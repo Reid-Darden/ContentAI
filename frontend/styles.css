@@ -26,7 +26,7 @@ body {
 
 .section-container {
     position: relative;
-    height: 60vh; /* Adjusted height */
+    height: 50vh; /* Adjusted height */
     margin: 2rem;  /* Added margin */
     padding: 1rem; /* Added padding */
 }
@@ -55,6 +55,6 @@ body {
     opacity: 0.5; /* This will gray it out a bit */
 }
 
-#pdfStatus, #pdfMessage {
+#pdfStatus, #pdfMessage, #parseStatus {
     margin-top: 50px;
 }

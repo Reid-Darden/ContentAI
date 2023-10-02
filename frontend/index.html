@@ -23,12 +23,12 @@
 			<div class="box"> 
 				<h2 class="title">PDF Import</h2>
 				<div id="pdfStatus">
-					<span class="icon  has-text-danger">
+					<span class="icon has-text-danger">
 						<i class="fas fa-times-circle fa-2xl"></i>
 					</span>
 				</div>
 
-                <div class="file has-name is-centered mt-5">
+                <div class="file has-name is-centered mt-4">
                     <input class="file-input" type="file" name="pdf" id="pdfUpload" accept=".pdf" style="display: none;">
                     <label for="pdfUpload" class="button is-info">
                         Choose a PDF...
@@ -49,13 +49,31 @@
 
         <!-- Column 2: Parse PDF -->
         <div class="column section-container has-text-centered disabled-box">
-            <div class="box">
-                <h2 class="title">Rewrite Content</h2>
-                <div class="content">
-                    <!-- Your Rewriting Logic Goes Here -->
+            <div class="box" id="parseBox">
+                <h2 class="title">Parse PDF</h2>
+                
+                <!-- PDF Parsing Status Indicator -->
+                <div id="parseStatus">
+                    <span class="icon has-text-danger">
+						<i class="fas fa-times-circle fa-2xl"></i>
+					</span>
+                </div>
+                
+                <!-- Button to initiate parsing -->
+                <button class="button is-info mt-4" id="startParseBtn">Start Parsing</button>
+                
+                <!-- Progress Indicator -->
+                <div class="progress" id="parseProgress">
+                    <div class="progress-bar"></div>
+                </div>
+                
+                <!-- Results of Parsing -->
+                <div id="parseResults" class="mt-4">
+                    <!-- This will be populated dynamically after parsing is done -->
                 </div>
             </div>
         </div>
+
 
         <!-- Rewrite Area -->
         <div class="column section-container has-text-centered disabled-box">

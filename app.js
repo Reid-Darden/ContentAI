@@ -23,7 +23,7 @@ const upload = multer({
   },
 });
 
-app.post("/upload", upload.single("pdf"), (req, res) => {
+app.post("/uploads", upload.single("pdf"), (req, res) => {
   if (req.file) {
     res.json({ message: "File uploaded successfully" });
   } else {
@@ -35,8 +35,6 @@ app.use("/frontend", express.static("frontend"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/frontend/index.html"));
-  res.sendFile(path.join(__dirname, "/frontend/styles.css"));
-  res.sendFile(path.join(__dirname, "/frontend/script.js"));
 });
 
 app.listen(3000, () => {

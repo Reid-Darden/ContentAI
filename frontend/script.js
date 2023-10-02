@@ -1,4 +1,6 @@
+
 $(document).ready(function () {
+
   // upload of pdf event
   $("#pdfUpload").on("change", function () {
     var file = this.files[0];
@@ -6,7 +8,7 @@ $(document).ready(function () {
     formData.append("pdf", file);
 
     $.ajax({
-      url: "/upload", // Your server-side upload route
+      url: "/uploads", // Your server-side upload route
       type: "POST",
       data: formData,
       contentType: false,
@@ -34,4 +36,6 @@ $(document).ready(function () {
       },
     });
   });
+
+  // 
 });
