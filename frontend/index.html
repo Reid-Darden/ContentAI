@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVC Content AI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="/frontend/styles.css">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <header class="p-4 dark-blue is-flex is-justify-content-space-between is-align-items-center">
+        <h1 class="header-title">GVC Content AI</h1>
+        <span class="has-text-green">Welcome, ____</span>
+    </header>
+    
+    <div class="columns is-mobile tight-gap">
+
+        <!-- Column 1: PDF Import -->
+		<div class="column section-container has-text-centered">
+			<div class="box"> 
+				<h2 class="title">PDF Import</h2>
+				<div id="pdfStatus">
+					<span class="icon  has-text-danger">
+						<i class="fas fa-times-circle fa-2xl"></i>
+					</span>
+				</div>
+
+                <div class="file has-name is-centered mt-5">
+                    <input class="file-input" type="file" name="pdf" id="pdfUpload" accept=".pdf" style="display: none;">
+                    <label for="pdfUpload" class="button is-info">
+                        Choose a PDF...
+                    </label>
+                    <span class="file-name" id="pdfFileName">
+                        No file uploaded.
+                    </span>
+                </div>
+
+                <div id="pdfMessage" class="message is-hidden">
+                    <div class="message-body has-text-weight-bold">
+                        No file uploaded.
+                    </div>
+                </div>                
+
+			</div>
+		</div>	
+
+        <!-- Column 2: Parse PDF -->
+        <div class="column section-container has-text-centered disabled-box">
+            <div class="box">
+                <h2 class="title">Rewrite Content</h2>
+                <div class="content">
+                    <!-- Your Rewriting Logic Goes Here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewrite Area -->
+        <div class="column section-container has-text-centered disabled-box">
+            <div class="box">
+                <h2 class="title">Rewrite Content</h2>
+                <div class="content">
+                    <!-- Your Rewriting Logic Goes Here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="has-text-centered p-4">
+        <button class="button is-large is-primary" disabled>CREATE ARTICLE</button>
+    </div>
+
+    <script src="https://kit.fontawesome.com/e0a5ef1876.js" crossorigin="anonymous"></script>
+    <script src="/frontend/script.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

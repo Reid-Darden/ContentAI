@@ -1,0 +1,60 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+}
+
+.dark-blue {
+    background-color: #007BFF;
+}
+
+.header-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+}
+
+.vertical-divider {
+    border-left: 2px solid #000;
+    height: 100%;
+    position: absolute;
+    right: 0;
+}
+
+.section-container {
+    position: relative;
+    height: 60vh; /* Adjusted height */
+    margin: 2rem;  /* Added margin */
+    padding: 1rem; /* Added padding */
+}
+
+/* Centering the H2 titles in each box */
+.box {
+    height: 100%;
+}
+
+.box .title {
+    text-align: center;
+}
+
+/* Tighten the gap between columns */
+.tight-gap {
+    --gap: 0.5rem; /* Adjust this value to control the gap. Default in Bulma is 1.5rem for mobile and 2rem for tablet/desktop */
+}
+
+.tight-gap .column {
+    padding-left: var(--gap);
+    padding-right: var(--gap);
+}
+
+.disabled-box {
+    pointer-events: none; /* This prevents clicking and events on the element */
+    opacity: 0.5; /* This will gray it out a bit */
+}
+
+#pdfStatus, #pdfMessage {
+    margin-top: 50px;
+}
