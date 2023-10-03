@@ -62,14 +62,16 @@
                 <!-- Button to initiate parsing -->
                 <button class="button is-info mt-4" id="startParseBtn">Start Parsing</button>
                 
-                <!-- Progress Indicator -->
-                <div class="progress" id="parseProgress">
-                    <div class="progress-bar"></div>
+                <!-- Progress Circle-->
+                <div id="parseLoader" class="has-text-centered is-hidden">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
                 
                 <!-- Results of Parsing -->
-                <div id="parseResults" class="mt-4">
-                    <!-- This will be populated dynamically after parsing is done -->
+                <div id="parseResults" class="message is-hidden">
+                    <div class="message-body has-text-weight-bold">
+                        Parsing failed.
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,7 +89,7 @@
     </div>
 
     <div class="has-text-centered p-4">
-        <button class="button is-large is-primary" disabled>CREATE ARTICLE</button>
+        <button class="button is-large is-success" disabled>CREATE ARTICLE</button>
     </div>
 
     <script src="https://kit.fontawesome.com/e0a5ef1876.js" crossorigin="anonymous"></script>

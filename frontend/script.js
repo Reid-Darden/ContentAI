@@ -1,8 +1,9 @@
-
 $(document).ready(function () {
+  // Flag for if pdf is successfully loaded in
+  let pdfStatusFlag = false;
 
   // upload of pdf event
-  $("#pdfUpload").on("change", function () {
+  $(document).on("change", "#pdfUpload", function () {
     var file = this.files[0];
     var formData = new FormData();
     formData.append("pdf", file);
@@ -17,18 +18,26 @@ $(document).ready(function () {
         $("#pdfMessage .message-body").text(data.message);
         $("#pdfMessage").removeClass("is-hidden");
 
-        if (data.message === "File uploaded successfully") {
+        if (data.message == "File uploaded successfully.") {
           // Enable the Parse PDF box
-          $(".columns .section-container:eq(1)").removeClass("disabled-box");
+          $(".columns .section-container:eq(1)").first().removeClass("disabled-box");
 
           // Change the icon to check
-          $("#pdfStatus .icon i").removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+          $("#pdfStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+
+          $("#pdfFileName").text(data.file);
+
+          pdfStatusFlag = true;
         } else {
           // Disable the Parse PDF box
           $(".columns .section-container:eq(1)").addClass("disabled-box");
 
           // Change the icon to x-icon
           $("#pdfStatus .icon i").removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+
+          $("#pdfFileName").text("No file uploaded.");
+
+          pdfStatusFlag = false;
         }
       },
       error: function (err) {
@@ -37,5 +46,47 @@ $(document).ready(function () {
     });
   });
 
-  // 
+  // parse the pdf
+  $(document).on("click", "#startParseBtn", () => {
+    if (pdfStatusFlag) {
+      const filename = $("#pdfFileName")[0].innerText;
+
+      // Show the spinner
+      $("#parseLoader").removeClass("is-hidden");
+
+      $.ajax({
+        url: "/parsedPDFs",
+        method: "POST",
+        data: JSON.stringify({
+          filename: filename, // Make sure this is dynamic based on the uploaded file's name
+        }),
+        contentType: "application/json",
+        success: function (response) {
+          if (response.success) {
+            const parsedData = response.parsedData;
+
+            console.log(parsedData);
+
+            $("#parseResults .message-body").text("PDF Parsed.");
+            $("#parseResults").removeClass("is-hidden");
+
+            $("#parseLoader").addClass("is-hidden");
+            $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+          } else {
+            $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+            alert("Failed to parse the PDF.");
+          }
+        },
+        error: function () {
+          // Hide the spinner
+          $("#parseLoader").addClass("is-hidden");
+
+          $("#parseResults .message-body").text("PDF not parsed.");
+
+          $("#parseProgressBarContainer").addClass("is-hidden");
+          alert("Error connecting to the server.");
+        },
+      });
+    }
+  });
 });

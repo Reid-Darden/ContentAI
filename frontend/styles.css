@@ -55,6 +55,6 @@ body {
     opacity: 0.5; /* This will gray it out a bit */
 }
 
-#pdfStatus, #pdfMessage, #parseStatus {
+#pdfStatus, #pdfMessage, #parseStatus, #parseProgressBarContainer, #parseResults {
     margin-top: 50px;
 }
