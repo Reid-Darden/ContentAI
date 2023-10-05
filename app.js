@@ -1,7 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const pdf = require("pdf-parse");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 var AdmZip = require("adm-zip");
@@ -126,6 +125,9 @@ async function parsePDF(filename) {
 
     for (let i = 0; i < zippedEntries.length; i++) {
       let entry = zippedEntries[i];
+      // change this to look for excel files
+      // return an array of strings of their file names?
+      // use read excel file to extract the data
       if (entry.entryName == "structuredData.json") {
         let x = entry.getData().toString("utf8");
         return x;

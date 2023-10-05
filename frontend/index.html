@@ -10,7 +10,7 @@
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
-<body>
+<body class="has-background-grey-light">
     <header class="p-4 dark-blue is-flex is-justify-content-space-between is-align-items-center">
         <h1 class="header-title">GVC Content AI</h1>
         <span class="has-text-green">Welcome, ____</span>
@@ -48,7 +48,7 @@
 		</div>	
 
         <!-- Column 2: Parse PDF -->
-        <div class="column section-container has-text-centered disabled-box">
+        <div class="column section-container has-text-centered disabled-box grey-light ">
             <div class="box" id="parseBox">
                 <h2 class="title">Parse PDF</h2>
                 
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Progress Circle-->
-                <div id="parseLoader" class="has-text-centered is-hidden mt-3">
+                <div id="parseLoader" class="has-text-centered is-hidden mt-3 ">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
             </div>
@@ -79,7 +79,7 @@
 
         <!-- Rewrite Area -->
         <div class="column section-container has-text-centered disabled-box">
-            <div class="box">
+            <div class="box grey-light">
                 <h2 class="title">Rewrite Content</h2>
                 <div class="content">
                     <!-- Your Rewriting Logic Goes Here -->
@@ -89,7 +89,7 @@
     </div>
 
     <div class="has-text-centered p-4">
-        <button class="button is-large is-success" disabled>CREATE ARTICLE</button>
+        <button class="button is-large is-success has-text-black has-text-weight-bold createArticle" disabled>CREATE ARTICLE</button>
     </div>
 
     <script src="https://kit.fontawesome.com/e0a5ef1876.js" crossorigin="anonymous"></script>
