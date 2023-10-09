@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Progress Circle-->
-                <div id="parseLoader" class="has-text-centered is-hidden mt-3 ">
+                <div id="parseLoader" class="has-text-centered is-hidden">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
             </div>
@@ -81,8 +81,26 @@
         <div class="column section-container has-text-centered disabled-box">
             <div class="box grey-light">
                 <h2 class="title">Rewrite Content</h2>
-                <div class="content">
-                    <!-- Your Rewriting Logic Goes Here -->
+        
+                <!-- Rewrite Status Indicator -->
+                <div id="rewriteStatus">
+                    <span class="icon  has-text-danger">
+                        <i class="fas fa-times-circle fa-2xl"></i>
+                    </span>
+                </div>
+
+                <button id="rewriteContent" class="button is-info mt-4">Edit Rewritten Content</button>
+
+                <!-- Results of Parsing -->
+                <div id="rewriteResults" class="message is-hidden">
+                    <div class="message-body has-text-weight-bold">
+                        Rewrite failed.
+                    </div>
+                </div>
+
+                <!-- Progress Circle-->
+                <div id="rewriteLoader" class="has-text-centered is-hidden">
+                    <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
             </div>
         </div>

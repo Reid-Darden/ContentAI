@@ -1,6 +1,8 @@
 $(document).ready(function () {
   // Flag for if pdf is successfully loaded in
   let pdfStatusFlag = false;
+  let parsedPDFData;
+  let rewrittenContent;
 
   // upload of pdf event
   $(document).on("change", "#pdfUpload", function () {
@@ -63,9 +65,10 @@ $(document).ready(function () {
         contentType: "application/json",
         success: function (response) {
           if (response.success) {
-            const parsedData = response.parsedData;
+            parsedPDFData = JSON.parse(response.parsedData);
 
-            console.log(parsedData);
+            // Enable the Rewrite content box
+            $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
 
             $("#parseResults .message-body").text("PDF Parsed.");
             $("#parseResults").removeClass("is-hidden");
@@ -83,7 +86,48 @@ $(document).ready(function () {
 
           $("#parseResults .message-body").text("PDF not parsed.");
 
-          $("#parseProgressBarContainer").addClass("is-hidden");
+          alert("Error connecting to the server.");
+        },
+      });
+    }
+  });
+
+  // rewrite the content
+  $(document).on("click", "#rewriteContent", () => {
+    if (parsedPDFData.length > 0) {
+      // Show the spinner
+      $("#rewriteLoader").removeClass("is-hidden");
+
+      $.ajax({
+        url: "/rewrittenContent",
+        method: "POST",
+        data: JSON.stringify({
+          content: parsedPDFData.paragraph,
+        }),
+        contentType: "application/json",
+        success: function (response) {
+          if (response.success) {
+            rewrittenContent = response.rewrittenContent;
+
+            console.log("1: " + rewrittenContent);
+
+            // do something with the rewritten content
+
+            $("#rewriteResults .message-body").text("PDF Parsed.");
+            $("#rewriteResults").removeClass("is-hidden");
+
+            $("#rewriteLoader").addClass("is-hidden");
+            $("#rewriteStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+          } else {
+            $("#rewriteStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+            alert("Failed to rewrite the content.");
+          }
+        },
+        error: function () {
+          // Hide the spinner
+          $("#rewriteLoader").addClass("is-hidden");
+
+          $("#rewriteResults .message-body").text("PDF not parsed.");
           alert("Error connecting to the server.");
         },
       });
