@@ -65,7 +65,8 @@ $(document).ready(function () {
         contentType: "application/json",
         success: function (response) {
           if (response.success) {
-            parsedPDFData = JSON.parse(response.parsedData);
+            parsedPDFData = response.parsedData;
+            console.log("a: " + parsedPDFData);
 
             // Enable the Rewrite content box
             $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
@@ -98,11 +99,14 @@ $(document).ready(function () {
       // Show the spinner
       $("#rewriteLoader").removeClass("is-hidden");
 
+      let parsedData = JSON.parse(parsedPDFData);
+      console.log("b: " + parsedData);
+
       $.ajax({
         url: "/rewrittenContent",
         method: "POST",
         data: JSON.stringify({
-          content: parsedPDFData.paragraph,
+          content: parsedData.paragraph,
         }),
         contentType: "application/json",
         success: function (response) {

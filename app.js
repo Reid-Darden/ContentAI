@@ -241,15 +241,19 @@ function getDateString() {
 // PROMPTS
 let gptPrompts = [
   {
-    prompt: `Please pretend to be a JavaScript expert who is proficient in speaking and writing English. Respond to the question below in English: Some of the following JSON is structured as a table with its data as the table structure, and some of it is structured as paragraphs that have the header and body seperated. Make your best determination between the two from the JSON, then output it as the following structure: 
+    prompt: `Please pretend to be a JavaScript expert who is proficient in speaking and writing English. Respond to the question below in JSON: Some of the following JSON is structured as a table with its data as the table structure, and some of it is structured as paragraphs that have the header and body seperated. Make your best determination between the two from the JSON, then output it as the following structure: 
     
     Paragraphs (1)- the header (or what you deem to be the header) of the paragraph is typically gonna map to the theme of an overall paragraph, and the body is going to be any longer form text that has similar keywords and theme to the header that it was mapped to. The output will be JSON formatted, with a "name" key and "paragraph" value, then a key of "data" with the outputted JSON stucuture as the value. Make seperate key values in the data value to seperate the body from the header, and do that for every entry.
 
     Table (2)- the table (or what you deem to be the table) is going to be any data that appears to be in a table format from the JSON. You will construct a seperate JSON structure that extracts the table data from the orignal JSON into this structure. We will use this structure later to build a HTML table. The output will be JSON formatted, with a "name" key and "table" value, then a key of "data" with the outputted JSON stucuture as the value.
 
-    Additional notes: if you deem any data within the json to have no data or content assoicated with it, then exclude it from the response. THE FINAL OUTPUT IS THE COMBINATION OF THE 2 JSON STRUCTURES AS A JSON   STRUCTURE, SEPERATED BY THE NAME KEY (EITHER "paragraph" or "table"). 
+    Additional notes: if you deem any data within the json to have no data or content assoicated with it, then exclude it from the response. You also will not mix the data. For example, if you have numeric data included in the paragraphs (for example, data points about the shaft or grip), make sure they are included in the data half of the response. The goal is to seperate all textual data from the numeric data. If numeric data is included in the paragraph response surrounded by text content, then you can leave it be.
+    
+    THE FINAL OUTPUT IS THE COMBINATION OF THE 2 JSON STRUCTURES AS A SINGLE JSON STRUCTURE, SEPERATED BY THE NAME KEY (EITHER "paragraph" or "table"). 
     
     Example output data format (look at the (1) & (2) mappings from the formatting paragraphs above): [{"name": "paragraph", "data": (1) }, {"name": "table", "data" : (2)}]
+
+    ONLY OUTPUT THE JSON STRUCTURE. DO NOT ADD ANY ADDITIONAL TEXT TO THE RESPONSE.
       
     The JSON to reformat is as follows: `,
   },
