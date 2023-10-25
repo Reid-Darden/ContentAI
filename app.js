@@ -2,8 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 var AdmZip = require("adm-zip");
-var parser = require("node-xlsx");
 const axios = require("axios");
+const xlsx = require("xlsx");
 
 // ADOBE API
 const PDFToolsSdk = require("@adobe/pdfservices-node-sdk");
@@ -65,14 +65,21 @@ app.post("/parsedPDFs", async (req, res) => {
     const parsedData = await parsePDF(filename);
 
     // read and extract the data from the excel files into string of json
-    let json = JSON.stringify(await parseExcelFiles(parsedData, filename));
+    let parsedExcel = await parseExcelFiles(parsedData, filename);
 
-    const excelJSON2Text = await doGPTRequest(gptPrompts[0].prompt + json);
+    // run chatgpt to extract key data from the json into paragraphs
+    // build prompt
+    let excel2JSON;
+
+    parsedExcel.forEach((file) => {
+      excel2JSON += JSON.stringify(file);
+    });
+
+    const excelJSON2Text = await doGPTRequest(gptPrompts[0].prompt + excel2JSON);
 
     res.json({
       success: true,
       parsedData: excelJSON2Text,
-      test: test,
     });
   } catch (error) {
     res.status(500).json({
@@ -91,8 +98,10 @@ app.post("/rewrittenContent", async (req, res) => {
   }
 
   try {
+    let contentJSON = JSON.stringify(content);
+
     // do gpt call to rewrite the content, focusing on paragraph structure
-    let rewrite = await doGPTRequest(gptPrompts[1].prompt + content);
+    let rewrite = await doGPTRequest(gptPrompts[1].prompt + contentJSON);
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -160,9 +169,11 @@ async function parseExcelFiles(files, orignalFileName) {
   for (let i = 0; i < files.length; i++) {
     let excelFile = files[i].filename;
 
-    let parsedExcelFile = parser.parse(`./unzipped/EXTRACTED${getDateString()}_${newFile}/${excelFile}`);
+    let file = xlsx.readFile(`./unzipped/EXTRACTED${getDateString()}_${newFile}/${excelFile}`);
 
-    output.push({ parsedExcelFile });
+    let values = xlsx.utils.sheet_to_json(file.Sheets["Sheet1"]);
+
+    output.push(values);
   }
 
   return output;
@@ -227,6 +238,14 @@ function getDateString() {
   return month + day + year;
 }
 
+function removeSpecialCharacters(str) {
+  // Regular expression to match sequences like /t, /n, /r, etc., possibly followed by a space
+  // Also includes /"
+  const regex = /\/[btnvfr'\"\\0-7]{1,3}\s?|\/\"\s?/g;
+
+  return str.replace(regex, "");
+}
+
 // PROMPTS
 let gptPrompts = [
   {
@@ -244,7 +263,7 @@ let gptPrompts = [
 
     ONLY OUTPUT THE JSON STRUCTURE. DO NOT ADD ANY ADDITIONAL TEXT TO THE RESPONSE.
       
-    The JSON to reformat is as follows: `,
+    The JSON to reformat is as follows. Before operating any of the above commands, I also need the JSON "cleaned", that is to say remove any uneccessary characters or regular expression characters and fix spacing (some of the characters to watch out for are /r, //r, or /", but there may be others that are probably going to be regular expressions). The content within the JSON should still read in normal English characters and numbers at your discrection. Once you have cleaned the following JSON, then complete the commands above upon it. JSON IS AS FOLLOWS: `,
   },
   {
     prompt: `Please pretend to be a content specialist with complete knowledge of SEO and the best SEO practices within, having over 20 years in the business of Search Engine Optimization. You have also have the expert knowledge of the english language from a grammar, spelling, and language perspective. Use this information to rewrite, refine, and lengthen the content that I provide at the end of this prompt. 
@@ -253,6 +272,6 @@ let gptPrompts = [
 
     The content that is passed in will be in JSON format. When you complete the rewriting of all the content, you will format the output as a JSON string that has the new header name (it may be the saem as the orignal passed in header or an ammended one based on your updates to the paragraph content) as the value of the "header" key, and the newly written paragraph will be in the "content" key.
     
-    The JSON input to rewrite is as follows: `,
+    The JSON input to rewrite is as follows. You will only look at the JSON data under "name": "paragraph"; the other data is table data and can be ignored. JSON =  `,
   },
 ];

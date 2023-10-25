@@ -1,6 +1,8 @@
 $(document).ready(function () {
   // Flag for if pdf is successfully loaded in
   let pdfStatusFlag = false;
+
+  // variables that get set as we progress through the program
   let parsedPDFData;
   let rewrittenContent;
 
@@ -66,6 +68,7 @@ $(document).ready(function () {
         success: function (response) {
           if (response.success) {
             parsedPDFData = response.parsedData;
+
             console.log(parsedPDFData);
 
             // Enable the Rewrite content box
@@ -100,20 +103,19 @@ $(document).ready(function () {
       $("#rewriteLoader").removeClass("is-hidden");
 
       let parsedData = JSON.parse(parsedPDFData);
-      console.log("b: " + parsedData);
 
       $.ajax({
         url: "/rewrittenContent",
         method: "POST",
         data: JSON.stringify({
-          content: parsedData.paragraph,
+          content: parsedData,
         }),
         contentType: "application/json",
         success: function (response) {
           if (response.success) {
             rewrittenContent = response.rewrittenContent;
 
-            console.log("1: " + rewrittenContent);
+            console.log(rewrittenContent);
 
             // do something with the rewritten content
 

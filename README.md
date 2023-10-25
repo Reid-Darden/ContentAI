@@ -1,6 +1,6 @@
 # GVContentAI
 
-### Created by Reid Darden in October of 2023. All rights reserved.
+### Created by Reid Darden in October of 2023 for Worldwide Golf Shops / Global Value Commerce. All rights reserved.
 
 **This program was created to generate on page articles (in HTML w/ appropriate formatting) for product pages by parsing sell sheets. These parsed sheets have their content rewritten using a SEO specific prompt in ChatGPT. Finally, another ChatGPT call is made to assemble the article based on a template. All articles that are created with this template will be automatically emailed to Reid Darden (rdarden@wgs.com) for final approval for both content and formatting validation.**
 
@@ -33,3 +33,7 @@
 ### [Path]("https://www.npmjs.com/package/path")
 
 **Used in site setup to send appropriate files to server.**
+
+### [fs]("https://www.npmjs.com/package/fs")
+
+**Need for file reading**
