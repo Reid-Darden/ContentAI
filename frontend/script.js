@@ -66,7 +66,7 @@ $(document).ready(function () {
         success: function (response) {
           if (response.success) {
             parsedPDFData = response.parsedData;
-            console.log("a: " + parsedPDFData);
+            console.log(parsedPDFData);
 
             // Enable the Rewrite content box
             $(".columns .section-container:eq(2)").first().removeClass("disabled-box");

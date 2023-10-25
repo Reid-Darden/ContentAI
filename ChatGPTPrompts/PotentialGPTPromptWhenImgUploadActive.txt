@@ -1,0 +1,255 @@
+GPT ONLY
+
+Given the image, you will extract the text from the paragraphs and the headers in which they map too. The final structure will be a JSON format.
+
+PARAGRAPH DATA: For all header/paragraphs in the image that you deem to be header/paragraph combo, output them all in the format listed under the "text" object in the output JSON. You will repeat that specific {paragraph: .. , header: .. } in the output for all of the header and paragraph combos.
+
+TABLE AND CHART DATA: The chart data that is found in the image can be mapped in the TABLE object found in the output JSON. Analyze how ALL chart is structured and input the data from the chart into their respective outputs in the JSON. 
+
+CLUBS: The data will be outputted in such a manner that has the headers of the table as the first object in the array with the data that maps to each header as additonal objects in the structure. This will be text strings such as Lie Angle, Loft, Length, etc. You may have to flip the axis of the rows and columns based on the table in the chart, but the output should reflect the format seen in the sentence prior to this one. For this chart, you will ONLY focus on data surrounding a golf club. You will focus on words like lie angle, loft, and length to detemine which chart to map into the template. IGNORE ANY DATA IN A CHART THAT HAS GRIP OR SHAFT DATA WITHIN - WE DO NOT NEED THIS DATA FOR CLUB CHARTS. In the final output, you will IGNORE any brevity check you have that limits the output within the array. OUTPUT EVERY SINGLE ROW THAT IS IN THE TABLE - DO NOT STOP. DO NOT PUT ... - YOU WILL OUTPUT THE ROW DATA FOR EVERY SINGLE CLUB. I CANNOT STRESS THIS ENOUGH. THERE IS A CHANCE WE MAY HAVE 10 OR MORE ENTRIES IN THIS ARRAY. AND I NEED EVERY SINGLE ONE OF THEM.
+
+SHAFTS: The data found in the image that is deemed to be shaft data (i.e. will contain words such as flex (stiff, regular), weight (g), brands like Fujukura and True Temper, Torque, Tip Diameter, etc.) will be outputted to the shaft template in the JSON output. IGNORE IMAGES THAT ARE ABOUT THE SHAFT DATA - ONLY FOCUS ON THE TEXT. There is a chance the text may not be in a well established table format - it may be in a string format. As a expert in sentence disection in relation to popular golf keywords, you will (ONLY IF NEEDED) do your best to break the long string of data apart into the appropriate format where each data point is in a seperate entry.
+
+GRIPS: The data found in the image that is deemed to be grip data (i.e. will contain words such as material (rubber), weight (g), brands like Golf Pride and Super Stroke, Core Size as a number, Core Size as text such as midsize or standard, etc.) will be outputted to the grip template in the JSON output. IGNORE IMAGES THAT ARE ABOUT THE GRIP DATA - ONLY FOCUS ON THE TEXT. There is a chance the text may not be in a well established table format - it may be in a string format. As a expert in sentence disection in relation to popular golf keywords, you will (ONLY IF NEEDED) do your best to break the long string of data apart into the appropriate format where each data point is in a seperate entry.
+
+The final output will be a JSON structure that will be formatted as the following:
+[
+	{
+		text: [
+			{
+				paragraph : "",
+				header : ""
+			}, ...  
+		]
+	},
+	{
+		club: [
+			{
+				*this will map the header value from the key of the table to the data that is found in each row/column the header corresponds to. MAKE SURE THE CLUB AND CLUB VALUE (3 Wood, 5 iron, Pitching Wedge) IS WITHIN THIS OBJECT*
+			}, ...
+		]
+	},
+	{
+		shaft: [
+			{
+				*this will map to any shaft data found*
+			}
+		]
+	},
+	{
+		grip: [
+			{
+				*this will map to any grip data found*
+			}
+		]
+	}
+]
+
+
+
+THE ONLY VALUE THAT SHOULD BE OUTPUTTED IS THE FULLY CONSTRUCTED (WITH REPEATED ENTRIES WHERE NEEDED) JSON STRUCTURE.
+------------------------------------
+BARD ONLY
+
+Given the image, you will extract the table data from the images. The final structure will be a JSON format. YOU WILL IGNORE TEXT DATA THAT IS DEEMED TO BE IN A PARAGRAPH AND HEADER LIKE TABLE/CHART FORMAT.
+
+TABLE AND CHART DATA: The chart data that is found in the image can be mapped in the TABLE object found in the output JSON. Analyze how ALL chart is structured and input the data from the chart into their respective outputs in the JSON. 
+
+CLUBS: The data will be outputted in such a manner that has the headers of the table as the first object in the array with the data that maps to each header as additonal objects in the structure. This will be text strings such as Lie Angle, Loft, Length, etc. You may have to flip the axis of the rows and columns based on the table in the chart, but the output should reflect the format seen in the sentence prior to this one. For this chart, you will ONLY focus on data surrounding a golf club. You will focus on words like lie angle, loft, and length to detemine which chart to map into the template. IGNORE ANY DATA IN A CHART THAT HAS GRIP OR SHAFT DATA WITHIN - WE DO NOT NEED THIS DATA FOR CLUB CHARTS. In the final output, you will IGNORE any brevity check you have that limits the output within the array. OUTPUT EVERY SINGLE ROW THAT IS IN THE TABLE - DO NOT STOP. DO NOT PUT ... - YOU WILL OUTPUT THE ROW DATA FOR EVERY SINGLE CLUB. I CANNOT STRESS THIS ENOUGH. THERE IS A CHANCE WE MAY HAVE 10 OR MORE ENTRIES IN THIS ARRAY. AND I NEED EVERY SINGLE ONE OF THEM.
+
+SHAFTS: The data found in the image that is deemed to be shaft data (i.e. will contain words such as shaft, flex (stiff, regular), weight (g), brands like Fujukura and True Temper, Torque, Tip Diameter, etc.) will be outputted to the shaft template in the JSON output. IGNORE IMAGES THAT ARE ABOUT THE SHAFT DATA - ONLY FOCUS ON THE TEXT. There is a chance the text may not be in a well established table format - it may be in a string format. As a expert in sentence disection in relation to popular golf keywords, you will (ONLY IF NEEDED) do your best to break the long string of data apart into the appropriate format where each data point is in a seperate entry.
+
+GRIPS: The data found in the image that is deemed to be grip data (i.e. will contain words such as grip, material (rubber), weight (g), brands like Golf Pride and Super Stroke, Core Size as a number, Core Size as text such as midsize or standard, etc.) will be outputted to the grip template in the JSON output. IGNORE IMAGES THAT ARE ABOUT THE GRIP DATA - ONLY FOCUS ON THE TEXT. There is a chance the text may not be in a well established table format - it may be in a string format. As a expert in sentence disection in relation to popular golf keywords, you will (ONLY IF NEEDED) do your best to break the long string of data apart into the appropriate format where each data point is in a seperate entry.
+
+The final output will be a JSON structure that will be formatted as the following:
+[
+	{
+		club: [
+			{
+				*this will map the header value from the key of the table to the data that is found in each row/column the header corresponds to. MAKE SURE THE CLUB AND CLUB VALUE (3 Wood, 5 iron, Pitching Wedge) IS WITHIN THIS OBJECT*
+			}, ...
+		]
+	},
+	{
+		shaft: [
+			{
+				*this will map to any shaft data found*
+			}
+		]
+	},
+	{
+		grip: [
+			{
+				*this will map to any grip data found*
+			}
+		]
+	}
+]
+
+Here is a completed example output for a TaylorMade club that has data for all 3 aspects of the table:
+[
+  {
+    "text": [
+      {
+        "paragraph": "TaylorMade Stealth Irons are the latest and greatest from the company that has been at the forefront of iron innovation for decades.",
+        "header": "TaylorMade Stealth Irons"
+      }
+    ]
+  },
+  {
+    "club": [
+      {
+        "Loft": "18.5°",
+        "Lie": "61.5°",
+        "Offset": "5.8mm",
+        "Bounce": "2.0°",
+        "Length": "39.125\"",
+        "Swingweight": "D1/DD"
+      },
+      {
+        "Loft": "21°",
+        "Lie": "62°",
+        "Offset": "5mm",
+        "Bounce": "3.5°",
+        "Length": "38.5\"",
+        "Swingweight": "D1/DD"
+      },
+      {
+        "Loft": "24°",
+        "Lie": "62.5°",
+        "Offset": "4.6mm",
+        "Bounce": "5.0°",
+        "Length": "37.88\"",
+        "Swingweight": "D1/DD"
+      },
+      {
+        "Loft": "28°",
+        "Lie": "63°",
+        "Offset": "4.1mm",
+        "Bounce": "5.6°",
+        "Length": "37.25\"",
+        "Swingweight": "C1/C0"
+      },
+      {
+        "Loft": "32°",
+        "Lie": "63.5°",
+        "Offset": "3.4mm",
+        "Bounce": "6.3°",
+        "Length": "36.75\"",
+        "Swingweight": "C1/C0"
+      },
+      {
+        "Loft": "37°",
+        "Lie": "64°",
+        "Offset": "2.9mm",
+        "Bounce": "7.8°",
+        "Length": "36.25\"",
+        "Swingweight": "C1/C0"
+      },
+      {
+        "Loft": "43°",
+        "Lie": "64.5°",
+        "Offset": "2.6mm",
+        "Bounce": "9.0°",
+        "Length": "35.75\"",
+        "Swingweight": "C2"
+      },
+      {
+        "Loft": "54°",
+        "Lie": "64.5°",
+        "Offset": "2mm",
+        "Bounce": "12.5°",
+        "Length": "35.5\"",
+        "Swingweight": "C3"
+      },
+      {
+        "Loft": "59°",
+        "Lie": "64.5°",
+        "Offset": "1.5mm",
+        "Bounce": "9.0°",
+        "Length": "35.25\"",
+        "Swingweight": "C3"
+      }
+    ]
+  },
+  {
+    "shaft": [
+      {
+        "Flex": "R",
+        "Weight": "82 grams",
+        "Brand": "KBS Max MT",
+        "Torque": "3.1°",
+        "Tip Diameter": ".600"
+      },
+      {
+        "Flex": "S",
+        "Weight": "82 grams",
+        "Brand": "KBS Max MT",
+        "Torque": "2.9°",
+        "Tip Diameter": ".600"
+      }
+    ]
+  },
+  {
+    "grip": [
+      {
+        "Material": "Rubber",
+        "Weight": "48.5 grams",
+        "Brand": "Lamkin",
+        "Model": "Crossline 360",
+        "Core Size": "0.600",
+        "Color": "Black/Red"
+      }
+    ]
+  }
+]
+------------------------------------
+
+You will act as a SEO Content Creator, representing maximum knowledge in optimizing paragraph content, keyword usage, language, tone of voice, etc. You also have complete HTML knowledge, capable of writing articles with the given the SEO content. 
+
+Given the text in the image, you will rewrite each header and paragraph combo to be perfectly SEO optimized. IGNORE ANY CHARTS, TABLES, OR OTHER DATA THAT DOES NOT MAP TO LONG FORM TEXT SUCH AS A PARAGRAPH FOR THE REWRITING OF THE CONTENT. Focus the outputted paragraphs on the theme of the original paragraph, yet ensure the content is unique, inviting, and not overly difficult to read. 
+
+Along with SEO content rewriting, you are also responsible for creating HTML web articles with the rewritten. Once the content has been rewritten, you will use the below template to create a new HTML file with the given constraints found in the {} within the template. Note: within the repeated paragraph div in the template is an div with an img within it. You will leave this within the outputted article, but leave the img src and alt values blank. I will fill these in later on.
+
+TABLE AND CHART DATA: The chart data that is found in the image can be mapped in the TABLE comment found in the template. Analyze how the template is structured and input the data from the chart in the same manner (REPLACE THE DATA THAT IS IN THE TEMPLATE - ONLY LOOK AT HOW THE TEMPLATE DATA IS STRUCTURED.) Replace all headers for the outputted chart with those from the club chart in the image. You may have to flip the axis of the rows and columns based on the table in the chart, but the output should reflect the format seen in the template. For this chart, you will ONLY focus on data surrounding a golf club. You will focus on words like lie angle, loft, and length to detemine which chart to map into the template. IGNORE ANY DATA IN A CHART THAT HAS GRIP OR SHAFT DATA WITHIN - WE DO NOT NEED THIS DATA FOR OUR OUTPUTTED ARTICLE. Ensure that the entire chart is completely filled into the div of table content (THE TABLE TEMPLATE LENGTH IS MERELY A TEMPLATE, IGNORE ITS LENGTH)
+
+For all paragraphs in the image that you deem to be header/paragraph combo, output them all in the format listed under the "Paragraph" comment in the template. You will repeat that specific div in the output for all of the header and paragraph combos. Then create the table from the above instructions. THE ONLY THING THAT SHOULD BE OUTPUTTED IS THE FINAL HTML ARTICLE (COMPLETELY OUTPUT THE ARTICLE, EVEN THE ENTIRE CHART).
+
+BRAND FOR ARTICLE: TaylorMade
+MODEL FOR ARTICLE: Stealth Irons
+
+The following is the output template to use to create the Article:
+<div id="Article">
+	<h2 class="imageCtr">{The Name of the Club (Brand Name and Model Name)}</h2>
+	
+	<!-- PARAGRAPH (repeated)-->
+	<div class="outer s-fit conseg">
+		<div class="inner">
+			<img src="" alt="">
+		</div>
+		<div class="inner">
+			<div class="innerText">
+				<h3>{Feature/Benefit (this will map to the header of the paragraph that is supplied below)}</h3>                                                    
+				<p class="fancyLine">{Paragraph mapping to the feature and benefit listed above}</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- TABLE -->
+	<h3>{Brand and Model Name} Specs</h3>
+	<div class="table-content"> 
+		<table cellpadding="2" cellspacing="0">
+			<thead>
+				<tr><th colspan="5"></th></tr>
+				<tr>
+					{REPLACE THIS WITH HEADERS FOR THE CLUB CHART}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					{THIS IS REPEATED FOR EVERY ROW IN THE CHART. MAP THE DATA IN THE ROW TO THE HEADER ABOVE}
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

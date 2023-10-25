@@ -1,8 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
-const bodyParser = require("body-parser");
 var AdmZip = require("adm-zip");
 var parser = require("node-xlsx");
 const axios = require("axios");
@@ -20,8 +18,6 @@ const openAISecret = "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";
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
 
 const app = express();
-
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json());
 
@@ -69,21 +65,14 @@ app.post("/parsedPDFs", async (req, res) => {
     const parsedData = await parsePDF(filename);
 
     // read and extract the data from the excel files into string of json
-    const parsedExcel = await parseExcelFiles(parsedData, filename);
+    let json = JSON.stringify(await parseExcelFiles(parsedData, filename));
 
-    // run chatgpt to extract key data from the json into paragraphs
-    // build prompt
-    let excel2JSON;
-
-    parsedExcel.forEach((file) => {
-      excel2JSON += JSON.stringify(file);
-    });
-
-    const excelJSON2Text = await doGPTRequest(gptPrompts[0].prompt + excel2JSON);
+    const excelJSON2Text = await doGPTRequest(gptPrompts[0].prompt + json);
 
     res.json({
       success: true,
       parsedData: excelJSON2Text,
+      test: test,
     });
   } catch (error) {
     res.status(500).json({
@@ -118,8 +107,8 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/frontend/index.html"));
 });
 
-app.listen(5000, () => {
-  console.log("Server started on port 5000.");
+app.listen(3000, () => {
+  console.log("Server started on port 3000.");
 });
 
 // == FUNCTIONS ==
@@ -173,7 +162,7 @@ async function parseExcelFiles(files, orignalFileName) {
 
     let parsedExcelFile = parser.parse(`./unzipped/EXTRACTED${getDateString()}_${newFile}/${excelFile}`);
 
-    output.push(parsedExcelFile);
+    output.push({ parsedExcelFile });
   }
 
   return output;
