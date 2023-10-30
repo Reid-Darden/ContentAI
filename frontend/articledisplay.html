@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GVContentAI</title>
+    <link rel="icon" href="/frontend/gvclogo.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="/frontend/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/frontend/helpers.js"></script>
+    <script src="/frontend/article.js"></script>
+</head>
+
+<body>
+    <header class="p-4 dark-blue is-flex is-justify-content-space-between is-align-items-center">
+        <h1 class="header-title is-center">GVCContentAI</h1>
+        <span class="has-text-green">Welcome, ____</span>
+    </header>
+
+    <!-- Columns Container -->
+    <div class="columns">
+
+        <!-- Raw HTML Column -->
+        <div class="column">
+            <h2 class="subtitle">Raw HTML</h2>
+            <textarea id="rawHTML" class="textarea" readonly></textarea>
+        </div>
+
+        <!-- Rendered View Column -->
+        <div class="column">
+            <h2 class="subtitle">Rendered View</h2>
+            <div id="renderedContent" class="content"></div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -1,3 +1,36 @@
+Outputted and rewritten json, used for testing
+{
+  "name": "paragraph",
+  "data": [
+    {
+      "header": "FEATURE CAP BACK™ DESIGN WITH TOE WRAP CONSTRUCTION",
+      "content": "The Cap Back™ Design with toe wrap construction is a revolutionary technology that enhances the distance, forgiveness, and feel of the iron. By shifting mass from the extreme high toe of the head to the sole, this advanced engineering feat creates an incredibly low CG. As a result, launching the ball with a hot trajectory throughout the set becomes effortless."
+    },
+    {
+      "header": "FEATURE FAST FORGIVING FACE",
+      "content": "The Fast Forgiving Face features a 450SS face with an intelligently positioned sweet spot. This sweet spot spans the most common impact points, ensuring explosive ball speeds and consistent performance. With this innovative design, golfers can experience maximum distance and forgiveness in all the right places."
+    },
+    {
+      "header": "FEATURE THRU-SLOT SPEED POCKET",
+      "content": "The Thru-Slot Speed Pocket is a patented TaylorMade® technology that maximizes face flexibility for increased ball speed and forgiveness. Specifically engineered to enhance performance on mis-hits low on the face, this feature ensures that golfers achieve optimal distance and forgiveness even on off-center strikes."
+    },
+    {
+      "header": "FEATURE ECHO DAMPING SYSTEM®",
+      "content": "The Echo Damping System® is strategically located behind the face of the iron. By utilizing a soft polymer blend and multiple contact points across the face, this innovative system effectively channels away harsh vibrations. As a result, golfers can enjoy a forged-like feel at impact, enhancing their overall experience with the iron."
+    },
+    {
+      "header": "FEATURE LAUNCH FLIGHT BIAS",
+      "content": "The Launch Flight Bias feature offers golfers different options to suit their playing style and preferences."
+    },
+    {
+      "header": "FEATURE High-Launch Neutral",
+      "content": "The High-Launch Neutral option is designed to provide golfers with a high launch angle, allowing for maximum carry distance and stopping power on the greens."
+    }
+  ]
+}
+
+--------------------------------------------------------------------------
+
 GPT ONLY
 
 Given the image, you will extract the text from the paragraphs and the headers in which they map too. The final structure will be a JSON format.

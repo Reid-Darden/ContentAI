@@ -42,7 +42,6 @@ const upload = multer({
 });
 
 // Server side calls from page
-
 // PDF UPLOADS
 app.post("/uploads", upload.single("pdf"), (req, res) => {
   if (req.file) {
@@ -59,7 +58,7 @@ app.post("/parsedPDFs", async (req, res) => {
   if (!filename) {
     return res.status(400).json({ success: false, message: "No filename provided" });
   }
-
+  // look into adding a "caching" for the unzipped files based on the filename so we dont have to hit the gpt api everytime
   try {
     // parse the PDF file and return the excel file names
     const parsedData = await parsePDF(filename);
@@ -67,20 +66,33 @@ app.post("/parsedPDFs", async (req, res) => {
     // read and extract the data from the excel files into string of json
     let parsedExcel = await parseExcelFiles(parsedData, filename);
 
-    // run chatgpt to extract key data from the json into paragraphs
-    // build prompt
-    let excel2JSON;
+    // Convert each parsed file to a json string
+    let excel2JSONParagraph = JSON.stringify(parsedExcel[0]);
+    let excel2JSONTable = JSON.stringify(parsedExcel[1]);
 
-    parsedExcel.forEach((file) => {
-      excel2JSON += JSON.stringify(file);
-    });
+    // send gpt request for paragraph data
+    const gptParagraphResp = await doGPTRequest(gptPrompts[0].prompt + excel2JSONParagraph);
 
-    const excelJSON2Text = await doGPTRequest(gptPrompts[0].prompt + excel2JSON);
+    // send gpt request for table data
+    const gptTableResp = await doGPTRequest(gptPrompts[1].prompt + excel2JSONTable);
 
-    res.json({
-      success: true,
-      parsedData: excelJSON2Text,
-    });
+    // construct final output
+    let excelJSON2Text;
+    if (gptParagraphResp.length > 0 && gptTableResp.length > 0) {
+      excelJSON2Text = await doGPTRequest(gptPrompts[2].prompt + gptParagraphResp + gptTableResp);
+    }
+
+    if (excelJSON2Text.length > 0) {
+      res.json({
+        success: true,
+        parsedData: excelJSON2Text,
+        parsedTable: gptTableResp,
+      });
+    } else {
+      res.json({
+        success: false,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -98,10 +110,8 @@ app.post("/rewrittenContent", async (req, res) => {
   }
 
   try {
-    let contentJSON = JSON.stringify(content);
-
     // do gpt call to rewrite the content, focusing on paragraph structure
-    let rewrite = await doGPTRequest(gptPrompts[1].prompt + contentJSON);
+    let rewrite = await doGPTRequest(gptPrompts[4].prompt + content);
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -109,11 +119,28 @@ app.post("/rewrittenContent", async (req, res) => {
   }
 });
 
+// ARTICLE BUILDING
+app.post("/buildarticle", async (req, res) => {
+  const content = req.body.content;
+  const table = req.body.table;
+
+  try {
+    let article = await doGPTRequest(gptPrompts[4].prompt + content + table);
+
+    res.json({ success: true, data: article });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err });
+  }
+});
 // SITE SETUP
 app.use("/frontend", express.static("frontend"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/frontend/index.html"));
+});
+
+app.get("/articledisplay", (req, res) => {
+  res.sendFile(path.join(__dirname, "/frontend/articledisplay.html"));
 });
 
 app.listen(3000, () => {
@@ -185,7 +212,7 @@ async function doGPTRequest(promptText) {
     const response = await axios.post(
       openAIEndpoint,
       {
-        max_tokens: 2500,
+        max_tokens: 2000,
         model: "gpt-3.5-turbo",
         messages: [
           {
@@ -193,7 +220,7 @@ async function doGPTRequest(promptText) {
             content: promptText,
           },
         ],
-        temperature: 1,
+        temperature: 0.5,
       },
       {
         headers: {
@@ -238,40 +265,48 @@ function getDateString() {
   return month + day + year;
 }
 
-function removeSpecialCharacters(str) {
-  // Regular expression to match sequences like /t, /n, /r, etc., possibly followed by a space
-  // Also includes /"
-  const regex = /\/[btnvfr'\"\\0-7]{1,3}\s?|\/\"\s?/g;
-
-  return str.replace(regex, "");
-}
-
 // PROMPTS
 let gptPrompts = [
   {
-    prompt: `Please pretend to be a JavaScript expert who is proficient in speaking and writing English. Respond to the question below in JSON: Some of the following JSON is structured as a table with its data as the table structure, and some of it is structured as paragraphs that have the header and body seperated. Make your best determination between the two from the JSON, then output it as the following structure: 
-    
-    Paragraphs (1)- the header (or what you deem to be the header) of the paragraph is typically gonna map to the theme of an overall paragraph, and the body is going to be any longer form text that has similar keywords and theme to the header that it was mapped to. The output will be JSON formatted, with a "name" key and "paragraph" value, then a key of "data" with the outputted JSON stucuture as the value. Make seperate key values in the data value to seperate the body from the header, and do that for every entry.
+    prompt: `Please pretend to be a JavaScript expert who is proficient in speaking and writing English. Respond to the question below in JSON. Use the following criteria to anaylze, rewrite, and output the JSON content passed in.  
 
-    Table (2)- the table (or what you deem to be the table) is going to be any data that appears to be in a table format from the JSON. You will construct a seperate JSON structure that extracts the table data from the orignal JSON into this structure. We will use this structure later to build a HTML table. The output will be JSON formatted, with a "name" key and "table" value, then a key of "data" with the outputted JSON stucuture as the value.
+    CRITERIA: The header of the paragraph is typically gonna map to the theme of an overall paragraph, and the body is going to be any longer form text that has similar keywords and theme to the header that it was mapped to. The output will be JSON formatted, with a "name" key and "paragraph" value, then a key of "data" with the outputted JSON stucuture as the value. Make seperate key values in the data value to seperate the body from the header, and do that for every entry.
 
-    Additional notes: if you deem any data within the json to have no data or content assoicated with it, then exclude it from the response. You also will not mix the data. For example, if you have numeric data included in the paragraphs (for example, data points about the shaft or grip), make sure they are included in the data half of the response. The goal is to seperate all textual data from the numeric data. If numeric data is included in the paragraph response surrounded by text content, then you can leave it be.
-    
-    THE FINAL OUTPUT IS THE COMBINATION OF THE 2 JSON STRUCTURES AS A SINGLE JSON STRUCTURE, SEPERATED BY THE NAME KEY (EITHER "paragraph" or "table"). 
-    
-    Example output data format (look at the (1) & (2) mappings from the formatting paragraphs above): [{"name": "paragraph", "data": (1) }, {"name": "table", "data" : (2)}]
+    ONLY OUTPUT THE JSON STRUCTURE. DO NOT ADD ANY ADDITIONAL TEXT TO THE RESPONSE. I ALSO NEED THE JSON MINIFIED INTO ITS SIMPLEST FORM; THAT IS TO SAY IT WOULD NOT HAVE ANY REGULAR EXPRESSION CHARACTERS. The JSON to reformat is as follows. Before operating any of the above commands, I also need the JSON "cleaned", that is to say remove any uneccessary characters or regular expression characters and fix spacing (some of the characters to watch out for are /r, //r, or /", but there may be others that are probably going to be regular expressions). The content within the JSON should still read in normal English characters and numbers at your discrection. Once you have cleaned the following JSON, then complete the commands above upon it. JSON IS AS FOLLOWS:
+    `,
+  },
+  {
+    prompt: `Please pretend to be a JSON expert who is proficient in speaking and writing English. Respond to the question below in JSON. Use the following criteria to analyze, rewrite, and output the JSON content passed in.
 
-    ONLY OUTPUT THE JSON STRUCTURE. DO NOT ADD ANY ADDITIONAL TEXT TO THE RESPONSE.
-      
-    The JSON to reformat is as follows. Before operating any of the above commands, I also need the JSON "cleaned", that is to say remove any uneccessary characters or regular expression characters and fix spacing (some of the characters to watch out for are /r, //r, or /", but there may be others that are probably going to be regular expressions). The content within the JSON should still read in normal English characters and numbers at your discrection. Once you have cleaned the following JSON, then complete the commands above upon it. JSON IS AS FOLLOWS: `,
+    CRITERIA: The table will be data that would be deemed to be found in a table format from the JSON. You will construct a JSON structure that extracts the table data from the orignal JSON into this structure.   There is a good chance that the data will be properly JSON formatted, but the content of the JSON itself may need manipulating. Make your best judgment with the data found in each array of objects within the JSON and determine the relevant numerical data in relation to the theme of that row of data. Then construct the final output structure with the updated content. Possible data structure in the table 
+    [[{"GRIP (MENS) \\r":"Hand \\r","__EMPTY":"RH/LH \\r","__EMPTY_1":"RH/LH \\r","GRIP (WOMENS) \\r":"RH/LH \\r","__EMPTY_2":"RH/LH \\r","__EMPTY_3":"RH/LH \\r","__EMPTY_4":"RH/LH \\r","__EMPTY_5":"RH/LH \\r","__EMPTY_6":"RH/LH \\r","__EMPTY_7":"RH/LH \\r","__EMPTY_8":"RH \\r"}]]
+
+    The following is an example of how the data should be outputted. Also note the removal of special characters (some maybe be double slashed (//) or some maybe be normal regular expressions (/r, etc.)) The "Values" property should be an array of strings containing all the data points and the "DataPoint" property should be the name surrounding what that data represents. This is the ideal output: 
+    [[{"dataPoint": "Hand", "values": ["RH/LH", ..., "RH"]},... (other ojects)]]. All this would be within an overall object with "name" property of "table" and "data" property of the previous array of data.
+
+    Additional notes: The goal is to seperate all textual/paragraph data from the numeric data. If numeric data is included in the paragraph response surrounded by text content, then you can leave it be. ONLY OUTPUT THE JSON STRUCTURE. DO NOT ADD ANY ADDITIONAL TEXT TO THE RESPONSE. I ALSO NEED THE JSON MINIFIED INTO ITS SIMPLEST FORM; THAT IS TO SAY IT WOULD NOT HAVE ANY REGULAR EXPRESSION CHARACTERS. Before operating any of the above commands, I also need the JSON "cleaned", that is to say remove any uneccessary characters or regular expression characters and fix spacing (some of the characters to watch out for are /r, //r, or /", but there may be others that are probably going to be regular expressions). Once you have cleaned the following JSON, then complete the commands above upon it. JSON IS AS FOLLOWS: `,
+  },
+  {
+    prompt: `Please act as a JSON expert. The inputted JSON is a combination of 2 or more JSON strings. I need all the JSON strings combined into a single JSON string that is properly formatted. The only thing that should be outputted is the final JSON structure in a string format. The only thing I want returned is the JSON - no code, not text, not anything but JSON. The JSON to analyze, reformat, and output is as follows: `,
   },
   {
     prompt: `Please pretend to be a content specialist with complete knowledge of SEO and the best SEO practices within, having over 20 years in the business of Search Engine Optimization. You have also have the expert knowledge of the english language from a grammar, spelling, and language perspective. Use this information to rewrite, refine, and lengthen the content that I provide at the end of this prompt. 
 
-    There will be many paragraphs with headers that will be apart of the content that is passed in that you will rewrite. You will identify the theme, main idea, key points, and other data/keywords from each paragraph. Using these keywords, you then will rewrite each paragraph (do not combine the content of 2 different paragraphs) with perfect SEO practices and perfect English language in mind. You have the right to extend the content length of each paragraph, but do make it more than 6-7 long sentences in length; 3-5 sentences is going to be the ideal length based on the length of each paragraph that is passed in.
+    There will be many paragraphs with headers that will be apart of the content that is passed in that you will rewrite. You will identify the theme, main idea, key points, and other data/keywords from each paragraph. Using these keywords, you then will rewrite each paragraph (do not combine the content of 2 different paragraphs) with perfect SEO practices and perfect English language in mind. You have the right to extend the content length of each paragraph, but do make it more than 6-7 long sentences in length; 3-5 sentences is going to be the ideal length based on the length of each paragraph that is passed in. This is the minimum length that you can make an output paragraph.
 
-    The content that is passed in will be in JSON format. When you complete the rewriting of all the content, you will format the output as a JSON string that has the new header name (it may be the saem as the orignal passed in header or an ammended one based on your updates to the paragraph content) as the value of the "header" key, and the newly written paragraph will be in the "content" key.
+    The content that is passed in will be in JSON format. When you complete the rewriting of all the content, you will format the output as a JSON string that has the new header name (it may be the same as the orignal passed in header or an ammended one based on your updates to the paragraph content) as the value of the "header" key, and the newly written paragraph will be in the "content" key.
     
-    The JSON input to rewrite is as follows. You will only look at the JSON data under "name": "paragraph"; the other data is table data and can be ignored. JSON =  `,
+    The JSON input to rewrite is as follows. You will only look at the JSON data under "name": "paragraph" for the rewrite; the other data is table data and can be appended to the end of the rewritten content as is(maintain perfect JSON). JSON TO REWRITE =  `,
+  },
+  {
+    prompt: `You will act as a HTML expert and will create a HTML article given a "template" that you will repeat with the given JSON data provided. You will be replacing the inner text of each template piece with the content from the JSON (look for {} in (a)). For paragraph data in the JSON, you will use template (a) to fill in the data, repeating the template for the total paragraph content length in the JSON. Every pargraph will use this template. For table data in the JSON, you will use template (b) to replace the data within the template and fill in the data accordingly from the JSON. The (b) template provides what the output should be and how the data passed in maps to each value - replace the template data with data found in the inputted JSON as you see fit. Any <img> tags found in the template will be ignored in creation - we will add those later.
+    
+    (a)
+    <div class="conseg outer s-fit"><div class=inner><img alt=""src=""></div><div class=inner><div class=innerText><h3>{Header value. Will map to shorter text in the JSON that describes a longer form of text. Remove keywords that may lead the sentence like Feature or benefit - this should be the overall theme of the paragraph}</h3><p class=fancyLine>{Paragraph value. Maps to longer text that relates to the header above.}</div></div></div>
+
+    (b)
+    <div class=table-content><table cellpadding=2 cellspacing=0><thead><tr><th colspan=5><tr><th>Loft<th>Dexterity<th>Lie Angle<th>Volume<th>Length<th>Swing Weight<th>Launch<th>Spin<tbody><tr><td>9°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>10.5°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>12°<td>RH Only<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low</table></div>
+
+    Output the final article (as HTML) only. No other code or no other text in the output - just HTML. The JSON to build the article from is: `,
   },
 ];

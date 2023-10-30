@@ -4,15 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GVC Content AI</title>
+    <title>GVContentAI</title>
+    <link rel="icon" href="/frontend/gvclogo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="/frontend/styles.css">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/frontend/helpers.js"></script>
+    <script src="/frontend/main.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="has-background-grey-light">
     <header class="p-4 dark-blue is-flex is-justify-content-space-between is-align-items-center">
-        <h1 class="header-title">GVC Content AI</h1>
+        <h1 class="header-title is-center">GVCContentAI</h1>
         <span class="has-text-green">Welcome, ____</span>
     </header>
     
@@ -106,12 +109,11 @@
         </div>
     </div>
 
-    <div class="has-text-centered p-4">
+    <div class="has-text-centered p-4" id="create_article">
         <button class="button is-large is-success has-text-black has-text-weight-bold createArticle" disabled>CREATE ARTICLE</button>
     </div>
 
     <script src="https://kit.fontawesome.com/e0a5ef1876.js" crossorigin="anonymous"></script>
-    <script src="/frontend/script.js" crossorigin="anonymous"></script>
 </body>
 
 </html>
