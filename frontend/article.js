@@ -8,6 +8,11 @@ $(document).ready(async function () {
 
   let article = await buildArticle(content, table);
 
+  // TODO: editor left side, rendered right side. editor needed to add images.
+  // TODO: login page - username and password that i create
+  // TODO: prompt enginerring (ALL)
+  // TODO: cleanup
+
   // build the article - call gpt?
   async function buildArticle(content, table) {
     $.ajax({
