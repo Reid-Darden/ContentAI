@@ -40,3 +40,13 @@ var cookies = (function () {
 
   return _cookies;
 })();
+
+var helpers = (function () {
+  var _helpers = {};
+
+  _helpers.removeWhiteSpaceToFirstChar = function (string) {
+    return string.replace(/^\s+/, "");
+  };
+
+  return _helpers;
+})();

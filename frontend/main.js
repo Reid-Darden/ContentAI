@@ -1,4 +1,10 @@
 $(document).ready(function () {
+  // User info
+  let cook = cookies.getCookie("loggedIn");
+  console.log(cook);
+  if (cook) {
+    $("#logged_in_user").text("Welcome, " + cook);
+  }
   // Flag for if pdf is successfully loaded in
   let pdfStatusFlag = false;
   let pdfFileName;

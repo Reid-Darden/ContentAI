@@ -17,6 +17,38 @@ const extractPDFOperation = PDFToolsSdk.ExtractPDF.Operation.createNew();
 const openAISecret = "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";
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
 
+// LOGIN CREDENTIALS
+let loginCredentials = [
+  {
+    username: "rdarden",
+    name: "Reid Darden",
+  },
+  {
+    username: "mslock",
+    name: "Mike Slock",
+  },
+  {
+    username: "smargison",
+    name: "Sean Margison",
+  },
+  {
+    username: "tlarson",
+    name: "TJ Larson",
+  },
+  {
+    username: "mjohnson",
+    name: "Marc Johnson",
+  },
+  {
+    username: "aclloyd",
+    name: "Alec Lloyd",
+  },
+  {
+    username: "anlloyd",
+    name: "Alan Lloyd",
+  },
+];
+
 const app = express();
 
 app.use(express.json());
@@ -42,6 +74,25 @@ const upload = multer({
 });
 
 // Server side calls from page
+// LOGIN
+app.post("/login", (req, res) => {
+  let username = req.body.username;
+  let password = req.body.password;
+
+  if (username.length > 0 && password.length > 0) {
+    let usernameCheck = checkUserNameValue(username);
+    let passwordCheck = password === generatePassword();
+    if (usernameCheck && passwordCheck) {
+      let name = findNameByUsername(loginCredentials, username);
+      if (name) {
+        res.json({ loggedIn: true, name: name });
+      }
+    } else {
+      res.json({ loggedIn: false });
+    }
+  }
+});
+
 // PDF UPLOADS
 app.post("/uploads", upload.single("pdf"), (req, res) => {
   if (req.file) {
@@ -136,6 +187,10 @@ app.post("/buildarticle", async (req, res) => {
 app.use("/frontend", express.static("frontend"));
 
 app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "/frontend/login/login.html"));
+});
+
+app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "/frontend/index.html"));
 });
 
@@ -263,6 +318,29 @@ function getDateString() {
   const year = String(date.getFullYear());
 
   return month + day + year;
+}
+
+// LOGIN HELPERS
+function generatePassword() {
+  const date = new Date();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // months are 0-based in JS
+  const year = date.getFullYear().toString().slice(-2); // get the last two digits of the year
+
+  return `gvc${month}${year}`;
+}
+
+function findNameByUsername(arr, targetUsername) {
+  const user = arr.find((user) => user.username === targetUsername);
+  return user ? user.name : null;
+}
+
+function checkUserNameValue(user) {
+  let check = loginCredentials.find((u) => u.username === user);
+  if (check) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 // PROMPTS
