@@ -99,7 +99,7 @@ $(document).ready(function () {
   }`;
   localStorage.setItem("1", content);
   localStorage.setItem("table_1", table);
-  //window.location.href = "/articledisplay?article=1";
+  window.location.href = "/articledisplay?article=1";
   // END TESTING
 
   // upload of pdf event

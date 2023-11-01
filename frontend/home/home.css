@@ -1,0 +1,13 @@
+.vertical-divider {
+    border-left: 2px solid #000;
+    height: 100%;
+    position: absolute;
+    right: 0;
+}
+
+.section-container {
+    position: relative;
+    height: 50vh; /* Adjusted height */
+    margin: 2rem;  /* Added margin */
+    padding: 1rem; /* Added padding */
+}

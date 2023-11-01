@@ -191,11 +191,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/home", (req, res) => {
-  res.sendFile(path.join(__dirname, "/frontend/index.html"));
+  res.sendFile(path.join(__dirname, "/frontend/home/home.html"));
 });
 
 app.get("/articledisplay", (req, res) => {
-  res.sendFile(path.join(__dirname, "/frontend/articledisplay.html"));
+  res.sendFile(path.join(__dirname, "/frontend/article/articledisplay.html"));
 });
 
 app.listen(3000, () => {
