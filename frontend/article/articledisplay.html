@@ -28,8 +28,8 @@
                 <div class="has-text-weight-bold has-text-centered mb-2">Raw HTML</div>
                 <div id="article_raw_html" class="content">
                     <textarea id="raw_html" class="textarea"></textarea>
-                    <div id="image_entry" style="display: none;"></div>
-                    <div class="has-text-centered">
+                    <div id="image_entry" style="display: none;" class="has-text-centered"></div>
+                    <div class="has-text-centered" id="raw_html_buttons">
                         <button type="button" id="update_content" class="button is-info mt-3">Update</button>
                         <button type="button" id="confirm_content" class="button is-success mt-3">Confirm</button>
                         <button type="button" id="add_images" class="button is-warning has-text-black mt-3">Add Images</button>
@@ -40,7 +40,7 @@
 
         <!-- Rendered View Column -->
         <div class="column mb-3" id="Article">
-            <div class="box mr-2 ml-2 mt-1 singlepage">
+            <div class="box mr-2 ml-2 mt-1 mb-4">
                 <div class="has-text-weight-bold has-text-centered mb-2">Rendered View</div>
                 <div id="rendered_content" class="content"></div>
             </div>

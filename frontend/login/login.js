@@ -1,7 +1,7 @@
 $(document).ready(function () {
   // TESTING
   $("#username").val("rdarden");
-  $("#password").val("gvc1023");
+  $("#password").val("gvc1123");
   // END TESTING
 
   $(document).on("click keydown", "#login", (e) => {

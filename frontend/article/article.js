@@ -20,7 +20,7 @@ $(document).ready(async function () {
 
       <div class="conseg outer s-fit">
     <div class="inner">
-      <img alt="" src="">
+      <img src="" alt="">
     </div>
     <div class="inner">
       <div class="innerText">
@@ -143,14 +143,12 @@ $(document).ready(async function () {
 </div>
 `;
 
-  $("#rendered_content").html(testHTML);
-  $("#raw_html").val(helpers.removeWhiteSpaceToFirstChar(testHTML));
+  let shortened = helpers.removeWhiteSpaceToFirstChar(testHTML);
+  let imaged = helpers.updateImageSource(shortened);
 
-  // TODO: hide default buttons when adding images
-  // TODO: format image buttons
-  // TODO: no scroll page - all content will be in 2 different scrollable boxes
+  $("#rendered_content").html(imaged);
+  $("#raw_html").val(shortened);
 
-  // BELOW IS GOOD
   // Updates the rendered content with the new content
   $(document).on("click", "#update_content", () => {
     let newHTML = $("#raw_html").val();
@@ -160,41 +158,51 @@ $(document).ready(async function () {
   // Replaces left side with image entry form
   $(document).on("click", "#add_images", () => {
     if (!$("#image_entry").html()) {
-      // Count the number of images
-      var imageCount = $(".conseg.outer.s-fit img").length;
+      let imageCount = $(".conseg.outer.s-fit img").length;
 
-      // Generate input boxes
-      for (var i = 0; i < imageCount; i++) {
+      for (let i = 0; i < imageCount; i++) {
+        // generate the wrapping div
+        let wrapper = $("<div>", { id: `image_${i + 1}` });
+
+        // header input
+        let headerInput = $(`<h3>Image ${i + 1}</h3>`, {
+          id: "image" + (i + 1) + "-header",
+        });
+
         // alt input
-        var altInput = $("<input>", {
+        let altInput = $("<input>", {
           type: "text",
           id: "image" + (i + 1) + "-alt",
           placeholder: "Image " + (i + 1) + " Alt Text",
-          class: "is-normal is-focused",
+          class: "is-normal is-focused mb-2 mr-2 ml-2",
         });
 
         // src input
-        var srcInput = $("<input>", {
+        let srcInput = $("<input>", {
           type: "text",
           id: "image" + (i + 1) + "-src",
           placeholder: "Image " + (i + 1) + " URL",
-          class: "is-normal is-focused",
+          class: "is-normal is-focused mb-2 mr-2 ml-2",
         });
 
-        $("#image_entry").append(srcInput, "<br>", altInput, "<br>");
+        wrapper.append(headerInput, srcInput, altInput);
+
+        // add the wrapper div to the image entry
+        $("#image_entry").append(wrapper);
       }
 
-      $("#raw_html").hide();
+      $("#raw_html, #raw_html_buttons").hide();
       $("#image_entry").show();
 
       $("#image_entry").append(
         $("<button>", {
           text: "Update Images",
           id: "update_image_links",
+          class: "button is-primary mt-5",
         })
       );
     } else {
-      $("#raw_html").hide();
+      $("#raw_html, #raw_html_buttons").hide();
       $("#image_entry").show();
     }
   });
@@ -203,14 +211,14 @@ $(document).ready(async function () {
   $(document).on("click", "#update_image_links", () => {
     $("#Article .conseg.outer.s-fit img").each(function (index, imgElement) {
       // Update src and alt for each image
-      var srcValue = $("#image" + (index + 1) + "-src").val();
-      var altValue = $("#image" + (index + 1) + "-alt").val();
+      let srcValue = $("#image" + (index + 1) + "-src").val();
+      let altValue = $("#image" + (index + 1) + "-alt").val();
 
       $(imgElement).attr("src", srcValue);
       $(imgElement).attr("alt", altValue);
     });
 
-    $("#raw_html").show();
+    $("#raw_html, #raw_html_buttons").show();
     $("#image_entry").hide();
 
     let output = $("#Article").wrap("<p/>").parent().html();

@@ -48,5 +48,29 @@ var helpers = (function () {
     return string.replace(/^\s+/, "");
   };
 
+  _helpers.updateImageSource = function (htmlString) {
+    // Parse the HTML string into a DOM
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+
+    // Find all the img tags in the parsed HTML
+    const images = doc.querySelectorAll(".conseg.outer.s-fit img");
+
+    // Update the src for each img tag
+    images.forEach((img, index) => {
+      // Assuming the images are named sequentially as article_img1.jpg, article_img2.jpg, etc.
+      const imageName = "article_img" + (index + 1) + ".jpg";
+      const imagePath = "frontend/img/article_img/" + imageName;
+      img.setAttribute("src", imagePath);
+    });
+
+    // Serialize the updated HTML back into a string
+    const serializer = new XMLSerializer();
+    const updatedHtmlString = serializer.serializeToString(doc);
+
+    // Remove the doctype (added by XMLSerializer) if present
+    return updatedHtmlString.replace(/<!DOCTYPE html>/, "");
+  };
+
   return _helpers;
 })();

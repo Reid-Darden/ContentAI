@@ -1,18 +1,329 @@
-#raw_html, #image_entry {
+#raw_html {
     height: 80vh;
 }
 
-.section-container {
-    position: relative;
-    height: 80%; 
-    margin: 2rem;  
-    padding: 1rem; 
-}
 
 #article_body {
     overflow: hidden;
     font-family: 'Arial', sans-serif;
     overflow-x: hidden; /* Prevent horizontal scrolling */
     overflow-y: hidden; /* Prevent vertical scrolling */
-    height: 100vh;
+    height: 100%;
+    margin: 0;
+}
+
+/* Flexbox setup for columns container to fit the columns within the window */
+.columns {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    padding: 0; /* Removing any default padding */
+    margin: 0; /* Removing any default margin */
+    overflow: hidden; /* Hide overflow */
+}
+
+/* Article Preview CSS */
+#pnlContent {
+    float: left;
+    width: 100%;
+    overflow: hidden
+}
+
+#Article, #RawHTML {
+    margin-top: 20px;
+    float: left;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    color: #546266;
+    font-size: 16px
+}
+
+#ArticleMain .maxLim {
+    max-width: 950px;
+    float: none;
+    margin: auto
+}
+
+#Article img {
+    margin: 0 auto;
+    display: block
+}
+
+#Article p {
+    margin-top: 20px;
+    line-height: 30px;
+    clear: both
+}
+
+#Article h1 {
+    display: none
+}
+
+#Article h2, #RawHTML h2 {
+    margin-top: 40px;
+    margin-bottom: 0;
+    font-size: 24px
+}
+
+#Article h3 {
+    margin-top: 20px;
+    font-size: 20px;
+    text-align: left;
+    padding: 0
+}
+
+#Article table {
+    border: 0;
+    max-width: 100%;
+    overflow: auto;
+    margin-top: 10px;
+    float: left;
+    min-width: 500px;
+    box-sizing: border-box
+}
+
+#Article table thead {
+    font-weight: bold
+}
+
+#Article table td {
+    border: 0;
+    padding: 5px 10px;
+    border-left: 1px solid #dfe4e7
+}
+
+#Article table tbody tr:nth-child(even) {
+    background: #dfe4e7;
+    border: 0
+}
+
+#Article table th {
+    padding: 5px 20px 5px 0
+}
+
+#Article table tr td:first-child,#Article table tr th:first-child {
+    border-left: 0
+}
+
+#Article .imageCtr {
+    text-align: center;
+}
+
+#Article .outer {
+    box-sizing: border-box;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    position: relative;
+    margin-top: 20px;
+    overflow: hidden
+}
+
+#Article .outer:nth-child(even) {
+    flex-direction: row-reverse
+}
+
+#Article .outer h3 {
+    margin-top: 0
+}
+
+#Article .outer+h3,#Article .outer+img+h3 {
+    float: left;
+    width: 100%;
+    margin-top: 20px
+}
+
+#Article .inner {
+    width: 50%;
+    box-sizing: border-box;
+    padding-right: 20px
+}
+
+#Article .innerText {
+    margin: 0;
+    width: 100%
+}
+
+#Article .innerText h2 {
+    margin: 0
+}
+
+#Article .inner img {
+    max-height: 280px
+}
+
+#Article padding {
+    margin: 0
+}
+
+#Article .fancyLine {
+    border-left: solid 4px #1c5799;
+    padding-left: 20px;
+    margin: 20px 20px 20px 0
+}
+
+#Article ul {
+    list-style: none;
+    float: left;
+    clear: both
+}
+
+#Article .bullets {
+    margin-top: 20px;
+    list-style: circle
+}
+
+#Article .bullets li {
+    display: list-item
+}
+
+#Article .bullets .bullets {
+    margin-top: 0
+}
+
+#Article button,#Article .buttonLink {
+    margin-top: 20px;
+    border-radius: 6px;
+    background-color: #1c5899;
+    border: 0;
+    color: #fff;
+    text-align: center;
+    padding: 10px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer
+}
+
+#Article button:hover,#Article .buttonLink:hover {
+    text-decoration: none;
+    transition: .2s linear;
+    background-color: #167ae4
+}
+
+#Article .vid {
+    display: table;
+    margin: auto
+}
+
+#Article iframe {
+    width: 624px;
+    height: 351px;
+    margin: 20px auto 20px auto;
+    display: block
+}
+
+#Article a,#Article button {
+    border-radius: 6px!important
+}
+
+#Article.slim {
+    display: block
+}
+
+#Article.slim iframe {
+    display: none!important
+}
+
+#Article.slim .outer {
+    display: block
+}
+
+#Article.slim .outer.conseg {
+    padding: 0
+}
+
+#Article.slim .inner {
+    display: block;
+    width: 100%
+}
+
+#Article.slim .center.mrg-20 {
+    margin-top: 0
+}
+
+#Article .table-content {
+    float: left;
+    max-width: 100%;
+    overflow: auto
+}
+
+#Accordion ul li>h2,#Technology #Article h2 {
+    margin: 0;
+    float: left
+}
+
+#Accordion ul li>div,#Technology #Article>div {
+    float: left;
+    width: 100%
+}
+
+#Accordion {
+    min-height: 0;
+    display: inline-block;
+    position: relative;
+    width: 100%
+}
+
+#Accordion i {
+    font-style: normal;
+    transition: transform .2s ease-in-out;
+    transform: rotate(0deg);
+    display: inline-block;
+    color: #5497c4
+}
+
+#Accordion ul {
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+#Accordion ul li {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-top: 1px dotted #5497c4;
+    float: left
+}
+
+#Accordion ul li input[type=checkbox] {
+    position: absolute;
+    cursor: pointer;
+    width: 100%;
+    height: 45px;
+    z-index: 1;
+    opacity: 0;
+    margin: 0;
+    left: 0;
+    top: 0
+}
+
+#Accordion ul li input[type=checkbox]:checked~div {
+    margin: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden
+}
+
+#Accordion ul li input[type=checkbox]:checked+h2>i {
+    transform: rotate(-90deg)
+}
+
+#Accordion ul li:nth-of-type(1) {
+    border-top: 0
+}
+
+#Accordion li>div>h3,#Accordion li>div>h2,#Technology #Article>h3,#Technology #Article>h2 {
+    float: left;
+    width: 100%
+}
+
+#Technology a.learn-more {
+    float: right;
+    margin-top: 40px
 }

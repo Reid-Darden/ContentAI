@@ -11,3 +11,37 @@
     margin: 2rem;  /* Added margin */
     padding: 1rem; /* Added padding */
 }
+
+#main_body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    overflow-y: hidden; /* Prevent vertical scrolling */
+    height: 100vh;
+}
+
+/* Centering the H2 titles in each box */
+.box {
+    height: 100%;
+}
+
+.box .title {
+    text-align: center;
+}
+
+*/
+.tight-gap {
+    --gap: 0.5rem; /* Adjust this value to control the gap. Default in Bulma is 1.5rem for mobile and 2rem for tablet/desktop */
+}
+
+.tight-gap .column {
+    padding-left: var(--gap);
+    padding-right: var(--gap);
+}
+
+.disabled-box {
+    pointer-events: none; /* This prevents clicking and events on the element */
+    opacity: 0.5; /* This will gray it out a bit */
+}
