@@ -1,4 +1,5 @@
-// TODO: format boxes
+// TODO: format boxes (look at button margin at bottom)
 // TODO: prompt engineering
 // TODO: no scroll page - all content will be in 2 different scrollable boxes
 // TODO: fix app.js file paths with new folder for all the previous files
+// TODO: admin panel to view stats, files, tokens remaining for each api, other details

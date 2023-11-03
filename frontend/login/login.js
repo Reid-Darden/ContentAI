@@ -4,6 +4,9 @@ $(document).ready(function () {
   $("#password").val("gvc1123");
   // END TESTING
 
+  // wipe all cookies
+  cookies.clearAllCookies();
+
   $(document).on("click keydown", "#login", (e) => {
     let username = $("#username").val();
     let password = $("#password").val();
@@ -21,6 +24,7 @@ $(document).ready(function () {
         success: function (data) {
           if (data.loggedIn) {
             cookies.setCookie("loggedIn", data.name, 1);
+            cookies.setCookie("role", data.role, 1);
             window.location.href = "/home";
           } else {
             alert("Login failed.");

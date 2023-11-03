@@ -22,30 +22,37 @@ let loginCredentials = [
   {
     username: "rdarden",
     name: "Reid Darden",
+    role: "admin"
   },
   {
     username: "mslock",
     name: "Mike Slock",
+    role: "admin"
   },
   {
     username: "smargison",
     name: "Sean Margison",
+    role: "admin"
   },
   {
     username: "tlarson",
     name: "TJ Larson",
+    role: "user"
   },
   {
     username: "mjohnson",
     name: "Marc Johnson",
+    role: "user"
   },
   {
     username: "aclloyd",
     name: "Alec Lloyd",
+    role: "user"
   },
   {
     username: "anlloyd",
     name: "Alan Lloyd",
+    role: "user"
   },
 ];
 
@@ -84,8 +91,9 @@ app.post("/login", (req, res) => {
     let passwordCheck = password === generatePassword();
     if (usernameCheck && passwordCheck) {
       let name = findNameByUsername(loginCredentials, username);
-      if (name) {
-        res.json({ loggedIn: true, name: name });
+      let role = findRoleByUsername(loginCredentials, username);
+      if (name && role) {
+        res.json({ loggedIn: true, name: name, role: role });
       }
     } else {
       res.json({ loggedIn: false });
@@ -332,6 +340,11 @@ function generatePassword() {
 function findNameByUsername(arr, targetUsername) {
   const user = arr.find((user) => user.username === targetUsername);
   return user ? user.name : null;
+}
+
+function findRoleByUsername(arr, targetUsername) {
+  const user = arr.find((user) => user.username === targetUsername);
+  return user ? user.role : null;
 }
 
 function checkUserNameValue(user) {
