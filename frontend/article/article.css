@@ -2,6 +2,22 @@
     height: 80vh;
 }
 
+body {height: 100%;}
+
+/* Centering the H2 titles in each box */
+.box {
+    height: calc(100vh - 150px);
+}
+
+.box .title {
+    text-align: center;
+}
+
+/* Make only the rendered_content scrollable, not the entire column */
+#rendered_content {
+    max-height: 90%;
+    overflow-y: auto; /* Add a scrollbar if content overflows */
+}
 
 #article_body {
     overflow: hidden;
@@ -12,16 +28,6 @@
     margin: 0;
 }
 
-/* Flexbox setup for columns container to fit the columns within the window */
-.columns {
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-    padding: 0; /* Removing any default padding */
-    margin: 0; /* Removing any default margin */
-    overflow: hidden; /* Hide overflow */
-}
-
 /* Article Preview CSS */
 #pnlContent {
     float: left;
@@ -29,8 +35,7 @@
     overflow: hidden
 }
 
-#Article, #RawHTML {
-    margin-top: 20px;
+#Article {
     float: left;
     width: 100%;
     max-width: 100%;

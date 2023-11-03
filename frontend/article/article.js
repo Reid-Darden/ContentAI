@@ -16,6 +16,7 @@ $(document).ready(async function () {
   //let article = await buildArticle(content, table);
 
   let testHTML = `
+  <div id="Article">
     <h2 class="imageCtr">TaylorMade Stealth Fairway Wood</h2>
 
       <div class="conseg outer s-fit">
@@ -141,6 +142,7 @@ $(document).ready(async function () {
       </tbody>
     </table>
 </div>
+</div>
 `;
 
   let shortened = helpers.removeWhiteSpaceToFirstChar(testHTML);
@@ -213,9 +215,10 @@ $(document).ready(async function () {
       // Update src and alt for each image
       let srcValue = $("#image" + (index + 1) + "-src").val();
       let altValue = $("#image" + (index + 1) + "-alt").val();
-
-      $(imgElement).attr("src", srcValue);
-      $(imgElement).attr("alt", altValue);
+      if (srcValue.length > 0 && altValue.length > 0) {
+        $(imgElement).attr("src", srcValue);
+        $(imgElement).attr("alt", altValue);
+      }
     });
 
     $("#raw_html, #raw_html_buttons").show();

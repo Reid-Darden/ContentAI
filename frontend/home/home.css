@@ -31,7 +31,6 @@
     text-align: center;
 }
 
-*/
 .tight-gap {
     --gap: 0.5rem; /* Adjust this value to control the gap. Default in Bulma is 1.5rem for mobile and 2rem for tablet/desktop */
 }
