@@ -13,6 +13,10 @@ body {height: 100%;}
     text-align: center;
 }
 
+.columns {
+    height: calc(100vh - 56px);
+}
+
 /* Make only the rendered_content scrollable, not the entire column */
 #rendered_content {
     max-height: 90%;
