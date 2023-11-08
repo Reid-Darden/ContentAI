@@ -22,37 +22,37 @@ let loginCredentials = [
   {
     username: "rdarden",
     name: "Reid Darden",
-    role: "admin"
+    role: "admin",
   },
   {
     username: "mslock",
     name: "Mike Slock",
-    role: "admin"
+    role: "admin",
   },
   {
     username: "smargison",
     name: "Sean Margison",
-    role: "admin"
+    role: "admin",
   },
   {
     username: "tlarson",
     name: "TJ Larson",
-    role: "user"
+    role: "user",
   },
   {
     username: "mjohnson",
     name: "Marc Johnson",
-    role: "user"
+    role: "user",
   },
   {
     username: "aclloyd",
     name: "Alec Lloyd",
-    role: "user"
+    role: "user",
   },
   {
     username: "anlloyd",
     name: "Alan Lloyd",
-    role: "user"
+    role: "user",
   },
 ];
 
@@ -63,7 +63,7 @@ app.use(express.json());
 // Configure multer for PDF uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads/"); // Folder where PDFs will be stored
+    cb(null, "./files/uploads/"); // Folder where PDFs will be stored
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Keep the original file name
@@ -193,6 +193,7 @@ app.post("/buildarticle", async (req, res) => {
 });
 // SITE SETUP
 app.use("/frontend", express.static("frontend"));
+app.use("/files", express.static("files"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "/frontend/login/login.html"));
@@ -214,7 +215,7 @@ app.listen(3000, () => {
 
 // Function to parse pdf
 async function parsePDF(filename) {
-  const source = PDFToolsSdk.FileRef.createFromLocalFile(`./uploads/${filename}`);
+  const source = PDFToolsSdk.FileRef.createFromLocalFile(`./files/uploads/${filename}`);
 
   let newFile = removeFilenameEnding(filename);
 
@@ -227,12 +228,12 @@ async function parsePDF(filename) {
 
   try {
     // do the extraction
-    let result = await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./parsedPDFs/uploads/${newFile}.zip`));
+    let result = await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/uploads/${newFile}.zip`));
 
     // unzip the extracted data
-    let zipped = new AdmZip(`./parsedPDFs/uploads/${newFile}.zip`);
+    let zipped = new AdmZip(`./files/parsedPDFs/uploads/${newFile}.zip`);
 
-    zipped.extractAllTo(`./unzipped/EXTRACTED${getDateString()}_${newFile}`, true);
+    zipped.extractAllTo(`./files/unzipped/EXTRACTED${getDateString()}_${newFile}`);
 
     let zippedEntries = zipped.getEntries();
     let extractedExcelFileNames = [];
@@ -259,7 +260,7 @@ async function parseExcelFiles(files, orignalFileName) {
   for (let i = 0; i < files.length; i++) {
     let excelFile = files[i].filename;
 
-    let file = xlsx.readFile(`./unzipped/EXTRACTED${getDateString()}_${newFile}/${excelFile}`);
+    let file = xlsx.readFile(`./files/unzipped/EXTRACTED${getDateString()}_${newFile}/${excelFile}`);
 
     let values = xlsx.utils.sheet_to_json(file.Sheets["Sheet1"]);
 
@@ -276,7 +277,7 @@ async function doGPTRequest(promptText) {
       openAIEndpoint,
       {
         max_tokens: 2000,
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-1106-preview",
         messages: [
           {
             role: "user",

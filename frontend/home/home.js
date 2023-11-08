@@ -13,6 +13,7 @@ $(document).ready(function () {
   // variables that get set as we progress through the program
   let parsedPDFData;
   let rewrittenContent;
+  let articleContentBuild, articleTableBuild;
 
   // final output variables
   let finalData;
@@ -97,9 +98,9 @@ $(document).ready(function () {
       }
     ]
   }`;
-  localStorage.setItem("1", content);
-  localStorage.setItem("table_1", table);
-  window.location.href = "/articledisplay?article=1";
+  //localStorage.setItem("1", content);
+  //localStorage.setItem("table_1", table);
+  //window.location.href = "/articledisplay?article=1";
   // END TESTING
 
   // upload of pdf event
@@ -209,8 +210,8 @@ $(document).ready(function () {
           if (response.success) {
             rewrittenContent = response.rewrittenContent;
 
-            localStorage.setItem(pdfFileName, rewrittenContent);
-            localStorage.setItem("table_" + pdfFileName, pdfTable);
+            articleContentBuild = rewrittenContent;
+            articleTableBuild = pdfTable;
 
             $("#rewriteResults .message-body").text("Content Rewritten.");
             $("#rewriteResults").removeClass("is-hidden");
@@ -236,7 +237,31 @@ $(document).ready(function () {
   });
 
   // create article from the rewritten content JSON structure
-  $(document).on("click", "#create_article button", () => {
-    window.location.href = "/articledisplay?article=" + pdfFileName;
+  $(document).on("click", "#create_article button", async () => {
+    if (articleContentBuild && articleTableBuild) {
+      await buildArticle(articleContentBuild, articleTableBuild);
+    }
   });
+
+  // build the article - call gpt?
+  async function buildArticle(content, table) {
+    $.ajax({
+      url: "/buildarticle",
+      method: "POST",
+      data: JSON.stringify({
+        content: content,
+        table: table,
+      }),
+      contentType: "application/json",
+      success: function (response) {
+        if (response.success) {
+          localStorage.setItem(pdfFileName, response.data);
+          window.location.href = "/articledisplay?article=" + pdfFileName;
+        }
+      },
+      error: function () {
+        alert("Error creating article.");
+      },
+    });
+  }
 });
