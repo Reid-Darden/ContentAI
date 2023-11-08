@@ -199,6 +199,8 @@ $(document).ready(function () {
       // Show the spinner
       $("#rewriteLoader").removeClass("is-hidden");
 
+      console.log(parsedPDFData);
+
       $.ajax({
         url: "/rewrittenContent",
         method: "POST",
@@ -255,7 +257,9 @@ $(document).ready(function () {
       contentType: "application/json",
       success: function (response) {
         if (response.success) {
-          localStorage.setItem(pdfFileName, response.data);
+          let shortened = helpers.removeWhiteSpaceToFirstChar(response.data);
+          let imaged = helpers.updateImageSource(shortened);
+          localStorage.setItem(pdfFileName, imaged);
           window.location.href = "/articledisplay?article=" + pdfFileName;
         }
       },

@@ -13,10 +13,7 @@ $(document).ready(async function () {
   let article = localStorage.getItem(articleContent);
 
   if (article.length > 0) {
-    let shortened = helpers.removeWhiteSpaceToFirstChar(article);
-    let imaged = helpers.updateImageSource(shortened);
-
-    $("#rendered_content").html(imaged);
+    $("#rendered_content").html(article);
     $("#raw_html").val(article);
   }
   // Updates the rendered content with the new content

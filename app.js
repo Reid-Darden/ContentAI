@@ -170,7 +170,7 @@ app.post("/rewrittenContent", async (req, res) => {
 
   try {
     // do gpt call to rewrite the content, focusing on paragraph structure
-    let rewrite = await doGPTRequest(gptPrompts[4].prompt + content);
+    let rewrite = await doGPTRequest(gptPrompts[3].prompt + content);
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -399,6 +399,8 @@ let gptPrompts = [
     (b)
     <div class=table-content><table cellpadding=2 cellspacing=0><thead><tr><th colspan=5><tr><th>Loft<th>Dexterity<th>Lie Angle<th>Volume<th>Length<th>Swing Weight<th>Launch<th>Spin<tbody><tr><td>9°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>10.5°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>12°<td>RH Only<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low</table></div>
 
+    The template will be wrapped in a <div id="Article"></div>.
+    
     Output the final article (as HTML) only. No other code or no other text in the output - just HTML. The JSON to build the article from is: `,
   },
 ];
