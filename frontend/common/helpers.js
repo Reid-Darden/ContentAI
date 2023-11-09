@@ -44,8 +44,8 @@ var cookies = (function () {
 var helpers = (function () {
   var _helpers = {};
 
-  _helpers.removeWhiteSpaceToFirstChar = function (string) {
-    return string.replace(/^\s+/, "");
+  _helpers.trimToArticleDiv = function (string) {
+    return string.replace(/^[\s\S]*?(<div id="Article">)/, "$1").replace(/(<\/div>)[\s\S]*?$/, "$1");
   };
 
   _helpers.updateImageSource = function (htmlString) {

@@ -241,31 +241,36 @@ $(document).ready(function () {
   // create article from the rewritten content JSON structure
   $(document).on("click", "#create_article button", async () => {
     if (articleContentBuild && articleTableBuild) {
-      await buildArticle(articleContentBuild, articleTableBuild);
+      // add spinner
+      let $button = $(this);
+
+      $button.html(`
+      <div class="has-text-centered is-hidden">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+      </div>`);
+
+      $button.prop("disabled", true);
+
+      $.ajax({
+        url: "/buildarticle",
+        method: "POST",
+        data: JSON.stringify({
+          content: articleContentBuild,
+          table: articleTableBuild,
+        }),
+        contentType: "application/json",
+        success: function (response) {
+          if (response.success) {
+            let shortened = helpers.trimToArticleDiv(response.data);
+            let imaged = helpers.updateImageSource(shortened);
+            localStorage.setItem(pdfFileName, imaged);
+            window.location.href = "/articledisplay?article=" + pdfFileName;
+          }
+        },
+        error: function () {
+          alert("Error creating article.");
+        },
+      });
     }
   });
-
-  // build the article - call gpt?
-  async function buildArticle(content, table) {
-    $.ajax({
-      url: "/buildarticle",
-      method: "POST",
-      data: JSON.stringify({
-        content: content,
-        table: table,
-      }),
-      contentType: "application/json",
-      success: function (response) {
-        if (response.success) {
-          let shortened = helpers.removeWhiteSpaceToFirstChar(response.data);
-          let imaged = helpers.updateImageSource(shortened);
-          localStorage.setItem(pdfFileName, imaged);
-          window.location.href = "/articledisplay?article=" + pdfFileName;
-        }
-      },
-      error: function () {
-        alert("Error creating article.");
-      },
-    });
-  }
 });
