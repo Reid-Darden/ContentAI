@@ -3,8 +3,12 @@ $(document).ready(async function () {
 
   // User info
   let cook = cookies.getCookie("loggedIn");
+  let role = cookies.getCookie("role");
   if (cook) {
     $("#logged_in_user").text("Welcome, " + cook);
+    if (role == "admin") {
+      $("#admin_panel").removeClass("is-hidden");
+    }
   }
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -13,6 +17,7 @@ $(document).ready(async function () {
   let article = localStorage.getItem(articleContent);
 
   if (article.length > 0) {
+    console.log(article);
     $("#rendered_content").html(article);
     $("#raw_html").val(article);
   }

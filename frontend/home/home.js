@@ -1,9 +1,12 @@
 $(document).ready(function () {
   // User info
   let cook = cookies.getCookie("loggedIn");
-  console.log(cook);
+  let role = cookies.getCookie("role");
   if (cook) {
     $("#logged_in_user").text("Welcome, " + cook);
+    if (role == "admin") {
+      $("#admin_panel").removeClass("is-hidden");
+    }
   }
   // Flag for if pdf is successfully loaded in
   let pdfStatusFlag = false;
@@ -242,14 +245,9 @@ $(document).ready(function () {
   $(document).on("click", "#create_article button", async () => {
     if (articleContentBuild && articleTableBuild) {
       // add spinner
-      let $button = $(this);
+      let $button = $("#create_article button");
 
-      $button.html(`
-      <div class="has-text-centered is-hidden">
-        <i class="fas fa-spinner fa-spin fa-2x"></i>
-      </div>`);
-
-      $button.prop("disabled", true);
+      $button.html(`<i class="fas fa-spinner fa-spin fa-2x"></i>`).attr("disabled", true);
 
       $.ajax({
         url: "/buildarticle",
