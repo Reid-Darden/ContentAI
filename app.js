@@ -178,7 +178,7 @@ app.post("/buildarticle", async (req, res) => {
   const table = req.body.table;
 
   try {
-    let article = await doGPTRequest(gptPrompts[3].prompt + content + table, false);
+    let article = await doGPTRequest(gptPrompts[3].prompt + content + table);
 
     res.json({ success: true, data: article });
   } catch (err) {
@@ -265,7 +265,7 @@ async function parseExcelFiles(files, orignalFileName) {
 }
 
 // do a GPT Request
-async function doGPTRequest(promptText, asJSON = true) {
+async function doGPTRequest(promptText) {
   try {
     const response = await axios.post(
       openAIEndpoint,
@@ -279,11 +279,9 @@ async function doGPTRequest(promptText, asJSON = true) {
           },
         ],
         temperature: 0.5,
-        ...(asJSON ?? {
-          response_format: {
-            type: "json_object",
-          },
-        }),
+        response_format: {
+          type: "json_object",
+        },
       },
       {
         headers: {
@@ -359,9 +357,7 @@ function checkUserNameValue(user) {
 // PROMPTS
 let gptPrompts = [
   {
-    prompt: `Please pretend to be a JavaScript expert who is proficient in speaking and writing English. Respond to the question below in JSON. Use the following criteria to anaylze, rewrite, and output the JSON content passed in.  
-
-    CRITERIA: The header of the paragraph is typically gonna map to the theme of an overall paragraph, and the body is going to be any longer form text that has similar keywords and theme to the header that it was mapped to. The output will be JSON formatted, with a "name" key and "paragraph" value, then a key of "data" with the outputted JSON stucuture as the value. Make seperate key values in the data value to seperate the body from the header, and do that for every entry. For this request, only look at text and headers apart of paragraphs - ignore data that would be found in a table (do not need ANY table data in the output).
+    prompt: `Respond to the question below in JSON. Use the following criteria to anaylze, rewrite, and output the JSON content passed in. CRITERIA: The header of the paragraph is typically gonna map to the theme of an overall paragraph, and the body is going to be any longer form text that has similar keywords and theme to the header that it was mapped to. The output will be JSON formatted, with a "name" key and "paragraph" value, then a key of "data" with the outputted JSON stucuture as the value. Make seperate key values in the data value to seperate the body from the header, and do that for every entry. For this request, only look at text and headers apart of paragraphs - ignore data that would be found in a table (do not need ANY table data in the output).
 
     ONLY OUTPUT THE JSON STRUCTURE. DO NOT ADD ANY ADDITIONAL TEXT TO THE RESPONSE. I ALSO NEED THE JSON MINIFIED INTO ITS SIMPLEST FORM; THAT IS TO SAY IT WOULD NOT HAVE ANY REGULAR EXPRESSION CHARACTERS. The JSON to reformat is as follows. Before operating any of the above commands, I also need the JSON "cleaned", that is to say remove any uneccessary characters or regular expression characters and fix spacing (some of the characters to watch out for are /r, //r, or /", but there may be others that are probably going to be regular expressions). The content within the JSON should still read in normal English characters and numbers at your discrection. Once you have cleaned the following JSON, then complete the commands above upon it. JSON IS AS FOLLOWS:
     `,
@@ -382,13 +378,9 @@ let gptPrompts = [
     The JSON input to rewrite is as follows. You will only look at the JSON data under "name": "paragraph" for the rewrite; the other data is table data and can be appended to the end of the rewritten content as is(maintain perfect JSON). JSON TO REWRITE =  `,
   },
   {
-    prompt: `You will act as a HTML expert and will create a HTML article given a "template" that you will repeat with the given JSON data provided. You will be replacing the inner text of each template piece with the content from the JSON (look for {} in (a)). For paragraph data in the JSON, you will use template (a) to fill in the data, repeating the template for the total paragraph content length in the JSON. Every pargraph will use this template. For table data in the JSON, you will use template (b) to replace the data within the template and fill in the data accordingly from the JSON. The (b) template provides what the output should be and how the data passed in maps to each value - replace the template data with data found in the inputted JSON as you see fit. Any <img> tags found in the template will be ignored in creation - we will add those later.
-    
-    (a)<div class="conseg outer s-fit"><div class=inner><img alt=""src=""></div><div class=inner><div class=innerText><h3>{Header value. Will map to shorter text in the JSON that describes a longer form of text. Remove keywords that may lead the sentence like Feature or benefit - this should be the overall theme of the paragraph}</h3><p class=fancyLine>{Paragraph value. Maps to longer text that relates to the header above.}</div></div></div>
+    prompt: `You will act as a HTML expert and will create a HTML article given a "template" that you will repeat with the given JSON data provided. You will be replacing the inner text of each template piece with the content from the JSON (look for {} in (a)). For paragraph data in the JSON, you will use template (a) to fill in the data, repeating the template for the total paragraph content length in the JSON. Every pargraph will use this template. For table data in the JSON, you will use template (b) to replace the data within the template and fill in the data accordingly from the JSON. The (b) template provides what the output should be and how the data passed in maps to each value - replace the template data with data found in the inputted JSON as you see fit. Any <img> tags found in the template will be ignored in creation - we will add those later. (a)<div class="conseg outer s-fit"><div class=inner><img alt=""src=""></div><div class=inner><div class=innerText><h3>{Header value. Will map to shorter text in the JSON that describes a longer form of text. Remove keywords that may lead the sentence like Feature or benefit - this should be the overall theme of the paragraph}</h3><p class=fancyLine>{Paragraph value. Maps to longer text that relates to the header above.}</div></div></div> (b)<div class=table-content><table cellpadding=2 cellspacing=0><thead><tr><th colspan=5><tr><th>Loft<th>Dexterity<th>Lie Angle<th>Volume<th>Length<th>Swing Weight<th>Launch<th>Spin<tbody><tr><td>9°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>10.5°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>12°<td>RH Only<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low</table></div>
 
-    (b)<div class=table-content><table cellpadding=2 cellspacing=0><thead><tr><th colspan=5><tr><th>Loft<th>Dexterity<th>Lie Angle<th>Volume<th>Length<th>Swing Weight<th>Launch<th>Spin<tbody><tr><td>9°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>10.5°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>12°<td>RH Only<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low</table></div>
-
-    The template will be wrapped in a <div id="Article"></div>. Output the final article only. No other text in the output. The first thing and last thing outputted should be the Article div opening and closing with content within it. I do not need any wrapping base HTML such as <html></html> or <head></head> - this is a template for a CMS.   
+    The template will be wrapped in a <div id="Article"></div>. Output a JSON structure of {data: content} where content is the Article HTML as a string. The first thing and last thing in the data should be the Article div opening and closing with content within it. I do not need any wrapping base HTML such as <html></html> or <head></head>.   
     
     The JSON to build the article from is: `,
   },
