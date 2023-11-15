@@ -259,8 +259,9 @@ $(document).ready(function () {
         contentType: "application/json",
         success: function (response) {
           if (response.success) {
-            let shortened = helpers.trimToArticleDiv(response.data);
-            let imaged = helpers.updateImageSource(shortened);
+            console.log(response);
+            //let shortened = helpers.trimToArticleDiv(response.data);
+            let imaged = helpers.updateImageSource(response.data);
             localStorage.setItem(pdfFileName, imaged);
             window.location.href = "/articledisplay?article=" + pdfFileName;
           }
