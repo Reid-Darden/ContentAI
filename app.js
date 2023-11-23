@@ -56,6 +56,9 @@ let loginCredentials = [
   },
 ];
 
+// GLOBAL VARIABLES
+let articleModelName;
+
 const app = express();
 
 app.use(express.json());
@@ -81,6 +84,14 @@ const upload = multer({
 });
 
 // Server side calls from page
+// Update the articleModelName
+app.post("/updateModelName", (req, res) => {
+  if (req.body.value != articleModelName) {
+    articleModelName = req.body.value;
+    res.json({ updated: true });
+  }
+});
+
 // LOGIN
 app.post("/login", (req, res) => {
   let username = req.body.username;

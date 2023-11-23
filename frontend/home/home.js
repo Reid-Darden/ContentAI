@@ -106,6 +106,38 @@ $(document).ready(function () {
   //window.location.href = "/articledisplay?article=1";
   // END TESTING
 
+  // on change and leave focus of model name, send to backend
+  $("#articleModelInput").on("focus", function () {
+    var input = this; // Direct reference to the DOM element
+    setTimeout(function () {
+      var length = input.value.length; // Get the length of the text
+      input.setSelectionRange(length, length); // Set the cursor position
+    }, 1);
+  });
+
+  $("#articleModelInput").on("change blur", function () {
+    var currentValue = $(this).val().trim();
+
+    // Send the current model name value to the server
+    $.ajax({
+      url: "/updateModelName",
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({ value: currentValue }),
+      success: function (response) {
+        if (response.updated) {
+          $("#model_name_label").text("Model Name Updated.");
+          setTimeout(() => {
+            $("#model_name_label").text("Enter the Model (w/ Brand Name) for the Article");
+          }, 1000 * 3);
+        }
+      },
+      error: function (error) {
+        console.error("Error sending data to the server: ", error);
+      },
+    });
+  });
+
   // upload of pdf event
   $(document).on("change", "#pdfUpload", function () {
     var file = this.files[0];
