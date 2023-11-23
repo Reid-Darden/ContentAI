@@ -181,7 +181,9 @@ app.post("/buildarticle", async (req, res) => {
     let jsonContent = await doGPTRequest(gptPrompts[3].prompt + content + table);
     let article = await doGPTRequest(gptPrompts[4].prompt + jsonContent);
 
-    res.json({ success: true, data: article });
+    let parsedArticle = JSON.parse(article);
+
+    res.json({ success: true, data: parsedArticle.data });
   } catch (err) {
     res.status(500).json({ success: false, message: err });
   }
@@ -330,8 +332,8 @@ function getDateString() {
 // LOGIN HELPERS
 function generatePassword() {
   const date = new Date();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // months are 0-based in JS
-  const year = date.getFullYear().toString().slice(-2); // get the last two digits of the year
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear().toString().slice(-2);
 
   return `gvc${month}${year}`;
 }
@@ -385,8 +387,6 @@ let gptPrompts = [
   {
     prompt: `You will act as a HTML expert and will create a HTML article given a "template" that you will repeat with the given JSON data provided. You will be replacing the inner text of each template piece with the content from the JSON (look for {} in (a)). For paragraph data in the JSON, you will use template (a) to fill in the data, repeating the template for the total paragraph content length in the JSON. Every pargraph will use this template. For table data in the JSON, you will use template (b) to replace the data within the template and fill in the data accordingly from the JSON. The (b) template provides what the output should be and how the data passed in maps to each value - replace the template data with data found in the inputted JSON as you see fit. Any <img> tags found in the template will be ignored in creation - we will add those later. (a)<div class="conseg outer s-fit"><div class=inner><img alt=""src=""></div><div class=inner><div class=innerText><h3>{Header value. Will map to shorter text in the JSON that describes a longer form of text. Remove keywords that may lead the sentence like Feature or benefit - this should be the overall theme of the paragraph}</h3><p class=fancyLine>{Paragraph value. Maps to longer text that relates to the header above.}</div></div></div> (b)<div class=table-content><table cellpadding=2 cellspacing=0><thead><tr><th colspan=5><tr><th>Loft<th>Dexterity<th>Lie Angle<th>Volume<th>Length<th>Swing Weight<th>Launch<th>Spin<tbody><tr><td>9°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>10.5°<td>RH/LH<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low<tr><td>12°<td>RH Only<td>56-60°<td>460cc<td>45.75"<td>D4/D5<td>Mid-High<td>Mid-Low</table></div>
 
-    The template will be wrapped in a <div id="Article"></div>. Output a JSON structure of {data: content} where content is the Article HTML as a string. The first thing and last thing in the data should be the Article div opening and closing with content within it. I do not need any wrapping base HTML such as <html></html> or <head></head>.   
-    
-    The JSON to build the article from is: `,
+    The template will be wrapped in a <div id="Article"></div>. Output a JSON structure of {data: content} where content is the Article HTML as a string. The first thing and last thing in the data should be the Article div opening and closing with content within it. I do not need any wrapping base HTML such as <html></html> or <head></head>. Also ensure that the content in the JSON structure is "beautified", such that it is tab indented and formatted properly as readable HTML for output.The JSON to build the article from is: `,
   },
 ];

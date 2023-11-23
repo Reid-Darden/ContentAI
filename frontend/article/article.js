@@ -9,6 +9,8 @@ $(document).ready(async function () {
     if (role == "admin") {
       $("#admin_panel").removeClass("is-hidden");
     }
+  } else {
+    window.location.href = "/";
   }
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -68,9 +70,17 @@ $(document).ready(async function () {
 
       $("#image_entry").append(
         $("<button>", {
+          text: "Cancel",
+          id: "cancel_image_links",
+          class: "button is-danger mt-5 ml-2 mr-2",
+        })
+      );
+
+      $("#image_entry").append(
+        $("<button>", {
           text: "Update Images",
           id: "update_image_links",
-          class: "button is-primary mt-5",
+          class: "button is-warning mt-5 ml-2 mr-2",
         })
       );
     } else {
@@ -91,11 +101,16 @@ $(document).ready(async function () {
       }
     });
 
-    $("#raw_html, #raw_html_buttons").show();
     $("#image_entry").hide();
+    $("#raw_html, #raw_html_buttons").show();
 
     let output = $("#Article").wrap("<p/>").parent().html();
     $("#Article").unwrap();
     $("#raw_html").val(output);
+  });
+
+  $(document).on("click", "#cancel_image_links", () => {
+    $("#raw_html, #raw_html_buttons").show();
+    $("#image_entry").hide();
   });
 });

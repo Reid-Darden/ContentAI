@@ -64,12 +64,10 @@ var helpers = (function () {
       img.setAttribute("src", imagePath);
     });
 
-    // Serialize the updated HTML back into a string
-    const serializer = new XMLSerializer();
-    const updatedHtmlString = serializer.serializeToString(doc);
+    // Extract the inner HTML of the body element
+    const updatedHtmlString = doc.body.innerHTML;
 
-    // Remove the doctype (added by XMLSerializer) if present
-    return updatedHtmlString.replace(/<!DOCTYPE html>/, "");
+    return updatedHtmlString;
   };
 
   return _helpers;

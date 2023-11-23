@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/frontend/home/home.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/frontend/common/helpers.js"></script>
+    <script src="/frontend/common/common.js"></script>
     <script src="/frontend/home/home.js" crossorigin="anonymous"></script>
 </head>
 
@@ -43,7 +44,7 @@
                     </span>
                 </div>
 
-                <div id="pdfMessage" class="message is-hidden mt-5">
+                <div id="pdfMessage" class="message is-hidden">
                     <div class="message-body has-text-weight-bold">
                         No file uploaded.
                     </div>
@@ -68,14 +69,14 @@
                 <button class="button is-info mt-4" id="startParseBtn">Start Parsing</button>
                 
                 <!-- Results of Parsing -->
-                <div id="parseResults" class="message is-hidden mt-5">
+                <div id="parseResults" class="message is-hidden">
                     <div class="message-body has-text-weight-bold">
                         Parsing failed.
                     </div>
                 </div>
 
                 <!-- Progress Circle-->
-                <div id="parseLoader" class="has-text-centered is-hidden">
+                <div id="parseLoader" class="has-text-centered is-hidden message">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
             </div>
@@ -97,14 +98,14 @@
                 <button id="rewriteContent" class="button is-info mt-4">Edit Rewritten Content</button>
 
                 <!-- Results of Parsing -->
-                <div id="rewriteResults" class="message is-hidden mt-5">
+                <div id="rewriteResults" class="message is-hidden">
                     <div class="message-body has-text-weight-bold">
                         Rewrite failed.
                     </div>
                 </div>
 
                 <!-- Progress Circle-->
-                <div id="rewriteLoader" class="has-text-centered is-hidden">
+                <div id="rewriteLoader" class="has-text-centered is-hidden message">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
             </div>
