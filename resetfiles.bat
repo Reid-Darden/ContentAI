@@ -20,7 +20,7 @@ REM Delete all contents in the unzipped folder (files and subfolders)
 IF EXIST "%BaseDir%\unzipped\*" (
     RMDIR /S /Q "%BaseDir%\unzipped"
     MKDIR "%BaseDir%\unzipped"
-    ECHO Emptied the unzipped folder
+    ECHO Deleted files in %BaseDir%\unzipped
 )
 
 ECHO Deletion complete.

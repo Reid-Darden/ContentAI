@@ -1,14 +1,13 @@
 $(document).ready(async function () {
-  // onload
-
   // User info
   let cook = cookies.getCookie("loggedIn");
   let role = cookies.getCookie("role");
   if (cook) {
-    $("#logged_in_user").text("Welcome, " + cook);
+    $("#logged_in_user").text("Welcome, " + decodeURIComponent(cook));
     if (role == "admin") {
       $("#admin_panel").removeClass("is-hidden");
     }
+    $("#article_display").show();
   } else {
     window.location.href = "/";
   }
@@ -19,7 +18,6 @@ $(document).ready(async function () {
   let article = localStorage.getItem(articleContent);
 
   if (article.length > 0) {
-    console.log(article);
     $("#rendered_content").html(article);
     $("#raw_html").val(article);
   }
@@ -94,9 +92,12 @@ $(document).ready(async function () {
     $("#Article .conseg.outer.s-fit img").each(function (index, imgElement) {
       // Update src and alt for each image
       let srcValue = $("#image" + (index + 1) + "-src").val();
-      let altValue = $("#image" + (index + 1) + "-alt").val();
-      if (srcValue.length > 0 && altValue.length > 0) {
+      if (srcValue.length > 0) {
         $(imgElement).attr("src", srcValue);
+      }
+
+      let altValue = $("#image" + (index + 1) + "-alt").val();
+      if (altValue.length > 0) {
         $(imgElement).attr("alt", altValue);
       }
     });
@@ -109,8 +110,36 @@ $(document).ready(async function () {
     $("#raw_html").val(output);
   });
 
+  // resets image add form
   $(document).on("click", "#cancel_image_links", () => {
     $("#raw_html, #raw_html_buttons").show();
     $("#image_entry").hide();
+  });
+
+  // begin article submission process
+  $(document).on("click", "#confirm_content", () => {
+    if (confirm("CONFIRM: Ready to submit the article?")) {
+      let article = $("#Article").wrap("<p/>").parent().html();
+      $("#Article").unwrap();
+
+      $.ajax({
+        url: "/confirmArticle",
+        type: "POST",
+        data: JSON.stringify({
+          user: cook,
+          content: article,
+        }),
+        contentType: "application/json",
+        processData: false,
+        success: function (data) {
+          if (data.success) {
+            window.location.href = "/confirmation";
+          } else {
+            alert("Error confirming article.");
+          }
+        },
+        error: function (err) {},
+      });
+    }
   });
 });

@@ -2,11 +2,5 @@
 // TODO: admin panel to view stats, files, tokens remaining for each api, other details
 // TODO: home: after check goes, make buttons unclickable
 // TODO: path redirects based on logged in cookie
-// TODO: dynamic html element button, on click of a button within a section a html element would be copied to the clipboard and able to be pasted anywhere in the html? Maybe
-// TODO: margin on manage image buttons
-// TODO: add a input on the home page that has a label for the name of the product that is being created, can use this in the prompts.
 // TODO: model name: update correctly, set cursor to the last element in the string
-
-
-// THE SITE NOT WORKING RIGHT NOW
-
+// TODO: confirmation page - with email - look at gpt for final testing

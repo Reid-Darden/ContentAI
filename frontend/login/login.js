@@ -23,11 +23,9 @@ $(document).ready(function () {
         processData: false,
         success: function (data) {
           if (data.loggedIn) {
-            cookies.setCookie("loggedIn", data.name, 1);
-            cookies.setCookie("role", data.role, 1);
             window.location.href = "/home";
           } else {
-            alert("Login failed.");
+            alert("Login failed. Provide correct login/password.");
           }
         },
         error: function (err) {},
