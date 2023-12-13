@@ -1,7 +1,7 @@
 $(document).ready(function () {
   // TESTING
   $("#username").val("rdarden");
-  $("#password").val("gvc1123");
+  $("#password").val("gvc1223");
   // END TESTING
 
   // wipe all cookies
@@ -23,6 +23,7 @@ $(document).ready(function () {
         processData: false,
         success: function (data) {
           if (data.loggedIn) {
+            cookies.setCookie("loggedIn", data.username, 1);
             window.location.href = "/home";
           } else {
             alert("Login failed. Provide correct login/password.");

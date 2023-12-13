@@ -12,7 +12,7 @@ const adobeClientID = "5f3f3107036947818f19b8bb6edbb37c";
 const adobeSecret = "p8e-kX0Bpm5gXp0MkP2UUa-VuA49awtDYEdb";
 const credentials = PDFToolsSdk.Credentials.servicePrincipalCredentialsBuilder().withClientId(adobeClientID).withClientSecret(adobeSecret).build();
 const executionContext = PDFToolsSdk.ExecutionContext.create(credentials);
-const extractPDFOperation = !PDFToolsSdk.ExtractPDF.Operation ? PDFToolsSdk.ExtractPDF.Operation : PDFToolsSdk.ExtractPDF.Operation.createNew();
+const extractPDFOperation = PDFToolsSdk.ExtractPDF.Operation.createNew();
 
 // ADDRESS ABOVE TO IDEALLY FIX THE INSTANCE ISSUE
 
@@ -42,18 +42,16 @@ async function parsePDF(filename) {
 
   let newFile = Helpers.removeFilenameEnding(filename);
 
-  extractPDFOperation().setInput(source);
+  extractPDFOperation.setInput(source);
 
   // Build extractPDF options
   const options = new PDFToolsSdk.ExtractPDF.options.ExtractPdfOptions.Builder().addElementsToExtract(PDFToolsSdk.ExtractPDF.options.ExtractElementType.TEXT, PDFToolsSdk.ExtractPDF.options.ExtractElementType.TABLES).build();
 
-  extractPDFOperation().setOptions(options);
+  extractPDFOperation.setOptions(options);
 
   try {
     // do the extraction
-    let result = await extractPDFOperation()
-      .execute(executionContext)
-      .then((result) => result.saveAsFile(`./files/parsedPDFs/uploads/${newFile}.zip`));
+    let result = await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/uploads/${newFile}.zip`));
 
     // unzip the extracted data
     let zipped = new AdmZip(`./files/parsedPDFs/uploads/${newFile}.zip`);

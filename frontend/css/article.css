@@ -18,7 +18,7 @@ body {height: 100%;}
 }
 
 /* Make only the rendered_content scrollable, not the entire column */
-#rendered_content {
+#rendered_content, #content_edit_cards {
     max-height: 90%;
     overflow-y: auto; /* Add a scrollbar if content overflows */
 }

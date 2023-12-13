@@ -18,29 +18,30 @@ let articleModelName;
 
 // load login
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/login/login.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/login.html"));
 });
 
 // load home page
 app.get("/home", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/home/home.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/home.html"));
 });
 
 // load article display
 app.get("/articledisplay", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/article/articledisplay.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
 });
 
 // load confirmation page
 app.get("/confirmation", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/confirmation/confirmation.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/confirmation.html"));
 });
 
 // POSTS
 
 // update model name used throughout backend
 app.post("/updateModelName", (req, res) => {
-  if (req.body.value != articleModelName) {
+  let modelName = req.body.value;
+  if (modelName && modelName.length > 0 && modelName != articleModelName) {
     articleModelName = req.body.value;
     res.json({ updated: true });
   }
@@ -58,9 +59,7 @@ app.post("/login", (req, res) => {
       let name = Helpers.findNameByUsername(loginCredentials, username);
       let role = Helpers.findRoleByUsername(loginCredentials, username);
       if (name && role) {
-        res.cookie("loggedIn", name, { maxAge: 60 * 60 * 24, path: "/" });
-        res.cookie("role", role, { maxAge: 60 * 60 * 24 });
-        res.json({ loggedIn: true });
+        res.json({ loggedIn: true, username: name });
       }
     } else {
       res.json({ loggedIn: false });
@@ -146,7 +145,7 @@ app.post("/buildarticle", async (req, res) => {
 
   try {
     let jsonContent = await doGPTRequest(gptPrompts(3, content + table));
-    let article = await doGPTRequest(gptPrompts(4, jsonContent));
+    let article = await doGPTRequest(gptPrompts(4, jsonContent, articleModelName));
 
     let parsedArticle = JSON.parse(article);
 

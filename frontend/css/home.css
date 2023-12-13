@@ -44,3 +44,7 @@
     opacity: 0.5; 
 }
 
+#model_name_label {
+    font-size: 25px;
+    margin-bottom: 20px;
+}

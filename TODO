@@ -1,6 +1,2 @@
-// TODO: prompt engineering - MAIN
-// TODO: admin panel to view stats, files, tokens remaining for each api, other details
-// TODO: home: after check goes, make buttons unclickable
-// TODO: path redirects based on logged in cookie
-// TODO: model name: update correctly, set cursor to the last element in the string
-// TODO: confirmation page - with email - look at gpt for final testing
+// TODO: remove admin panel starter code. i will monitor - or add back idk figure that out later prolly
+// TODO: add image pane in each card, similar logic to updating content

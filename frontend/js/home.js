@@ -106,6 +106,8 @@ $(document).ready(function () {
             parsedPDFData = response.parsedData;
             pdfTable = response.parsedTable;
             $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
+            $("#startParseBtn").attr("disabled", "disabled");
+            $("#pdfUpload").first().next().first().attr("disabled", "disabled");
             $("#parseResults .message-body").text("PDF Parsed.");
             $("#parseResults").removeClass("is-hidden");
             $("#parseLoader").addClass("is-hidden");
@@ -148,6 +150,8 @@ $(document).ready(function () {
             $("#rewriteResults .message-body").text("Content Rewritten.");
             $("#rewriteResults").removeClass("is-hidden");
 
+            $("#rewriteContent").attr("disabled", "disabled");
+
             $("#rewriteLoader").addClass("is-hidden");
             $("#rewriteStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
 
@@ -173,7 +177,7 @@ $(document).ready(function () {
     if (articleContentBuild && articleTableBuild) {
       let $button = $("#create_article button");
 
-      $button.html(`<i class="fas fa-spinner fa-spin fa-2x"></i>`).attr("disabled", true);
+      $button.addClass("is-loading").attr("disabled", true);
 
       $.ajax({
         url: "/buildarticle",

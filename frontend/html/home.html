@@ -7,11 +7,11 @@
     <title>GVContentAI</title>
     <link rel="icon" href="/frontend/img/gvclogo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-    <link rel="stylesheet" href="/frontend/common/styles.css">
-    <link rel="stylesheet" href="/frontend/home/home.css">
+    <link rel="stylesheet" href="/frontend/css/styles.css">
+    <link rel="stylesheet" href="/frontend/css/home.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/frontend/common/helpers.js"></script>
-    <script src="/frontend/home/home.js" crossorigin="anonymous"></script>
+    <script src="/frontend/js/helpers.js"></script>
+    <script src="/frontend/js/home.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="has-background-grey-light" id="main_body">
@@ -61,29 +61,24 @@
 			</div>
 		</div>	
 
-        <!-- Column 2: Parse PDF -->
         <div class="column section-container has-text-centered disabled-box">
             <div class="box" id="parseBox">
                 <h2 class="title">Parse PDF</h2>
                 
-                <!-- PDF Parsing Status Indicator -->
                 <div id="parseStatus">
                     <span class="icon has-text-danger">
 						<i class="fas fa-times-circle fa-2xl"></i>
 					</span>
                 </div>
                 
-                <!-- Button to initiate parsing -->
                 <button class="button is-info mt-4" id="startParseBtn">Start Parsing</button>
                 
-                <!-- Results of Parsing -->
                 <div id="parseResults" class="message is-hidden">
                     <div class="message-body has-text-weight-bold">
                         Parsing failed.
                     </div>
                 </div>
 
-                <!-- Progress Circle-->
                 <div id="parseLoader" class="has-text-centered is-hidden message">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
@@ -91,28 +86,24 @@
         </div>
 
 
-        <!-- Rewrite Area -->
         <div class="column section-container has-text-centered disabled-box">
             <div class="box grey-light">
                 <h2 class="title">Rewrite Content</h2>
         
-                <!-- Rewrite Status Indicator -->
                 <div id="rewriteStatus">
-                    <span class="icon  has-text-danger">
+                    <span class="icon has-text-danger">
                         <i class="fas fa-times-circle fa-2xl"></i>
                     </span>
                 </div>
 
                 <button id="rewriteContent" class="button is-info mt-4">Edit Rewritten Content</button>
 
-                <!-- Results of Parsing -->
                 <div id="rewriteResults" class="message is-hidden">
                     <div class="message-body has-text-weight-bold">
                         Rewrite failed.
                     </div>
                 </div>
 
-                <!-- Progress Circle-->
                 <div id="rewriteLoader" class="has-text-centered is-hidden message">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
                 </div>
