@@ -1,2 +1,5 @@
 // TODO: remove admin panel starter code. i will monitor - or add back idk figure that out later prolly
 // TODO: add image pane in each card, similar logic to updating content
+// TODO: update table data when button clicked
+// TODO: fix table css so everything lines up
+// TODO: fix box headers on article page, make them bigger than sub headers for content update page
