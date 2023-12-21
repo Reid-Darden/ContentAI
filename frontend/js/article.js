@@ -36,15 +36,53 @@ $(document).ready(async function () {
     let updatedHeader = cardToUpdate.find("#card_header")[0].innerHTML;
     let updatedParagraph = cardToUpdate.find("#card_paragraph")[0].value;
 
-    // update the article on the right
+    // update paragraph data
     let articleToUpdate = $("#Article .conseg.outer.s-fit").eq(cardToUpdateNumber - 1);
 
     articleToUpdate.find("h3")[0].innerText = updatedHeader;
     articleToUpdate.find("p")[0].innerHTML = updatedParagraph;
   });
 
-  // add image to paragraph
-  $(document).on("click", "#card_add_image", () => {});
+  // show add image card
+  $(document).on("click", "#card_show_image", function () {
+    let $this = $(this);
+
+    $this.closest("div.card").find("#edit_textarea_card").addClass("is-hidden");
+    $this.closest("div.card").find("#add_image_card").removeClass("is-hidden");
+
+    $this.parent().addClass("is-hidden").next().removeClass("is-hidden");
+  });
+
+  // update image
+  $(document).on("click", "#card_add_image", function () {
+    let $this = $(this);
+
+    let imageNumber2Update = $this.attr("card-num");
+
+    let imageURL2Update = $this.parent().prev().prev().find("#image_url").val();
+    let imageAlt2Update = $this.parent().prev().prev().find("#image_alt").val();
+
+    let article = $("#Article").find(".conseg.outer.s-fit");
+
+    let articleImg = $(article[imageNumber2Update - 1]).find("img");
+
+    articleImg.attr("src", imageURL2Update);
+    articleImg.attr("alt", imageAlt2Update);
+
+    $this.closest("div.card").find("#add_image_card").addClass("is-hidden");
+    $this.closest("div.card").find("#edit_textarea_card").removeClass("is-hidden");
+
+    $this.parent().addClass("is-hidden").prev().removeClass("is-hidden");
+  });
+
+  // cancel image add screen and go back to text edit
+  $(document).on("click", "#card_cancel", function () {
+    let $this = $(this);
+
+    $this.parent().addClass("is-hidden").prev().removeClass("is-hidden");
+    $this.closest("div.card").find("#add_image_card").addClass("is-hidden");
+    $this.closest("div.card").find("#edit_textarea_card").removeClass("is-hidden");
+  });
 
   // begin article submission process
   $(document).on("click", "#confirm_content", () => {
@@ -72,6 +110,46 @@ $(document).ready(async function () {
       });
     }
   });
+
+  // update table data
+  $(document).on("click", "#card_update_table", () => {
+    let tableHeaders = $(`[card-type="table_headers"] td`);
+    let tableData = $(`[card-type="table_data"] td`);
+
+    // holder for article table
+    let table2Update = $("#Article .table-content");
+
+    // headers to update - watch this later - could need to be changed depending on how gpt outputs the table
+    let table2UpdateHeaders = table2Update
+      .find("thead tr")
+      .filter((index, el) => {
+        return $(el).children().length > 1;
+      })
+      .first()
+      .children();
+
+    // row tds to update - will be updated L -> R *next row* L -> R  *next row* and so on...
+    let table2UpdateRows = table2Update.find("tbody tr td");
+
+    if (tableHeaders.length === table2UpdateHeaders.length && tableData.length === table2UpdateRows.length) {
+      // update changed headers
+      for (let i = 0; i < tableHeaders.length; i++) {
+        if (tableHeaders[i].innerText != table2UpdateHeaders[i].innerText) {
+          table2UpdateHeaders[i].innerText = tableHeaders[i].innerText;
+        }
+      }
+
+      // update changed row data
+      for (let i = 0; i < tableData.length; i++) {
+        if (tableData[i].innerText != table2UpdateRows[i].innerText) {
+          table2UpdateRows[i].innerText = tableData[i].innerText;
+        }
+      }
+    }
+  });
+
+  // add a row to the table for later
+  $(document).on("click", "#card_add_row", function () {});
 
   function buildArticleEditBoxes(article) {
     // extract paragraphs from input article
@@ -126,18 +204,38 @@ $(document).ready(async function () {
       let paragraph = contentMap[i].paragraph;
 
       let template = `
-      <div class="card m-2">
+      <div class="card m-4" card-type="data">
         <header class="card-header">
           <div class="card-header-title" contenteditable id="card_header">${header}</div>
         </header>
-        <div class="card-content">
+        <div class="card-content has-background-grey-light" id="edit_textarea_card">
           <div class="content">
-            <textarea class="textarea" id="card_paragraph">${paragraph}</textarea>
+            <textarea class="textarea mb-2" id="card_paragraph">${paragraph}</textarea>
+          </div>
+        </div>
+        <div class="card-content has-background-grey-light is-hidden" id="add_image_card">
+          <div class="content">
+            <div class="field">
+                <label class="label">Image URL</label>
+                <div class="control">
+                    <input class="input is-small" type="text" id="image_url" placeholder="Enter image URL">
+                </div>
+            </div>
+            <div class="field">
+              <label class="label">Image Alt Tag</label>
+              <div class="control">
+                  <input class="input is-small" type="text" id="image_alt" placeholder="Enter image alt tag">
+              </div>
+            </div>
           </div>
         </div>
         <footer class="card-footer">
-          <a class="card-footer-item" id="card_update" card-num="${i + 1}">Update</a>
-          <a class="card-footer-item" id="card_add_image">Add Image</a>
+          <a class="card-footer-item" id="card_update" card-num="${i + 1}">Update Paragraph</a>
+          <a class="card-footer-item is-primary" id="card_show_image" card-num="${i + 1}">Add Image</a>
+        </footer>
+        <footer class="card-footer is-hidden">
+          <a class="card-footer-item" id="card_cancel" card-num="${i + 1}">Cancel</a>
+          <a class="card-footer-item is-primary" id="card_add_image" card-num="${i + 1}">Confirm Image</a>
         </footer>
       </div>`;
 
@@ -156,7 +254,7 @@ $(document).ready(async function () {
 
     // append headers card
     $("#content_edit_cards").append(`
-      <div class="card m-2">
+      <div class="card m-2" card-type="table_headers">
         <div class="card-content">
           <div class="content">
             <table>
@@ -182,7 +280,7 @@ $(document).ready(async function () {
       }
 
       let template = `
-      <div class="card m-2">
+      <div class="card m-2" card-type="table_data">
         <div class="card-content">
           <div class="content">
             <table>
@@ -202,6 +300,7 @@ $(document).ready(async function () {
     $("#content_edit_cards").append(`
     <div class="card m-2 has-text-centered">
       <button class="button m-3 is-dark is-align-items-center" id="card_update_table">Update Table Data</button>
+      <button class="button m-3 is-dark is-align-items-center" id="card_add_row">Add Table Row</button>
     </div>`);
   }
 });
