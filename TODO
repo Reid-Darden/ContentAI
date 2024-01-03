@@ -1,6 +1,0 @@
-// TODO: remove admin panel starter code. i will monitor - or add back idk figure that out later prolly
-// TODO: add image pane in each card, similar logic to updating content
-// TODO: finish add image panel - button functionality
-// TODO: add new row to table if data not correct
-// TODO: from above todo, will need to create new table row with td for each new row (including a check on length to determine if we have any new rows or same rows)
-// TODO: table data edit css similar to the data edits

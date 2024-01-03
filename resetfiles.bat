@@ -23,4 +23,10 @@ IF EXIST "%BaseDir%\unzipped\*" (
     ECHO Deleted files in %BaseDir%\unzipped
 )
 
+REM Delete all contents in the files folder
+IF EXIST "%BaseDir%\html" (
+    DEL /Q "%BaseDir%\html\*"
+    ECHO Deleted files in %BaseDir%\html
+)
+
 ECHO Deletion complete.
