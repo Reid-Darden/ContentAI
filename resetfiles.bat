@@ -1,8 +1,12 @@
 @echo off
 SETLOCAL
 
-REM Define the base directory
-SET "BaseDir=D:\Coding\Development\ContentAI\files"
+REM Get the directory of the batch file
+SET "BatchDir=%~dp0"
+
+REM Set BaseDir relative to the batch file's location
+REM Assuming the batch file is inside ContentAI folder
+SET "BaseDir=%BatchDir%files"
 
 REM Delete files in parsedPDFs\uploads
 IF EXIST "%BaseDir%\parsedPDFs\uploads\*" (
