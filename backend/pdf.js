@@ -10,9 +10,6 @@ const multer = require("multer");
 const PDFToolsSdk = require("@adobe/pdfservices-node-sdk");
 const adobeClientID = "5f3f3107036947818f19b8bb6edbb37c";
 const adobeSecret = "p8e-kX0Bpm5gXp0MkP2UUa-VuA49awtDYEdb";
-const credentials = PDFToolsSdk.Credentials.servicePrincipalCredentialsBuilder().withClientId(adobeClientID).withClientSecret(adobeSecret).build();
-const executionContext = PDFToolsSdk.ExecutionContext.create(credentials);
-const extractPDFOperation = PDFToolsSdk.ExtractPDF.Operation.createNew();
 
 // ADDRESS ABOVE TO IDEALLY FIX THE INSTANCE ISSUE
 
@@ -38,6 +35,10 @@ const upload = multer({
 
 // Function to parse pdf
 async function parsePDF(filename) {
+  let credentials = PDFToolsSdk.Credentials.servicePrincipalCredentialsBuilder().withClientId(adobeClientID).withClientSecret(adobeSecret).build();
+  let executionContext = PDFToolsSdk.ExecutionContext.create(credentials);
+  let extractPDFOperation = PDFToolsSdk.ExtractPDF.Operation.createNew();
+
   const source = PDFToolsSdk.FileRef.createFromLocalFile(`./files/uploads/${filename}`);
 
   let newFile = Helpers.removeFilenameEnding(filename);
@@ -51,7 +52,7 @@ async function parsePDF(filename) {
 
   try {
     // do the extraction
-    let result = await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/uploads/${newFile}.zip`));
+    await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/uploads/${newFile}.zip`));
 
     // unzip the extracted data
     let zipped = new AdmZip(`./files/parsedPDFs/uploads/${newFile}.zip`);
@@ -67,6 +68,12 @@ async function parsePDF(filename) {
         extractedExcelFileNames.push({ filename: entry });
       }
     }
+
+    // when at this point we have successfully extracted
+    // this is a workaround for the adobe pdf sdk error for multiple instances when using this to create multiple articles
+    credentials = null;
+    executionContext = null;
+    extractPDFOperation = null;
 
     return extractedExcelFileNames;
   } catch (error) {
