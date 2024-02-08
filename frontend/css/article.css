@@ -17,6 +17,28 @@ body {height: 100%;}
     height: calc(100vh - 56px);
 }
 
+a {
+    background-color: #1c9858;
+    color: #000;
+    font-weight: 700;
+}
+
+.card-header-title, [card-type="table_headers"] > div {
+    background-color: #1c5799;
+    color: #fff;
+    font-weight: 700;
+}
+
+[card-type="table_data"] > div, #card_confirm_article, #table_update > button {
+    background-color: #1c9858;
+    color: #000;
+    font-weight: 700;
+}
+
+#table_update {
+    background-color: #1c5799;
+}
+
 /* Make only the rendered_content scrollable, not the entire column */
 #rendered_content, #content_edit_cards {
     max-height: 90%;

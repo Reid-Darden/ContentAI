@@ -32,7 +32,7 @@
 
 .tight-gap {
     --gap: 0.5rem;
-}
+} 
 
 .tight-gap .column {
     padding-left: var(--gap);
@@ -47,4 +47,16 @@
 #model_name_label {
     font-size: 25px;
     margin-bottom: 20px;
+}
+
+#pdfUpload + label, #startParseBtn, #rewriteContent {
+    background-color: #1c5799;
+    color: #fff;
+    font-weight: 700;
+}
+
+#create_article .createArticle {
+    background-color: #1c9858;
+    color: #000;
+    font-weight: 700;
 }
