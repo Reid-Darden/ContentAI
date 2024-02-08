@@ -22,10 +22,6 @@
 
 **Web framework used to run the program**
 
-### [Node-xlsx]("https://www.npmjs.com/package/node-xlsx")
-
-**Used to extract data from the excel file provided by the Adobe SDK**
-
 ### [Multer]("https://www.npmjs.com/package/multer")
 
 **Middleware used for file uploading. For the sake of the program, it confirms file upload is in a PDF format**
@@ -37,3 +33,11 @@
 ### [fs]("https://www.npmjs.com/package/fs")
 
 **Need for file reading**
+
+### [nodemailer]("https://www.npmjs.com/package/nodemailer")
+
+**Sends confirmation email + HTML attachment of article after creation**
+
+### [xlsx]("https://www.npmjs.com/package/xlsx")
+
+**Reads xlsx files and reads data**
