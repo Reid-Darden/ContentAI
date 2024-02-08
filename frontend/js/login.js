@@ -1,7 +1,9 @@
 $(document).ready(function () {
   // TESTING
+  /*
   $("#username").val("rdarden");
-  $("#password").val("gvc1223");
+  $(#password").val("gvc0224");
+  */
   // END TESTING
 
   // wipe all cookies

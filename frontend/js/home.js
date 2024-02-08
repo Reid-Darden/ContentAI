@@ -11,6 +11,7 @@ $(document).ready(function () {
   } else {
     window.location.href = "/";
   }
+
   // flag for if pdf is successfully loaded in
   let pdfStatusFlag = false;
 
@@ -112,6 +113,8 @@ $(document).ready(function () {
             $("#parseResults").removeClass("is-hidden");
             $("#parseLoader").addClass("is-hidden");
             $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+
+            $("#rewriteContent").click();
           } else {
             $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
             alert("Failed to parse the PDF.");
@@ -155,7 +158,7 @@ $(document).ready(function () {
             $("#rewriteLoader").addClass("is-hidden");
             $("#rewriteStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
 
-            $("#create_article button").removeAttr("disabled");
+            $("#create_article button").removeAttr("disabled").click();
           } else {
             $("#rewriteStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
             alert("Failed to rewrite the content.");

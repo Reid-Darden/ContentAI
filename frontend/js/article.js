@@ -84,11 +84,29 @@ $(document).ready(async function () {
     $this.closest("div.card").find("#edit_textarea_card").removeClass("is-hidden");
   });
 
+  // add a new row to the table data
+  $(document).on("click", "#card_add_row", function () {
+    let copiedRow = $(`[card-type="table_data"]`).first().clone();
+
+    // clear the content of the cloned row
+    let copiedRowTd = copiedRow.find("td");
+    for (let i = 0; i < copiedRowTd.length; i++) {
+      copiedRowTd[i].innerText = i + 1;
+    }
+
+    $(`[card-type="table_data"]`).last().after(copiedRow);
+  });
+
   // begin article submission process
-  $(document).on("click", "#confirm_content", () => {
+  $(document).on("click", "#card_confirm_article", () => {
+    let comments = prompt("Add comments or notes related to this article. They will be added to the confirmation email sent with the article.");
     if (confirm("CONFIRM: Ready to submit the article?")) {
+      $("#card_confirm_article").addClass("is-loading").attr("disabled", true);
+
       let article = $("#Article").wrap("<p/>").parent().html();
       $("#Article").unwrap();
+
+      let title = $("#Article h3").first().text();
 
       $.ajax({
         url: "/confirmArticle",
@@ -96,12 +114,17 @@ $(document).ready(async function () {
         data: JSON.stringify({
           user: cook,
           content: article,
+          title: title,
+          comments: comments,
         }),
         contentType: "application/json",
         processData: false,
         success: function (data) {
           if (data.success) {
-            window.location.href = "/confirmation";
+            $("#card_confirm_article").removeClass("is-loading").removeAttr("disabled");
+            localStorage.clear();
+            alert("Article successfully submitted. Confirm this alert to return home.");
+            window.location.href = "/home";
           } else {
             alert("Error confirming article.");
           }
@@ -231,11 +254,11 @@ $(document).ready(async function () {
         </div>
         <footer class="card-footer">
           <a class="card-footer-item" id="card_update" card-num="${i + 1}">Update Paragraph</a>
-          <a class="card-footer-item is-primary" id="card_show_image" card-num="${i + 1}">Add Image</a>
+          <a class="card-footer-item" id="card_show_image" card-num="${i + 1}">Add Image</a>
         </footer>
         <footer class="card-footer is-hidden">
           <a class="card-footer-item" id="card_cancel" card-num="${i + 1}">Cancel</a>
-          <a class="card-footer-item is-primary" id="card_add_image" card-num="${i + 1}">Confirm Image</a>
+          <a class="card-footer-item" id="card_add_image" card-num="${i + 1}">Confirm Image</a>
         </footer>
       </div>`;
 
@@ -298,9 +321,17 @@ $(document).ready(async function () {
     }
 
     $("#content_edit_cards").append(`
-    <div class="card m-2 has-text-centered">
+    <div class="card m-2 has-text-centered" id="table_update">
       <button class="button m-3 is-dark is-align-items-center" id="card_update_table">Update Table Data</button>
       <button class="button m-3 is-dark is-align-items-center" id="card_add_row">Add Table Row</button>
     </div>`);
+
+    // add confirm article button that sends to confrimation screen
+    $("#content_edit_cards").append(`
+    <br />
+    <div class="m-2 has-text-centered">
+      <button class="button m-3 is-dark is-align-items-center is-large" id="card_confirm_article">CONFIRM ARTICLE</button>
+    </div>
+    `);
   }
 });
