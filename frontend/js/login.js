@@ -2,14 +2,15 @@ $(document).ready(function () {
   // TESTING
   /*
   $("#username").val("rdarden");
-  $(#password").val("gvc0224");
+  $("#password").val("gvc0224");
   */
   // END TESTING
 
   // wipe all cookies
   cookies.clearAllCookies();
 
-  $(document).on("click keydown", "#login", (e) => {
+  // Function to handle login
+  function attemptLogin() {
     let username = $("#username").val();
     let password = $("#password").val();
 
@@ -31,8 +32,22 @@ $(document).ready(function () {
             alert("Login failed. Provide correct login/password.");
           }
         },
-        error: function (err) {},
+        error: function (err) {
+          // Handle error
+        },
       });
+    }
+  }
+
+  // Event listener for click on the login button
+  $(document).on("click", "#login", (e) => {
+    attemptLogin();
+  });
+
+  // Event listener for keydown on the entire document
+  $(document).keydown((e) => {
+    if (e.key === "Enter") {
+      attemptLogin();
     }
   });
 });
