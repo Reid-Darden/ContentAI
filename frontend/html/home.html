@@ -33,7 +33,10 @@
     <div class="columns is-mobile tight-gap" id="columns_section" style="display: none">
       <div class="column section-container has-text-centered disabled-box">
         <div class="box">
-          <h2 class="title">PDF Import</h2>
+          <div class="upload-container">
+            <h2 class="upload-header title">Upload File</h2>
+            <div class="tooltip">Allowed types: Word documents, PDFs</div>
+          </div>
           <div id="pdfStatus">
             <span class="icon has-text-danger">
               <i class="fas fa-times-circle fa-2xl"></i>
@@ -42,7 +45,7 @@
 
           <div class="file has-name is-centered mt-4">
             <input class="file-input" type="file" name="pdf" id="pdfUpload" accept=".pdf" style="display: none" />
-            <label for="pdfUpload" class="button"> Choose a PDF... </label>
+            <label for="pdfUpload" class="button"> Choose a file... </label>
             <span class="file-name" id="pdfFileName"> No file uploaded. </span>
           </div>
 
@@ -54,7 +57,7 @@
 
       <div class="column section-container has-text-centered disabled-box">
         <div class="box" id="parseBox">
-          <h2 class="title">Parse PDF</h2>
+          <h2 class="title">Parse File</h2>
 
           <div id="parseStatus">
             <span class="icon has-text-danger">

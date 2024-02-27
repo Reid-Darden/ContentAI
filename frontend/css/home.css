@@ -22,6 +22,29 @@
     height: 100vh;
 }
 
+.upload-container {
+    position: relative; 
+    display: inline-block; 
+  }
+  
+.tooltip {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #dcdcdc;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1;
+    white-space: nowrap; 
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30px;
+}
+
+.upload-header:hover + .tooltip {
+    display: block;
+}
+  
 .box {
     height: 100%;
 }
