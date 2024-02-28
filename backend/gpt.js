@@ -2,8 +2,8 @@
 const axios = require("axios");
 
 // CHATGPT AI
-const openAISecret = "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";
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
+const openAISecret = process.env.API_KEY || "";
 
 // do a GPT Request
 async function doGPTRequest(promptText) {
