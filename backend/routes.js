@@ -19,7 +19,7 @@ let articleModelName;
 
 // load login
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/login.html"));
+  res.sendFile(path.join(__dirname, "../index.html"));
 });
 
 // load home page
