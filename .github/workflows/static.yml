@@ -1,3 +1,6 @@
+env:
+  API_KEY: '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'
+
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
