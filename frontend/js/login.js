@@ -16,7 +16,7 @@ $(document).ready(function () {
 
     if (username && password) {
       $.ajax({
-        url: "../login",
+        url: "./login",
         type: "POST",
         data: JSON.stringify({
           username: username,
