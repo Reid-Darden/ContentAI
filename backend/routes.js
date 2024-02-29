@@ -35,7 +35,7 @@ app.get("/articledisplay", (req, res) => {
 // POSTS
 
 // update model name used throughout backend
-app.post("./updateModelName", (req, res) => {
+app.post("../updateModelName", (req, res) => {
   let modelName = req.body.value;
   if (modelName && modelName.length > 0 && modelName != articleModelName) {
     articleModelName = req.body.value;
@@ -44,7 +44,7 @@ app.post("./updateModelName", (req, res) => {
 });
 
 // login
-app.post("./login", (req, res) => {
+app.post("../login", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
@@ -64,7 +64,7 @@ app.post("./login", (req, res) => {
 });
 
 // pdf uploads
-app.post("./uploads", pdf.upload.single("pdf"), (req, res) => {
+app.post("../uploads", pdf.upload.single("pdf"), (req, res) => {
   if (req.file) {
     res.json({ message: "File uploaded successfully.", file: req.file.filename });
   } else {
@@ -73,7 +73,7 @@ app.post("./uploads", pdf.upload.single("pdf"), (req, res) => {
 });
 
 // pdf parsing
-app.post("./parsedPDFs", async (req, res) => {
+app.post("../parsedPDFs", async (req, res) => {
   const filename = req.body.filename;
 
   if (!filename) {
@@ -117,7 +117,7 @@ app.post("./parsedPDFs", async (req, res) => {
 });
 
 // content rewriting
-app.post("./rewrittenContent", async (req, res) => {
+app.post("../rewrittenContent", async (req, res) => {
   const content = req.body.content;
 
   if (!content) {
@@ -135,7 +135,7 @@ app.post("./rewrittenContent", async (req, res) => {
 });
 
 // article building
-app.post("./buildarticle", async (req, res) => {
+app.post("../buildarticle", async (req, res) => {
   const content = req.body.content;
   const table = req.body.table;
 
@@ -152,7 +152,7 @@ app.post("./buildarticle", async (req, res) => {
 });
 
 // send email notification of article creation
-app.post("./confirmArticle", async (req, res) => {
+app.post("../confirmArticle", async (req, res) => {
   let article = req.body.content;
   let user = req.body.user;
   let title = req.body.title;
