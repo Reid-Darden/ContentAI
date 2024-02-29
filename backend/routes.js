@@ -44,7 +44,7 @@ app.post("../updateModelName", (req, res) => {
 });
 
 // login
-app.post("./login", (req, res) => {
+app.post("../login", (req, res) => {
   let username = req.body.username;
   let password = req.body.password;
 
