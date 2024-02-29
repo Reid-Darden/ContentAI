@@ -24,12 +24,12 @@ app.get("/", (req, res) => {
 
 // load home page
 app.get("/home", (req, res) => {
-  res.sendFile(path.join(__dirname, "./frontend/html/home.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/home.html"));
 });
 
 // load article display
 app.get("/articledisplay", (req, res) => {
-  res.sendFile(path.join(__dirname, "./frontend/html/articledisplay.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
 });
 
 // POSTS
