@@ -27,7 +27,7 @@ $(document).ready(function () {
         success: function (data) {
           if (data.loggedIn) {
             cookies.setCookie("loggedIn", data.username, 1);
-            window.location.href += "/home";
+            window.location.href += "/home/";
           } else {
             alert("Login failed. Provide correct login/password.");
           }
