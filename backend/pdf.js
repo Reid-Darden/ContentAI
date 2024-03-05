@@ -16,7 +16,7 @@ const adobeSecret = "p8e-kX0Bpm5gXp0MkP2UUa-VuA49awtDYEdb";
 // Configure multer for PDF uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./files/uploads/"); // Folder where PDFs will be stored
+    cb(null, "/files/uploads/"); // Folder where PDFs will be stored
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Keep the original file name
