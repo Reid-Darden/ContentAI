@@ -24,12 +24,12 @@ app.get("/", (req, res) => {
 
 // load home page
 app.get("/home", (req, res) => {
-  res.sendFile(path.join(__dirname, "./frontend/html/home.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/home.html"));
 });
 
 // load article display
 app.get("/articledisplay", (req, res) => {
-  res.sendFile(path.join(__dirname, "./frontend/html/articledisplay.html"));
+  res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
 });
 
 // POSTS
@@ -64,7 +64,7 @@ app.post("/login", (req, res) => {
 });
 
 // pdf uploads
-app.post("../uploads", pdf.upload.single("pdf"), (req, res) => {
+app.post("/uploads", pdf.upload.single("pdf"), (req, res) => {
   if (req.file) {
     res.json({ message: "File uploaded successfully.", file: req.file.filename });
   } else {
@@ -73,7 +73,7 @@ app.post("../uploads", pdf.upload.single("pdf"), (req, res) => {
 });
 
 // pdf parsing
-app.post("../parsedPDFs", async (req, res) => {
+app.post("/parsedPDFs", async (req, res) => {
   const filename = req.body.filename;
 
   if (!filename) {
@@ -117,7 +117,7 @@ app.post("../parsedPDFs", async (req, res) => {
 });
 
 // content rewriting
-app.post("../rewrittenContent", async (req, res) => {
+app.post("/rewrittenContent", async (req, res) => {
   const content = req.body.content;
 
   if (!content) {
@@ -135,7 +135,7 @@ app.post("../rewrittenContent", async (req, res) => {
 });
 
 // article building
-app.post("../buildarticle", async (req, res) => {
+app.post("/buildarticle", async (req, res) => {
   const content = req.body.content;
   const table = req.body.table;
 
@@ -152,7 +152,7 @@ app.post("../buildarticle", async (req, res) => {
 });
 
 // send email notification of article creation
-app.post("../confirmArticle", async (req, res) => {
+app.post("/confirmArticle", async (req, res) => {
   let article = req.body.content;
   let user = req.body.user;
   let title = req.body.title;
