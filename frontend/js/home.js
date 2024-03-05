@@ -123,7 +123,7 @@ $(document).ready(function () {
         error: function (err) {
           $("#parseLoader").addClass("is-hidden");
           $("#parseResults .message-body").text("PDF not parsed.");
-          alert("Error connecting to the server." + err);
+          alert("Error connecting to the server." + err.message);
         },
       });
     }
