@@ -15,7 +15,7 @@ const adobeSecret = "p8e-kX0Bpm5gXp0MkP2UUa-VuA49awtDYEdb";
 
 // Configure multer for PDF uploads
 const storage = multer.diskStorage({
-  destination: "./files/uploads/",
+  destination: "./frontend/files/uploads/",
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
@@ -38,7 +38,7 @@ async function parsePDF(filename) {
   let executionContext = PDFToolsSdk.ExecutionContext.create(credentials);
   let extractPDFOperation = PDFToolsSdk.ExtractPDF.Operation.createNew();
   test = 1;
-  const source = PDFToolsSdk.FileRef.createFromLocalFile(`./files/uploads/${filename}`);
+  const source = PDFToolsSdk.FileRef.createFromLocalFile(`./frontend/files/uploads/${filename}`);
 
   let newFile = Helpers.removeFilenameEnding(filename);
 
@@ -51,12 +51,12 @@ async function parsePDF(filename) {
 
   try {
     // do the extraction
-    await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/${newFile}.zip`));
+    await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./frontend/files/parsedPDFs/${newFile}.zip`));
     test = 3;
     // unzip the extracted data
-    let zipped = new AdmZip(`./files/parsedPDFs/${newFile}.zip`);
+    let zipped = new AdmZip(`./frontend/files/parsedPDFs/${newFile}.zip`);
     test = 4;
-    zipped.extractAllTo(`./files/unzipped/EXTRACTED${Helpers.getDateString()}_${newFile}`);
+    zipped.extractAllTo(`./frontend/files/unzipped/EXTRACTED${Helpers.getDateString()}_${newFile}`);
     test = 5;
     let zippedEntries = zipped.getEntries();
     let extractedExcelFileNames = [];
@@ -89,7 +89,7 @@ async function parseExcelFiles(files, orignalFileName) {
   for (let i = 0; i < files.length; i++) {
     let excelFile = files[i].filename;
 
-    let file = xlsx.readFile(`./files/unzipped/EXTRACTED${Helpers.getDateString()}_${newFile}/${excelFile}`);
+    let file = xlsx.readFile(`./frontend/files/unzipped/EXTRACTED${Helpers.getDateString()}_${newFile}/${excelFile}`);
 
     let values = xlsx.utils.sheet_to_json(file.Sheets["Sheet1"]);
 
