@@ -1,3 +1,5 @@
+const { error } = require("@adobe/pdfservices-node-sdk/src/internal/logger");
+
 $(document).ready(function () {
   // user info
   let cook = cookies.getCookie("loggedIn");
@@ -123,7 +125,7 @@ $(document).ready(function () {
         error: function () {
           $("#parseLoader").addClass("is-hidden");
           $("#parseResults .message-body").text("PDF not parsed.");
-          alert("Error connecting to the server.");
+          alert("Error connecting to the server." + error.message);
         },
       });
     }
