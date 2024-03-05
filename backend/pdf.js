@@ -33,10 +33,11 @@ const upload = multer({
 
 // Function to parse pdf
 async function parsePDF(filename) {
+  let test = 0;
   let credentials = PDFToolsSdk.Credentials.servicePrincipalCredentialsBuilder().withClientId(adobeClientID).withClientSecret(adobeSecret).build();
   let executionContext = PDFToolsSdk.ExecutionContext.create(credentials);
   let extractPDFOperation = PDFToolsSdk.ExtractPDF.Operation.createNew();
-
+  test = 1;
   const source = PDFToolsSdk.FileRef.createFromLocalFile(`./files/uploads/${filename}`);
 
   let newFile = Helpers.removeFilenameEnding(filename);
@@ -45,18 +46,18 @@ async function parsePDF(filename) {
 
   // Build extractPDF options
   const options = new PDFToolsSdk.ExtractPDF.options.ExtractPdfOptions.Builder().addElementsToExtract(PDFToolsSdk.ExtractPDF.options.ExtractElementType.TEXT, PDFToolsSdk.ExtractPDF.options.ExtractElementType.TABLES).build();
-
+  test = 2;
   extractPDFOperation.setOptions(options);
 
   try {
     // do the extraction
     await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/${newFile}.zip`));
-
+    test = 3;
     // unzip the extracted data
     let zipped = new AdmZip(`./files/parsedPDFs/${newFile}.zip`);
-
+    test = 4;
     zipped.extractAllTo(`./files/unzipped/EXTRACTED${Helpers.getDateString()}_${newFile}`);
-
+    test = 5;
     let zippedEntries = zipped.getEntries();
     let extractedExcelFileNames = [];
 
@@ -75,7 +76,7 @@ async function parsePDF(filename) {
 
     return extractedExcelFileNames;
   } catch (error) {
-    throw error;
+    throw error + test;
   }
 }
 
