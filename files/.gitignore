@@ -5,8 +5,8 @@
 !.gitignore
 
 # To include a specific subfolder, use the '!' prefix followed by the subfolder's path
-!html/
-!parsedPDFs
-!unzipped/
-!uploads/
+!/html
+!/parsedPDFs
+!/unzipped/
+!/uploads/
 

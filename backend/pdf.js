@@ -50,10 +50,10 @@ async function parsePDF(filename) {
 
   try {
     // do the extraction
-    await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/uploads/${newFile}.zip`));
+    await extractPDFOperation.execute(executionContext).then((result) => result.saveAsFile(`./files/parsedPDFs/${newFile}.zip`));
 
     // unzip the extracted data
-    let zipped = new AdmZip(`./files/parsedPDFs/uploads/${newFile}.zip`);
+    let zipped = new AdmZip(`./files/parsedPDFs/${newFile}.zip`);
 
     zipped.extractAllTo(`./files/unzipped/EXTRACTED${Helpers.getDateString()}_${newFile}`);
 
