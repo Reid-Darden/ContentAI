@@ -35,7 +35,7 @@ app.get("/articledisplay", (req, res) => {
 // POSTS
 
 // update model name used throughout backend
-app.post("../updateModelName", (req, res) => {
+app.post("/updateModelName", (req, res) => {
   let modelName = req.body.value;
   if (modelName && modelName.length > 0 && modelName != articleModelName) {
     articleModelName = req.body.value;
