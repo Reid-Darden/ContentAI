@@ -112,8 +112,7 @@ app.post("/parsedPDFs", async (req, res) => {
     res.status(500).json({
       success: false,
       message: error,
-      excel1: excel2JSONParagraph,
-      excel2: excel2JSONTable,
+      // error somewhere in this call
     });
   }
 });
