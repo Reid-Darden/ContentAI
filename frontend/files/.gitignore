@@ -3,9 +3,3 @@
 
 # Except this file
 !.gitignore
-
-# Include specific subfolders from the 'files' directory
-!/html/
-!/parsedPDFs/
-!/unzipped/
-!/uploads/
