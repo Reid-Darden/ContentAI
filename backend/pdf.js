@@ -76,7 +76,7 @@ async function parsePDF(filename) {
 
     return extractedExcelFileNames;
   } catch (error) {
-    throw error + test;
+    return error.message + " " + test;
   }
 }
 
