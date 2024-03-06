@@ -32,6 +32,7 @@ async function doGPTRequest(promptText) {
 
     return response.data.choices[0].message.content;
   } catch (error) {
+    error.message = "GPT";
     throw error;
   }
 }
