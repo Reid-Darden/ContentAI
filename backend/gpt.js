@@ -1,5 +1,6 @@
 // GPT related requests
 const axios = require("axios");
+const process = require("process").config();
 
 // CHATGPT AI
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
