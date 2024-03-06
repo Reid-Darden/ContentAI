@@ -4,9 +4,8 @@
 # Except this file
 !.gitignore
 
-# To include a specific subfolder, use the '!' prefix followed by the subfolder's path
-!/html
-!/parsedPDFs
+# Include specific subfolders from the 'files' directory
+!/html/
+!/parsedPDFs/
 !/unzipped/
 !/uploads/
-
