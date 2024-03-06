@@ -120,10 +120,11 @@ $(document).ready(function () {
             alert("Failed to parse the PDF.");
           }
         },
-        error: function (err) {
+        error: function (xhr, status, err) {
           $("#parseLoader").addClass("is-hidden");
           $("#parseResults .message-body").text("PDF not parsed.");
-          alert("Error connecting to the server." + err.message);
+          var err = eval("(" + xhr.responseText + ")");
+          alert(err.Message);
         },
       });
     }
