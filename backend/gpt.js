@@ -32,7 +32,7 @@ async function doGPTRequest(promptText) {
 
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.error("Error sending prompt to ChatGPT:", error);
+    throw error;
   }
 }
 
