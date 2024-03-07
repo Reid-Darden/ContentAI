@@ -1,0 +1,11 @@
+# Ignore everything in the 'files' subdirectories
+files/html/*
+files/parsedPDFs/*
+files/unzipped/*
+files/uploads/*
+
+# But keep the .gitkeep files
+!files/html/.gitkeep
+!files/parsedPDFs/.gitkeep
+!files/unzipped/.gitkeep
+!files/uploads/.gitkeep
