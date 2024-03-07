@@ -109,10 +109,9 @@ app.post("/parsedPDFs", async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
+    res.json({
       success: false,
       message: error,
-      // error somewhere in this call
     });
   }
 });
