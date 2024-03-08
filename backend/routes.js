@@ -10,7 +10,7 @@ const importHelpers = require("./helpers.js");
 const Helpers = new importHelpers();
 const loginCredentials = require("./credentials.js");
 const email = require("./email.js");
-const { exec } = require("child_process");
+const clearDirectory = require("./clearfiles.js");
 
 // GLOBAL VARIABLES
 let articleModelName;
@@ -158,16 +158,11 @@ app.post("/confirmArticle", async (req, res) => {
   let title = req.body.title;
   let comments = req.body.comments;
   if (await email(article, title, comments, user)) {
-    // reset the files folder (NOT WORKING)
-    let batchFile = `.\\resetfiles.bat`;
-    exec(`${batchFile}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error executing batch file: ${error}`);
-        return;
-      }
+    // reset the files folder
+    const pathToHtmlDir = path.join(__dirname, "..", "files", "html");
+    clearDirectory(pathToHtmlDir).catch(console.error);
 
-      res.json({ success: true });
-    });
+    res.json({ success: true });
   } else {
     res.json({ success: false });
   }
