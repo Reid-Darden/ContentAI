@@ -123,7 +123,10 @@ $(document).ready(async function () {
           if (data.success) {
             $("#card_confirm_article").removeClass("is-loading").removeAttr("disabled");
             localStorage.clear();
-            alert(data.alert);
+
+            // if problem with confirm, enable this alert
+            //alert(data.alert);
+
             alert("Article successfully submitted. Confirm this alert to return home.");
             window.location.href = "/home";
           } else {
