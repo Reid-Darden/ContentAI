@@ -5,7 +5,6 @@ const util = require("util");
 // Promisify the readdir and unlink functions to use them with async/await
 const readdir = util.promisify(fs.readdir);
 const unlink = util.promisify(fs.unlink);
-const rmdir = util.promisify(fs.rmdir);
 
 async function clearDirectory(directoryPath) {
   try {

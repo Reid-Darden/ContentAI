@@ -159,9 +159,11 @@ app.post("/confirmArticle", async (req, res) => {
   let comments = req.body.comments;
   if (await email(article, title, comments, user)) {
     // reset the files folder
-    clearDirectory.catch(console.error);
-
-    res.json({ success: true });
+    if (clearDirectory.catch(console.error)) {
+      res.json({ success: true, alert: "cleared" });
+    } else {
+      res.json({ success: true, alert: "email" });
+    }
   } else {
     res.json({ success: false });
   }
