@@ -16,13 +16,13 @@ let loginCredentials = [
     role: "admin",
   },
   {
-    username: "tlarson",
-    name: "TJ Larson",
-    role: "user",
+    username: "afutrell",
+    name: "Adam Futrell",
+    role: "admin",
   },
   {
-    username: "mjohnson",
-    name: "Marc Johnson",
+    username: "tj",
+    name: "TJ Larson",
     role: "user",
   },
   {
