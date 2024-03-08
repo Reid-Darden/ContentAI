@@ -21,7 +21,7 @@ async function sendEmail(textContent, title, comments, user) {
     from: "gvcontentai@gmail.com",
     to: "reiddarden@gmail.com",
     subject: `GVContentAI: New Article (${title}) by ${user}`,
-    text: comments,
+    text: "NOTES:" + comments,
     attachments: [
       {
         filename: `${title.replace(/\s/g, "")}.html`,
