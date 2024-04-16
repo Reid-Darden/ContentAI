@@ -49,22 +49,17 @@ var helpers = (function () {
   };
 
   _helpers.updateImageSource = function (htmlString) {
-    // Parse the HTML string into a DOM
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, "text/html");
 
-    // Find all the img tags in the parsed HTML
     const images = doc.querySelectorAll(".conseg.outer.s-fit img");
 
-    // Update the src for each img tag
     images.forEach((img, index) => {
-      // Assuming the images are named sequentially as article_img1.jpg, article_img2.jpg, etc.
       const imageName = "article_img" + (index + 1) + ".jpg";
       const imagePath = "frontend/img/article_img/" + imageName;
       img.setAttribute("src", imagePath);
     });
 
-    // Extract the inner HTML of the body element
     const updatedHtmlString = doc.body.innerHTML;
 
     return updatedHtmlString;
@@ -76,7 +71,12 @@ var helpers = (function () {
 $(document).ready(function () {
   $(document).on("click", "h1", () => {
     if (confirm("Go to home page?")) {
-      window.location.href = "/";
+      let cook = cookies.getCookie("loggedIn");
+      if (cook) {
+        window.location.href = "/home";
+      } else {
+        window.location.href = "/";
+      }
     }
   });
 });

@@ -9,7 +9,6 @@ $(document).ready(async function () {
     }
     $("#article_display").show();
   } else {
-    alert("hi");
     window.location.href = "/";
   }
 

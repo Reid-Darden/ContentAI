@@ -15,7 +15,7 @@ let transporter = nodemailer.createTransport({
 // Function to send the email
 async function sendEmail(textContent, title, comments, user) {
   // create html attachment
-  fs.writeFile(`./frontend/files/html/${title.replace(/\s/g, "")}.html`, textContent, () => {});
+  fs.writeFile(`./backend/files/html/${title.replace(/\s/g, "")}.html`, textContent, () => {});
 
   const mailOptions = {
     from: "gvcontentai@gmail.com",
@@ -25,7 +25,7 @@ async function sendEmail(textContent, title, comments, user) {
     attachments: [
       {
         filename: `${title.replace(/\s/g, "")}.html`,
-        path: `./frontend/files/html/${title.replace(/\s/g, "")}.html`,
+        path: `./backend/files/html/${title.replace(/\s/g, "")}.html`,
       },
     ],
   };

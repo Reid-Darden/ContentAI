@@ -10,7 +10,7 @@ const importHelpers = require("./helpers.js");
 const Helpers = new importHelpers();
 const loginCredentials = require("./credentials.js");
 const email = require("./email.js");
-const clearDirectory = require("./clearfiles.js");
+const wipeFolders = require("./clearfiles.js");
 
 // GLOBAL VARIABLES
 let articleModelName;
@@ -27,6 +27,16 @@ app.get("/home", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/html/home.html"));
 });
 
+// load article create page
+app.get("/contentrewrite", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/html/contentrewrite.html"));
+});
+
+// description rewrite
+app.get("/descriptionrewrite", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/html/descriptionrewrite.html"));
+});
+
 // load article display
 app.get("/articledisplay", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
@@ -37,7 +47,7 @@ app.get("/articledisplay", (req, res) => {
 // update model name used throughout backend
 app.post("/updateModelName", (req, res) => {
   let modelName = req.body.value;
-  if (modelName && modelName.length > 0 && modelName != articleModelName) {
+  if (modelName && modelName.length > 0) {
     articleModelName = req.body.value;
     res.json({ updated: true });
   }
@@ -159,13 +169,32 @@ app.post("/confirmArticle", async (req, res) => {
   let comments = req.body.comments;
   if (await email(article, title, comments, user)) {
     // reset the files folder
-    if (clearDirectory) {
+    if (await wipeFolders()) {
       res.json({ success: true, alert: "cleared" });
     } else {
       res.json({ success: true, alert: "email" });
     }
   } else {
     res.json({ success: false });
+  }
+});
+
+/*
+REWRITE DESCRIPTION
+*/
+
+app.post("/rewritedescription", async (req, res) => {
+  let description = req.body.description;
+
+  try {
+    let rewritten_descriptions = await doGPTRequest(gptPrompts(5, description));
+    let parsed_descriptions = JSON.parse(rewritten_descriptions);
+
+    if (parsed_descriptions) {
+      res.json({ success: true, descriptions: parsed_descriptions });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message, success: false });
   }
 });
 

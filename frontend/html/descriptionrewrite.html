@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GVContentAI</title>
+    <link rel="icon" href="/frontend/img/gvclogo.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css" />
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+    <link rel="stylesheet" href="/frontend/css/descriptions.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/frontend/js/helpers.js"></script>
+    <script src="/frontend/js/description.js" crossorigin="anonymous"></script>
+  </head>
+
+  <body class="has-background-grey-light" id="desc_body">
+    <header class="p-4 is-flex is-justify-content-space-between is-align-items-center">
+      <h1 class="header-title is-center">GVContentAI</h1>
+      <span class="has-text-white has-text-weight-bold" id="logged_in_user"></span>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="field">
+          <article class="message">
+            <div class="message-header has-text-centered">
+              <p>Multi-Channel Description Rewrite</p>
+            </div>
+            <div class="message-body">Input a product description provided by a vendor/brand and click the rewrite button. The description will be rewritten 3 times to fit each of the following 3 channels: GlobalGolf, FairwayStyles, and WGS.</div>
+          </article>
+          <div class="control" id="starting_desc">
+            <textarea class="textarea" placeholder="Starting input..." id="rewrite_description_start"></textarea>
+            <div class="field has-text-centered mt-2">
+              <button class="button is-info" id="send_description">Rewrite Button</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-hidden" id="rewritten_descriptions">
+          <div class="column">
+            <div class="box">
+              <h3 class="has-text-centered has-text-weight-bold">GlobalGolf</h3>
+              <textarea class="textarea" id="rewrite_description_gg"></textarea>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box">
+              <h3 class="has-text-centered has-text-weight-bold">FairwayStyles</h3>
+              <textarea class="textarea" id="rewrite_description_fs"></textarea>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box">
+              <h3 class="has-text-centered has-text-weight-bold">WGS</h3>
+              <textarea class="textarea" id="rewrite_description_wgs"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="field has-text-centered mt-2">
+          <button class="button is-danger is-hidden has-text-white" id="update_description_form">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://kit.fontawesome.com/e0a5ef1876.js" crossorigin="anonymous"></script>
+  </body>
+</html>

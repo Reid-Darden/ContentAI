@@ -1,0 +1,85 @@
+.vertical-divider {
+    border-left: 2px solid #000;
+    height: 100%;
+    position: absolute;
+    right: 0;
+}
+
+.section-container {
+    position: relative;
+    height: 50vh; 
+    margin: 2rem;  
+    padding: 1rem; 
+}
+
+#contentrewrite_body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    height: 100vh;
+}
+
+.upload-container {
+    position: relative; 
+    display: inline-block; 
+  }
+  
+.tooltip {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #dcdcdc;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 1;
+    white-space: nowrap; 
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30px;
+}
+
+.upload-header:hover + .tooltip {
+    display: block;
+}
+  
+.box {
+    height: 100%;
+}
+
+.box .title {
+    text-align: center;
+}
+
+.tight-gap {
+    --gap: 0.5rem;
+} 
+
+.tight-gap .column {
+    padding-left: var(--gap);
+    padding-right: var(--gap);
+}
+
+.disabled-box {
+    pointer-events: none;
+    opacity: 0.5; 
+}
+
+#model_name_label {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+#pdfUpload + label, #startParseBtn, #rewriteContent {
+    background-color: #1c5799;
+    color: #fff;
+    font-weight: 700;
+}
+
+#create_article .createArticle {
+    background-color: #1c9858;
+    color: #000;
+    font-weight: 700;
+}
