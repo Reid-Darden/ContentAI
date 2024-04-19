@@ -3,6 +3,15 @@ const loginCredentials = require("./credentials.js");
 module.exports = class Helpers {
   constructor() {}
 
+  static GPTPrompt = Object.freeze({
+    gptParagraph: 0,
+    gptTable: 1,
+    gptSEO: 2,
+    gptJSON: 3,
+    gptHTML: 4,
+    gptDescription: 5,
+  });
+
   // HELPERS
   removeFilenameEnding(filename) {
     const extensions = [".jpg", ".jpeg", ".png", ".gif", ".txt", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".mp3", ".mp4", ".wav"];

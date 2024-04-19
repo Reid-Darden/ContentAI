@@ -102,10 +102,10 @@ app.post("/parsedPDFs", async (req, res) => {
     let excel2JSONTable = JSON.stringify(parsedExcel[1]);
 
     // send gpt request for paragraph data
-    const gptParagraphResp = await doGPTRequest(gptPrompts(0, excel2JSONParagraph));
+    const gptParagraphResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptParagraph, excel2JSONParagraph));
 
     // send gpt request for table data
-    const gptTableResp = await doGPTRequest(gptPrompts(1, excel2JSONTable));
+    const gptTableResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptTable, excel2JSONTable));
 
     if (gptParagraphResp.length > 0 && gptTableResp.length > 0) {
       res.json({
@@ -136,7 +136,7 @@ app.post("/rewrittenContent", async (req, res) => {
 
   try {
     // do gpt call to rewrite the content, focusing on paragraph structure
-    let rewrite = await doGPTRequest(gptPrompts(2, content, articleModelName));
+    let rewrite = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName));
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -150,8 +150,8 @@ app.post("/buildarticle", async (req, res) => {
   const table = req.body.table;
 
   try {
-    let jsonContent = await doGPTRequest(gptPrompts(3, content + table));
-    let article = await doGPTRequest(gptPrompts(4, jsonContent, articleModelName));
+    let jsonContent = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptJSON, content + table));
+    let article = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName));
 
     let parsedArticle = JSON.parse(article);
 
@@ -179,6 +179,14 @@ app.post("/confirmArticle", async (req, res) => {
   }
 });
 
+app.post("/wipefolders", async (req, res) => {
+  if (await wipeFolders()) {
+    res.json({ wiped: true });
+  } else {
+    res.json({ wiped: false });
+  }
+});
+
 /*
 REWRITE DESCRIPTION
 */
@@ -187,7 +195,7 @@ app.post("/rewritedescription", async (req, res) => {
   let description = req.body.description;
 
   try {
-    let rewritten_descriptions = await doGPTRequest(gptPrompts(5, description));
+    let rewritten_descriptions = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptDescription, description));
     let parsed_descriptions = JSON.parse(rewritten_descriptions);
 
     if (parsed_descriptions) {

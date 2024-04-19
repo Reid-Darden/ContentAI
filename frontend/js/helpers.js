@@ -71,11 +71,37 @@ var helpers = (function () {
 $(document).ready(function () {
   $(document).on("click", "h1", () => {
     if (confirm("Go to home page?")) {
-      let cook = cookies.getCookie("loggedIn");
-      if (cook) {
-        window.location.href = "/home";
+      let url = window.location.href;
+
+      if (url.includes("/articledisplay/")) {
+        if (confirm("By going home, the current article will be lost. Do you want to continue?")) {
+          $.ajax({
+            url: "/wipefolders",
+            type: "POST",
+            contentType: "application/json",
+            success: function (response) {
+              if (response.wiped) {
+                completeLocationCheck();
+              } else {
+                alert("Error with file wiping.");
+              }
+            },
+            error: function (error) {
+              console.error("Error sending data to the server: ", error);
+            },
+          });
+        }
       } else {
-        window.location.href = "/";
+        completeLocationCheck();
+      }
+
+      function completeLocationCheck() {
+        let cook = cookies.getCookie("loggedIn");
+        if (cook) {
+          window.location.href = "/home";
+        } else {
+          window.location.href = "/";
+        }
       }
     }
   });
