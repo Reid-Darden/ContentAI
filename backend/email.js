@@ -19,7 +19,7 @@ async function sendEmail(textContent, title, comments, user) {
 
   const mailOptions = {
     from: "gvcontentai@gmail.com",
-    to: "reiddarden@gmail.com, tlarson@wgs.com",
+    to: "rdarden@wgs.com, tlarson@wgs.com",
     subject: `GVContentAI: New Article (${title}) by ${user}`,
     text: "NOTES:" + comments,
     attachments: [

@@ -10,6 +10,7 @@ module.exports = class Helpers {
     gptJSON: 3,
     gptHTML: 4,
     gptDescription: 5,
+    gptTest: 6,
   });
 
   // HELPERS

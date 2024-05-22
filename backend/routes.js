@@ -11,6 +11,7 @@ const Helpers = new importHelpers();
 const loginCredentials = require("./credentials.js");
 const email = require("./email.js");
 const wipeFolders = require("./clearfiles.js");
+const fs = require("fs");
 
 // GLOBAL VARIABLES
 let articleModelName;
@@ -91,6 +92,24 @@ app.post("/parsedPDFs", async (req, res) => {
   }
 
   try {
+    // create a function to parse a pdf in a system into a base64 image
+    /*
+    let folder = `./backend/files/uploads/`;
+    let file = folder + filename;
+    await pdf.pdfToImage(file, folder);
+    let imageBase = path.join(folder, path.basename(file, path.extname(file)) + "-1.jpg");
+    if (fs.existsSync(imageBase)) {
+      const base64Image = pdf.imageToBase64(imageBase);
+
+      // up to here works. the prompt is too long
+      const test = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptTest, base64Image));
+      console.log(test);
+      throw error();
+    } else {
+      console.error("Image file not found");
+    }
+    */
+
     // parse the PDF file and return the excel file names
     const parsedData = await pdf.parsePDF(filename);
 
