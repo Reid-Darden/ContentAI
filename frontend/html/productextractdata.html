@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GVContentAI</title>
+    <link rel="icon" href="/frontend/img/gvclogo.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="/frontend/css/styles.css" />
+    <link rel="stylesheet" href="/frontend/css/home.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/frontend/js/helpers.js"></script>
+    <script
+      src="/frontend/js/articlecreate.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body class="has-background-grey-light" id="main_body">
+    <header
+      class="p-4 is-flex is-justify-content-space-between is-align-items-center"
+    >
+      <h1 class="header-title is-center">GVContentAI</h1>
+      <span
+        class="has-text-white has-text-weight-bold"
+        id="logged_in_user"
+      ></span>
+    </header>
+
+    <section class="section">
+      <div class="container">
+        <div class="field">
+          <article class="message">
+            <div class="message-header has-text-centered">
+              <p>Product Data Extraction Tool</p>
+            </div>
+            <div class="message-body">
+              This tool allows for AI to extract data from a sell sheet into
+              "psuedo" Base SKU data before it is sent to the Base SKU Entry
+              page for data creation in our GVC system. Input a sell sheet from
+              an OEM and click extract data.
+            </div>
+          </article>
+          <div class="control" id="sheetUpload">
+            <div class="field has-text-centered mt-2">
+              <div class="box">
+                <div class="upload-container">
+                  <h2 class="upload-header title">Upload File</h2>
+                  <div class="tooltip">Allowed types: Word documents, PDFs</div>
+                </div>
+                <div id="pdfStatus">
+                  <span class="icon has-text-danger">
+                    <i class="fas fa-times-circle fa-2xl"></i>
+                  </span>
+                </div>
+
+                <div class="file has-name is-centered mt-4">
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="pdf"
+                    id="pdfUpload"
+                    accept=".pdf"
+                    style="display: none"
+                  />
+                  <label for="pdfUpload" class="button upload-color">
+                    Choose a file...
+                  </label>
+                  <span class="file-name" id="pdfFileName">
+                    No file uploaded.
+                  </span>
+                </div>
+
+                <div id="pdfMessage" class="message">
+                  <div class="message-body has-text-weight-bold">
+                    No file uploaded.
+                  </div>
+                </div>
+              </div>
+              <button class="button is-info" id="send_description">
+                Extract Data
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="columns is-hidden" id="rewritten_descriptions">
+          <div class="column">
+            <div class="box">
+              <h3 class="has-text-centered has-text-weight-bold">GlobalGolf</h3>
+              <textarea class="textarea" id="rewrite_description_gg"></textarea>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box">
+              <h3 class="has-text-centered has-text-weight-bold">
+                FairwayStyles
+              </h3>
+              <textarea class="textarea" id="rewrite_description_fs"></textarea>
+            </div>
+          </div>
+          <div class="column">
+            <div class="box">
+              <h3 class="has-text-centered has-text-weight-bold">WGS</h3>
+              <textarea
+                class="textarea"
+                id="rewrite_description_wgs"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="field has-text-centered mt-2">
+          <button
+            class="button is-danger is-hidden has-text-white"
+            id="update_description_form"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </section>
+    <script
+      src="https://kit.fontawesome.com/e0a5ef1876.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

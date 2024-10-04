@@ -36,12 +36,21 @@ app.get("/contentrewrite", (req, res) => {
 
 // description rewrite
 app.get("/descriptionrewrite", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/descriptionrewrite.html"));
+  res.sendFile(
+    path.join(__dirname, "../frontend/html/descriptionrewrite.html")
+  );
 });
 
 // load article display
 app.get("/articledisplay", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
+});
+
+// load product data extraction page
+app.get("/productextractdata", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "../frontend/html/productextractdata.html")
+  );
 });
 
 //#endregion
@@ -81,7 +90,10 @@ app.post("/login", (req, res) => {
 app.post("/uploads", pdf.upload.single("pdf"), (req, res) => {
   if (req.file) {
     uploadURL = req.file.filename;
-    res.json({ message: "File uploaded successfully.", file: req.file.filename });
+    res.json({
+      message: "File uploaded successfully.",
+      file: req.file.filename,
+    });
   } else {
     res.json({ message: "Please upload a valid PDF." });
   }
@@ -101,7 +113,12 @@ app.post("/uploadURL", async (req, res) => {
 // pdf parsing based on url
 app.get("/parsedPDFURL", async (req, res) => {
   try {
-    let pdfContentFromUrl = await doGPTRequest(gptPrompts(6), path.resolve(__dirname, "\\files\\uploads\\" + uploadURL), true, true);
+    let pdfContentFromUrl = await doGPTRequest(
+      gptPrompts(6),
+      path.resolve(__dirname, "files", "uploads", uploadURL),
+      true,
+      true
+    );
 
     let pdfJSON = JSON.parse(pdfContentFromUrl);
 
@@ -109,18 +126,12 @@ app.get("/parsedPDFURL", async (req, res) => {
     let pdfTable = pdfJSON.table;
 
     // WORKING TO HERE
-    return false;
-    // send gpt request for paragraph data
-    const gptParagraphResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptParagraph, pdfPara));
 
-    // send gpt request for table data
-    const gptTableResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptTable, pdfTable));
-
-    if (gptParagraphResp.length > 0 && gptTableResp.length > 0) {
+    if (pdfPara.length > 0 && pdfTable.length > 0) {
       res.json({
         success: true,
-        parsedData: gptParagraphResp,
-        parsedTable: gptTableResp,
+        parsedData: pdfPara,
+        parsedTable: pdfTable,
       });
     }
   } catch (err) {
@@ -130,12 +141,14 @@ app.get("/parsedPDFURL", async (req, res) => {
   }
 });
 
-// pdf parsing
+// pdf parsing - possibly do away with this, extract info from gpt
 app.post("/parsedPDFs", async (req, res) => {
   const filename = req.body.filename;
 
   if (!filename) {
-    return res.status(400).json({ success: false, message: "No filename provided" });
+    return res
+      .status(400)
+      .json({ success: false, message: "No filename provided" });
   }
 
   try {
@@ -150,10 +163,14 @@ app.post("/parsedPDFs", async (req, res) => {
     let excel2JSONTable = JSON.stringify(parsedExcel[1]);
 
     // send gpt request for paragraph data
-    const gptParagraphResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptParagraph, excel2JSONParagraph));
+    const gptParagraphResp = await doGPTRequest(
+      gptPrompts(importHelpers.GPTPrompt.gptParagraph, excel2JSONParagraph)
+    );
 
     // send gpt request for table data
-    const gptTableResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptTable, excel2JSONTable));
+    const gptTableResp = await doGPTRequest(
+      gptPrompts(importHelpers.GPTPrompt.gptTable, excel2JSONTable)
+    );
 
     if (gptParagraphResp.length > 0 && gptTableResp.length > 0) {
       res.json({
@@ -179,12 +196,16 @@ app.post("/rewrittenContent", async (req, res) => {
   const content = req.body.content;
 
   if (!content) {
-    return res.status(400).json({ success: false, message: "No content provided." });
+    return res
+      .status(400)
+      .json({ success: false, message: "No content provided." });
   }
 
   try {
     // do gpt call to rewrite the content, focusing on paragraph structure
-    let rewrite = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName));
+    let rewrite = await doGPTRequest(
+      gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName)
+    );
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -198,8 +219,12 @@ app.post("/buildarticle", async (req, res) => {
   const table = req.body.table;
 
   try {
-    let jsonContent = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptJSON, content + table));
-    let article = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName));
+    let jsonContent = await doGPTRequest(
+      gptPrompts(importHelpers.GPTPrompt.gptJSON, content + table)
+    );
+    let article = await doGPTRequest(
+      gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName)
+    );
 
     let parsedArticle = JSON.parse(article);
 
@@ -243,7 +268,9 @@ app.post("/rewritedescription", async (req, res) => {
   let description = req.body.description;
 
   try {
-    let rewritten_descriptions = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptDescription, description));
+    let rewritten_descriptions = await doGPTRequest(
+      gptPrompts(importHelpers.GPTPrompt.gptDescription, description)
+    );
     let parsed_descriptions = JSON.parse(rewritten_descriptions);
 
     if (parsed_descriptions) {

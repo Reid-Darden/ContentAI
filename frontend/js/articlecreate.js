@@ -16,7 +16,11 @@ $(document).ready(function () {
   let pdfStatusFlag = false;
 
   // variables that get set as we progress through the program
-  let parsedPDFData, rewrittenContent, articleContentBuild, articleTableBuild, pdfTable;
+  let parsedPDFData,
+    rewrittenContent,
+    articleContentBuild,
+    articleTableBuild,
+    pdfTable;
 
   var pdfFileName = "";
   var pdfURL = "";
@@ -44,7 +48,9 @@ $(document).ready(function () {
           $("#model_name_label").text("Model Name Updated.");
           $("#columns_section > div").first().removeClass("disabled-box");
           setTimeout(() => {
-            $("#model_name_label").text("Enter the Model (w/ Brand Name) for the Article");
+            $("#model_name_label").text(
+              "Enter the Model (w/ Brand Name) for the Article"
+            );
           }, 1000 * 3);
         }
       },
@@ -73,15 +79,26 @@ $(document).ready(function () {
         $("#pdfMessage").removeClass("is-hidden");
 
         if (data.message == "File uploaded successfully.") {
-          $(".columns .section-container:eq(1)").first().removeClass("disabled-box");
-          $("#pdfStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+          $(".columns .section-container:eq(1)")
+            .first()
+            .removeClass("disabled-box");
+          $("#pdfStatus .icon i")
+            .first()
+            .removeClass("fa-times-circle")
+            .addClass("fa-check-circle")
+            .removeClass("has-text-danger")
+            .addClass("has-text-success");
           $("#pdfFileName").text(data.file);
 
           pdfFileName = data.file;
           pdfStatusFlag = true;
         } else {
           $(".columns .section-container:eq(1)").addClass("disabled-box");
-          $("#pdfStatus .icon i").removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+          $("#pdfStatus .icon i")
+            .removeClass("fa-check-circle")
+            .addClass("fa-times-circle")
+            .removeClass("has-text-success")
+            .addClass("has-text-danger");
           $("#pdfFileName").text("No file uploaded.");
 
           pdfStatusFlag = false;
@@ -109,14 +126,25 @@ $(document).ready(function () {
           $("#pdfMessage").removeClass("is-hidden");
 
           if (data.message == "URL uploaded successfully.") {
-            $(".columns .section-container:eq(1)").first().removeClass("disabled-box");
-            $("#pdfStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+            $(".columns .section-container:eq(1)")
+              .first()
+              .removeClass("disabled-box");
+            $("#pdfStatus .icon i")
+              .first()
+              .removeClass("fa-times-circle")
+              .addClass("fa-check-circle")
+              .removeClass("has-text-danger")
+              .addClass("has-text-success");
 
             pdfURL = data.url;
             pdfStatusFlag = true;
           } else {
             $(".columns .section-container:eq(1)").addClass("disabled-box");
-            $("#pdfStatus .icon i").removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+            $("#pdfStatus .icon i")
+              .removeClass("fa-check-circle")
+              .addClass("fa-times-circle")
+              .removeClass("has-text-success")
+              .addClass("has-text-danger");
             $("#pdfFileName").text("No file uploaded.");
 
             pdfStatusFlag = false;
@@ -132,29 +160,46 @@ $(document).ready(function () {
   // parse the pdf
   $(document).on("click", "#startParseBtn", () => {
     if (pdfStatusFlag) {
-      // determine which file we have between url or actual pdf
-      console.log(pdfFileName);
       if (pdfFileName.length > 0) {
+        $("#startParseBtn")
+          .parent()
+          .find("#parseLoader")
+          .removeClass("is-hidden");
         $.ajax({
           url: "/parsedPDFURL",
           method: "GET",
           contentType: "application/json",
           success: function (response) {
             if (response.success) {
-              console.log(response.message);
-              /*   parsedPDFData = response.parsedData;
+              parsedPDFData = response.parsedData;
               pdfTable = response.parsedTable;
-              $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
+              $(".columns .section-container:eq(2)")
+                .first()
+                .removeClass("disabled-box");
               $("#startParseBtn").attr("disabled", "disabled");
-              $("#pdfUpload").first().next().first().attr("disabled", "disabled");
+              $("#pdfUpload")
+                .first()
+                .next()
+                .first()
+                .attr("disabled", "disabled");
               $("#parseResults .message-body").text("PDF Parsed.");
               $("#parseResults").removeClass("is-hidden");
               $("#parseLoader").addClass("is-hidden");
-              $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+              $("#parseStatus .icon i")
+                .first()
+                .removeClass("fa-times-circle")
+                .addClass("fa-check-circle")
+                .removeClass("has-text-danger")
+                .addClass("has-text-success");
 
-              $("#rewriteContent").click(); */
+              $("#rewriteContent").click();
             } else {
-              $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+              $("#parseStatus .icon i")
+                .first()
+                .removeClass("fa-check-circle")
+                .addClass("fa-times-circle")
+                .removeClass("has-text-success")
+                .addClass("has-text-danger");
               alert("Failed to parse the PDF.");
             }
           },
@@ -164,7 +209,7 @@ $(document).ready(function () {
             console.log(err);
           },
         });
-      } else if (pdfFileName.length > 0) {
+      } /*else if (pdfFileName.length > 0) {
         const filename = $("#pdfFileName")[0].innerText;
 
         $("#parseLoader").removeClass("is-hidden");
@@ -180,17 +225,33 @@ $(document).ready(function () {
             if (response.success) {
               parsedPDFData = response.parsedData;
               pdfTable = response.parsedTable;
-              $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
+              $(".columns .section-container:eq(2)")
+                .first()
+                .removeClass("disabled-box");
               $("#startParseBtn").attr("disabled", "disabled");
-              $("#pdfUpload").first().next().first().attr("disabled", "disabled");
+              $("#pdfUpload")
+                .first()
+                .next()
+                .first()
+                .attr("disabled", "disabled");
               $("#parseResults .message-body").text("PDF Parsed.");
               $("#parseResults").removeClass("is-hidden");
               $("#parseLoader").addClass("is-hidden");
-              $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+              $("#parseStatus .icon i")
+                .first()
+                .removeClass("fa-times-circle")
+                .addClass("fa-check-circle")
+                .removeClass("has-text-danger")
+                .addClass("has-text-success");
 
               $("#rewriteContent").click();
             } else {
-              $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+              $("#parseStatus .icon i")
+                .first()
+                .removeClass("fa-check-circle")
+                .addClass("fa-times-circle")
+                .removeClass("has-text-success")
+                .addClass("has-text-danger");
               alert("Failed to parse the PDF.");
             }
           },
@@ -200,7 +261,7 @@ $(document).ready(function () {
             console.log(err);
           },
         });
-      }
+      }*/
     }
   });
 
@@ -231,11 +292,21 @@ $(document).ready(function () {
             $("#rewriteContent").attr("disabled", "disabled");
 
             $("#rewriteLoader").addClass("is-hidden");
-            $("#rewriteStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+            $("#rewriteStatus .icon i")
+              .first()
+              .removeClass("fa-times-circle")
+              .addClass("fa-check-circle")
+              .removeClass("has-text-danger")
+              .addClass("has-text-success");
 
             $("#create_article button").removeAttr("disabled").click();
           } else {
-            $("#rewriteStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+            $("#rewriteStatus .icon i")
+              .first()
+              .removeClass("fa-check-circle")
+              .addClass("fa-times-circle")
+              .removeClass("has-text-success")
+              .addClass("has-text-danger");
             alert("Failed to rewrite the content.");
           }
         },

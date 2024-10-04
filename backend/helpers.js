@@ -18,7 +18,23 @@ module.exports = class Helpers {
 
   // HELPERS
   removeFilenameEnding(filename) {
-    const extensions = [".jpg", ".jpeg", ".png", ".gif", ".txt", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".mp3", ".mp4", ".wav"];
+    const extensions = [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".gif",
+      ".txt",
+      ".pdf",
+      ".doc",
+      ".docx",
+      ".xls",
+      ".xlsx",
+      ".ppt",
+      ".pptx",
+      ".mp3",
+      ".mp4",
+      ".wav",
+    ];
 
     for (const ext of extensions) {
       if (this.stringEndsWith(filename, ext)) {
@@ -64,14 +80,23 @@ module.exports = class Helpers {
       format: "jpeg",
       out_dir: outputDir,
       out_prefix: path.basename(pdfPath, path.extname(pdfPath)),
-      page: null, // Convert all pages. You can specify a page number if needed.
+      page: null, // Convert all pages
     };
 
     try {
       await pdfPoppler.convert(pdfPath, options);
+
+      const convertedFile = path.join(
+        options.out_dir,
+        `${options.out_prefix}-1.jpg`
+      );
+
       console.log(`PDF converted successfully to JPG in ${outputDir}`);
-    } catch (error) {
-      console.error("Error converting PDF to JPG:", error);
+
+      return convertedFile;
+    } catch (err) {
+      console.error("Error converting PDF to JPG:", err);
+      throw err;
     }
   }
 

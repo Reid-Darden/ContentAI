@@ -4,14 +4,24 @@ const Helpers = new importHelpers();
 const path = require("path");
 
 // this is the path to the example images used to give context to gpt calls
-const exampleArticleImg = path.resolve(__dirname, "./files/img/testsellsheet_article.jpg");
+const exampleArticleImg = path.resolve(
+  __dirname,
+  "./files/img/testsellsheet_article.jpg"
+);
 
 // CHATGPT AI
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
-const openAISecret = process.env.API_KEY || "sk-proj-Gepz49mZ6v661TWlmoUpT3BlbkFJIfWOrd5LhzFh3cTq6dc9";
+const openAISecret =
+  process.env.API_KEY ||
+  "sk-proj-Gepz49mZ6v661TWlmoUpT3BlbkFJIfWOrd5LhzFh3cTq6dc9";
 
 // do a GPT Request
-async function doGPTRequest(promptText, imageUrl, isResponseJSONFormat = false, useExampleImg = false) {
+async function doGPTRequest(
+  promptText,
+  imageUrl,
+  isResponseJSONFormat = false,
+  useExampleImg = false
+) {
   try {
     const messages = [
       {
@@ -22,7 +32,10 @@ async function doGPTRequest(promptText, imageUrl, isResponseJSONFormat = false, 
 
     if (imageUrl) {
       if (useExampleImg) {
-        let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
+        let exImgBase64 = await Helpers.imagePathToBase64String(
+          exampleArticleImg
+        );
+
         messages[0].content.push({
           type: "image_url",
           image_url: {
@@ -31,12 +44,21 @@ async function doGPTRequest(promptText, imageUrl, isResponseJSONFormat = false, 
         });
       }
 
-      const testImagePath = path.resolve(__dirname, Helpers.convertPdfToJpg(imageUrl, __dirname + "\\files\\uploads\\"));
+      const testImagePath = await Helpers.convertPdfToJpg(
+        imageUrl,
+        path.resolve(__dirname, "files", "uploads")
+      )
+        .then((response) => {
+          return response;
+        })
+        .catch((err) => {});
+
+      let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 
       messages[0].content.push({
         type: "image_url",
         image_url: {
-          url: `data:image/jpeg;base64,${Helpers.imagePathToBase64String(testImagePath)}`,
+          url: `data:image/jpeg;base64,${inputBase64Img}`,
         },
       });
     }
