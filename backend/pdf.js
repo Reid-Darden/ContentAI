@@ -11,8 +11,6 @@ const PDFToolsSdk = require("@adobe/pdfservices-node-sdk");
 const adobeClientID = "5f3f3107036947818f19b8bb6edbb37c";
 const adobeSecret = "p8e-kX0Bpm5gXp0MkP2UUa-VuA49awtDYEdb";
 
-// ADDRESS ABOVE TO IDEALLY FIX THE INSTANCE ISSUE
-
 // Configure multer for PDF uploads
 const storage = multer.diskStorage({
   destination: "./backend/files/uploads/",
@@ -30,33 +28,6 @@ const upload = multer({
     cb(null, true);
   },
 });
-
-/*
-async function pdfToImage(pdfPath, outputDir) {
-  try {
-    const options = {
-      format: "jpeg",
-      out_dir: outputDir,
-      out_prefix: path.basename(pdfPath, path.extname(pdfPath)),
-      page: 1,
-    };
-
-    try {
-      await pdfPoppler.convert(pdfPath, options);
-      console.log("PDF converted to image successfully");
-    } catch (error) {
-      console.error("Error converting PDF to image:", error);
-    }
-  } catch (err) {
-    throw err;
-  }
-}
-
-function imageToBase64(imagePath) {
-  const image = fs.readFileSync(imagePath);
-  return image.toString("base64");
-}
-*/
 
 // Function to parse pdf
 async function parsePDF(filename) {
@@ -127,4 +98,4 @@ async function parseExcelFiles(files, orignalFileName) {
   return output;
 }
 
-module.exports = { storage, upload, parseExcelFiles, parsePDF, imageToBase64, pdfToImage };
+module.exports = { storage, upload, parseExcelFiles, parsePDF };

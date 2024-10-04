@@ -1,7 +1,7 @@
 // LOGIN CREDENTIALS
 let loginCredentials = [
   {
-    username: "rdarden",
+    username: "rd",
     name: "Reid Darden",
     role: "admin",
   },

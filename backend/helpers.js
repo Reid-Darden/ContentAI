@@ -1,4 +1,7 @@
 const loginCredentials = require("./credentials.js");
+const fs = require("fs");
+const path = require("path");
+const pdfPoppler = require("pdf-poppler");
 
 module.exports = class Helpers {
   constructor() {}
@@ -10,7 +13,7 @@ module.exports = class Helpers {
     gptJSON: 3,
     gptHTML: 4,
     gptDescription: 5,
-    gptTest: 6,
+    gptImage: 6,
   });
 
   // HELPERS
@@ -42,6 +45,35 @@ module.exports = class Helpers {
 
     return month + day + year;
   };
+
+  async imagePathToBase64String(imagePath) {
+    return new Promise((resolve, reject) => {
+      fs.readFile(imagePath, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          const base64Image = data.toString("base64");
+          resolve(base64Image);
+        }
+      });
+    });
+  }
+
+  async convertPdfToJpg(pdfPath, outputDir) {
+    const options = {
+      format: "jpeg",
+      out_dir: outputDir,
+      out_prefix: path.basename(pdfPath, path.extname(pdfPath)),
+      page: null, // Convert all pages. You can specify a page number if needed.
+    };
+
+    try {
+      await pdfPoppler.convert(pdfPath, options);
+      console.log(`PDF converted successfully to JPG in ${outputDir}`);
+    } catch (error) {
+      console.error("Error converting PDF to JPG:", error);
+    }
+  }
 
   // LOGIN HELPERS
   generatePassword() {

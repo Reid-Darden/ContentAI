@@ -24,7 +24,7 @@
         <div class="field">
           <label id="model_name_label" class="label has-text-centered">Enter the Model (w/ Brand Name) for the Article</label>
           <div class="control is-flex is-justify-content-center">
-            <input class="input is-narrow" type="text" id="articleModelInput" placeholder="Enter Brand Name with Model Name here" style="width: 50%" />
+            <input class="input is-narrow" type="text" id="articleModelInput" placeholder="Enter Brand Name with Model Name here" style="width: 50%" value="TaylorMade Qi10 Driver" />
           </div>
         </div>
       </div>
@@ -45,8 +45,21 @@
 
           <div class="file has-name is-centered mt-4">
             <input class="file-input" type="file" name="pdf" id="pdfUpload" accept=".pdf" style="display: none" />
-            <label for="pdfUpload" class="button"> Choose a file... </label>
+            <label for="pdfUpload" class="button upload-color"> Choose a file... </label>
             <span class="file-name" id="pdfFileName"> No file uploaded. </span>
+          </div>
+
+          <div class="has-text-centered mt-4">
+            <span class="has-text-weight-bold">OR</span>
+          </div>
+
+          <div class="file has-addons is-centered mt-4">
+            <div class="control">
+              <label for="urlInput" class="button upload-color"> Enter URL...</label>
+            </div>
+            <div class="control">
+              <input class="input" type="text" name="url" id="urlInput" placeholder="Enter URL here" contenteditable="true" />
+            </div>
           </div>
 
           <div id="pdfMessage" class="message">

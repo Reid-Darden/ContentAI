@@ -16,7 +16,10 @@ $(document).ready(function () {
   let pdfStatusFlag = false;
 
   // variables that get set as we progress through the program
-  let parsedPDFData, rewrittenContent, articleContentBuild, articleTableBuild, pdfFileName, pdfTable;
+  let parsedPDFData, rewrittenContent, articleContentBuild, articleTableBuild, pdfTable;
+
+  var pdfFileName = "";
+  var pdfURL = "";
 
   // set cursor position to last character
   $("#articleModelInput").on("focus", function () {
@@ -50,6 +53,8 @@ $(document).ready(function () {
       },
     });
   });
+
+  // These next  2 event listeners handle the pdf upload via file upload or url entry
 
   // upload of pdf event
   $(document).on("change", "#pdfUpload", function () {
@@ -88,44 +93,114 @@ $(document).ready(function () {
     });
   });
 
-  // parse the pdf
-  $(document).on("click", "#startParseBtn", () => {
-    if (pdfStatusFlag) {
-      const filename = $("#pdfFileName")[0].innerText;
-
-      $("#parseLoader").removeClass("is-hidden");
-
+  // upload url
+  $(document).on("change", "#urlInput", function () {
+    let url = $("#urlInput").val();
+    if (url.length > 0) {
       $.ajax({
-        url: "/parsedPDFs",
-        method: "POST",
+        url: "/uploadURL",
+        type: "POST",
         data: JSON.stringify({
-          filename: filename,
+          url: url,
         }),
         contentType: "application/json",
-        success: function (response) {
-          if (response.success) {
-            parsedPDFData = response.parsedData;
-            pdfTable = response.parsedTable;
-            $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
-            $("#startParseBtn").attr("disabled", "disabled");
-            $("#pdfUpload").first().next().first().attr("disabled", "disabled");
-            $("#parseResults .message-body").text("PDF Parsed.");
-            $("#parseResults").removeClass("is-hidden");
-            $("#parseLoader").addClass("is-hidden");
-            $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+        success: function (data) {
+          $("#pdfMessage .message-body").text(data.message);
+          $("#pdfMessage").removeClass("is-hidden");
 
-            $("#rewriteContent").click();
+          if (data.message == "URL uploaded successfully.") {
+            $(".columns .section-container:eq(1)").first().removeClass("disabled-box");
+            $("#pdfStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+
+            pdfURL = data.url;
+            pdfStatusFlag = true;
           } else {
-            $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
-            alert("Failed to parse the PDF.");
+            $(".columns .section-container:eq(1)").addClass("disabled-box");
+            $("#pdfStatus .icon i").removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+            $("#pdfFileName").text("No file uploaded.");
+
+            pdfStatusFlag = false;
           }
         },
         error: function (err) {
-          $("#parseLoader").addClass("is-hidden");
-          $("#parseResults .message-body").text("PDF not parsed.");
           console.log(err);
         },
       });
+    }
+  });
+
+  // parse the pdf
+  $(document).on("click", "#startParseBtn", () => {
+    if (pdfStatusFlag) {
+      // determine which file we have between url or actual pdf
+      console.log(pdfFileName);
+      if (pdfFileName.length > 0) {
+        $.ajax({
+          url: "/parsedPDFURL",
+          method: "GET",
+          contentType: "application/json",
+          success: function (response) {
+            if (response.success) {
+              console.log(response.message);
+              /*   parsedPDFData = response.parsedData;
+              pdfTable = response.parsedTable;
+              $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
+              $("#startParseBtn").attr("disabled", "disabled");
+              $("#pdfUpload").first().next().first().attr("disabled", "disabled");
+              $("#parseResults .message-body").text("PDF Parsed.");
+              $("#parseResults").removeClass("is-hidden");
+              $("#parseLoader").addClass("is-hidden");
+              $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+
+              $("#rewriteContent").click(); */
+            } else {
+              $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+              alert("Failed to parse the PDF.");
+            }
+          },
+          error: function (err) {
+            $("#parseLoader").addClass("is-hidden");
+            $("#parseResults .message-body").text("PDF not parsed.");
+            console.log(err);
+          },
+        });
+      } else if (pdfFileName.length > 0) {
+        const filename = $("#pdfFileName")[0].innerText;
+
+        $("#parseLoader").removeClass("is-hidden");
+
+        $.ajax({
+          url: "/parsedPDFs",
+          method: "POST",
+          data: JSON.stringify({
+            filename: filename,
+          }),
+          contentType: "application/json",
+          success: function (response) {
+            if (response.success) {
+              parsedPDFData = response.parsedData;
+              pdfTable = response.parsedTable;
+              $(".columns .section-container:eq(2)").first().removeClass("disabled-box");
+              $("#startParseBtn").attr("disabled", "disabled");
+              $("#pdfUpload").first().next().first().attr("disabled", "disabled");
+              $("#parseResults .message-body").text("PDF Parsed.");
+              $("#parseResults").removeClass("is-hidden");
+              $("#parseLoader").addClass("is-hidden");
+              $("#parseStatus .icon i").first().removeClass("fa-times-circle").addClass("fa-check-circle").removeClass("has-text-danger").addClass("has-text-success");
+
+              $("#rewriteContent").click();
+            } else {
+              $("#parseStatus .icon i").first().removeClass("fa-check-circle").addClass("fa-times-circle").removeClass("has-text-success").addClass("has-text-danger");
+              alert("Failed to parse the PDF.");
+            }
+          },
+          error: function (err) {
+            $("#parseLoader").addClass("is-hidden");
+            $("#parseResults .message-body").text("PDF not parsed.");
+            console.log(err);
+          },
+        });
+      }
     }
   });
 

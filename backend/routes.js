@@ -1,4 +1,3 @@
-// This is all the get routes used in the app
 const express = require("express");
 const app = express.Router();
 const path = require("path");
@@ -15,10 +14,12 @@ const fs = require("fs");
 
 // GLOBAL VARIABLES
 let articleModelName;
+var uploadURL = "1";
 
-// GETS
+// url for pdf test: https://i.postimg.cc/G3fmqnY5/TM21-MWD005-ST-DRIVER-CORE-Sell-Sheet-v6-HI.jpg
+// MUST BE JPG
 
-// load login
+//#region PAGE LOADS
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../index.html"));
 });
@@ -43,7 +44,9 @@ app.get("/articledisplay", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
 });
 
-// POSTS
+//#endregion
+
+//#region POSTS FROM PAGE
 
 // update model name used throughout backend
 app.post("/updateModelName", (req, res) => {
@@ -77,9 +80,53 @@ app.post("/login", (req, res) => {
 // pdf uploads
 app.post("/uploads", pdf.upload.single("pdf"), (req, res) => {
   if (req.file) {
+    uploadURL = req.file.filename;
     res.json({ message: "File uploaded successfully.", file: req.file.filename });
   } else {
     res.json({ message: "Please upload a valid PDF." });
+  }
+});
+
+// url uploads
+app.post("/uploadURL", async (req, res) => {
+  uploadURL = req.body.url;
+
+  if (uploadURL.length > 0) {
+    res.json({ message: "URL uploaded successfully.", url: req.body.url });
+  } else {
+    res.json({ message: "URL upload failed.", url: req.body.url });
+  }
+});
+
+// pdf parsing based on url
+app.get("/parsedPDFURL", async (req, res) => {
+  try {
+    let pdfContentFromUrl = await doGPTRequest(gptPrompts(6), path.resolve(__dirname, "\\files\\uploads\\" + uploadURL), true, true);
+
+    let pdfJSON = JSON.parse(pdfContentFromUrl);
+
+    let pdfPara = pdfJSON.paragraph;
+    let pdfTable = pdfJSON.table;
+
+    // WORKING TO HERE
+    return false;
+    // send gpt request for paragraph data
+    const gptParagraphResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptParagraph, pdfPara));
+
+    // send gpt request for table data
+    const gptTableResp = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptTable, pdfTable));
+
+    if (gptParagraphResp.length > 0 && gptTableResp.length > 0) {
+      res.json({
+        success: true,
+        parsedData: gptParagraphResp,
+        parsedTable: gptTableResp,
+      });
+    }
+  } catch (err) {
+    res.json({
+      message: err.message,
+    });
   }
 });
 
@@ -92,24 +139,6 @@ app.post("/parsedPDFs", async (req, res) => {
   }
 
   try {
-    // create a function to parse a pdf in a system into a base64 image
-    /*
-    let folder = `./backend/files/uploads/`;
-    let file = folder + filename;
-    await pdf.pdfToImage(file, folder);
-    let imageBase = path.join(folder, path.basename(file, path.extname(file)) + "-1.jpg");
-    if (fs.existsSync(imageBase)) {
-      const base64Image = pdf.imageToBase64(imageBase);
-
-      // up to here works. the prompt is too long
-      const test = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptTest, base64Image));
-      console.log(test);
-      throw error();
-    } else {
-      console.error("Image file not found");
-    }
-    */
-
     // parse the PDF file and return the excel file names
     const parsedData = await pdf.parsePDF(filename);
 
@@ -224,5 +253,7 @@ app.post("/rewritedescription", async (req, res) => {
     res.status(500).json({ error: err.message, success: false });
   }
 });
+
+//#endregion
 
 module.exports = app;

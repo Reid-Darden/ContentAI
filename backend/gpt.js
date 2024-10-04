@@ -1,46 +1,68 @@
-// GPT related requests
 const axios = require("axios");
+const importHelpers = require("./helpers.js");
+const Helpers = new importHelpers();
+const path = require("path");
+
+// this is the path to the example images used to give context to gpt calls
+const exampleArticleImg = path.resolve(__dirname, "./files/img/testsellsheet_article.jpg");
 
 // CHATGPT AI
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
-const openAISecret = process.env.API_KEY || "";
+const openAISecret = process.env.API_KEY || "sk-proj-Gepz49mZ6v661TWlmoUpT3BlbkFJIfWOrd5LhzFh3cTq6dc9";
 
 // do a GPT Request
-async function doGPTRequest(promptText) {
+async function doGPTRequest(promptText, imageUrl, isResponseJSONFormat = false, useExampleImg = false) {
   try {
     const messages = [
       {
         role: "user",
-        content: [
-          {
-            type: "text",
-            text: promptText,
-          },
-        ],
+        content: [{ type: "text", text: promptText }],
       },
     ];
 
-    let response = await axios.post(
-      openAIEndpoint,
-      {
-        model: "gpt-4o-2024-05-13",
-        messages: messages,
-        response_format: {
-          type: "json_object",
-        },
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${openAISecret}`,
-          "Content-Type": "application/json",
-        },
+    if (imageUrl) {
+      if (useExampleImg) {
+        let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
+        messages[0].content.push({
+          type: "image_url",
+          image_url: {
+            url: `data:image/jpeg;base64,${exImgBase64}`,
+          },
+        });
       }
-    );
+
+      const testImagePath = path.resolve(__dirname, Helpers.convertPdfToJpg(imageUrl, __dirname + "\\files\\uploads\\"));
+
+      messages[0].content.push({
+        type: "image_url",
+        image_url: {
+          url: `data:image/jpeg;base64,${Helpers.imagePathToBase64String(testImagePath)}`,
+        },
+      });
+    }
+
+    const requestBody = {
+      model: "gpt-4o-2024-08-06",
+      messages: messages,
+    };
+
+    if (isResponseJSONFormat) {
+      requestBody.response_format = { type: "json_object" };
+    }
+
+    let response = await axios.post(openAIEndpoint, requestBody, {
+      headers: {
+        Authorization: `Bearer ${openAISecret}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     return response.data.choices[0].message.content;
   } catch (error) {
+    if (error.response) {
+      console.error("Error response data:", error.response.data);
+    }
     console.error("Error during API call:", error);
-    error.message = promptText;
     throw error;
   }
 }
