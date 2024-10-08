@@ -14,7 +14,7 @@ const fs = require("fs");
 
 // GLOBAL VARIABLES
 let articleModelName;
-var uploadURL = "1";
+var uploadURL = "";
 
 // url for pdf test: https://i.postimg.cc/G3fmqnY5/TM21-MWD005-ST-DRIVER-CORE-Sell-Sheet-v6-HI.jpg
 // MUST BE JPG
@@ -36,9 +36,7 @@ app.get("/contentrewrite", (req, res) => {
 
 // description rewrite
 app.get("/descriptionrewrite", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../frontend/html/descriptionrewrite.html")
-  );
+  res.sendFile(path.join(__dirname, "../frontend/html/descriptionrewrite.html"));
 });
 
 // load article display
@@ -48,9 +46,7 @@ app.get("/articledisplay", (req, res) => {
 
 // load product data extraction page
 app.get("/productextractdata", (req, res) => {
-  res.sendFile(
-    path.join(__dirname, "../frontend/html/productextractdata.html")
-  );
+  res.sendFile(path.join(__dirname, "../frontend/html/productextractdata.html"));
 });
 
 //#endregion
@@ -90,10 +86,12 @@ app.post("/login", (req, res) => {
 app.post("/uploads", pdf.upload.single("pdf"), (req, res) => {
   if (req.file) {
     uploadURL = req.file.filename;
-    res.json({
-      message: "File uploaded successfully.",
-      file: req.file.filename,
-    });
+    if (uploadURL.length > 0) {
+      res.json({
+        message: "File uploaded successfully.",
+        file: req.file.filename,
+      });
+    }
   } else {
     res.json({ message: "Please upload a valid PDF." });
   }
@@ -111,23 +109,16 @@ app.post("/uploadURL", async (req, res) => {
 });
 
 // pdf parsing based on url
-app.get("/parsedPDFURL", async (req, res) => {
+app.get("/parsePDF", async (req, res) => {
   try {
-    let pdfContentFromUrl = await doGPTRequest(
-      gptPrompts(6),
-      path.resolve(__dirname, "files", "uploads", uploadURL),
-      true,
-      true
-    );
+    let pdfContentFromUrl = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptImage), path.resolve(__dirname, "files", "uploads", uploadURL), true, true);
 
     let pdfJSON = JSON.parse(pdfContentFromUrl);
 
     let pdfPara = pdfJSON.paragraph;
     let pdfTable = pdfJSON.table;
 
-    // WORKING TO HERE
-
-    if (pdfPara.length > 0 && pdfTable.length > 0) {
+    if (pdfPara != undefined && pdfTable != undefined) {
       res.json({
         success: true,
         parsedData: pdfPara,
@@ -141,71 +132,19 @@ app.get("/parsedPDFURL", async (req, res) => {
   }
 });
 
-// pdf parsing - possibly do away with this, extract info from gpt
-app.post("/parsedPDFs", async (req, res) => {
-  const filename = req.body.filename;
-
-  if (!filename) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No filename provided" });
-  }
-
-  try {
-    // parse the PDF file and return the excel file names
-    const parsedData = await pdf.parsePDF(filename);
-
-    // read and extract the data from the excel files into string of json
-    let parsedExcel = await pdf.parseExcelFiles(parsedData, filename);
-
-    // Convert each parsed file to a json string
-    let excel2JSONParagraph = JSON.stringify(parsedExcel[0]);
-    let excel2JSONTable = JSON.stringify(parsedExcel[1]);
-
-    // send gpt request for paragraph data
-    const gptParagraphResp = await doGPTRequest(
-      gptPrompts(importHelpers.GPTPrompt.gptParagraph, excel2JSONParagraph)
-    );
-
-    // send gpt request for table data
-    const gptTableResp = await doGPTRequest(
-      gptPrompts(importHelpers.GPTPrompt.gptTable, excel2JSONTable)
-    );
-
-    if (gptParagraphResp.length > 0 && gptTableResp.length > 0) {
-      res.json({
-        success: true,
-        parsedData: gptParagraphResp,
-        parsedTable: gptTableResp,
-      });
-    } else {
-      res.json({
-        success: false,
-      });
-    }
-  } catch (error) {
-    res.json({
-      success: false,
-      message: error,
-    });
-  }
-});
-
 // content rewriting
 app.post("/rewrittenContent", async (req, res) => {
-  const content = req.body.content;
+  const contentObj = req.body.content;
 
-  if (!content) {
-    return res
-      .status(400)
-      .json({ success: false, message: "No content provided." });
+  if (!contentObj) {
+    return res.status(400).json({ success: false, message: "No content provided." });
   }
 
   try {
     // do gpt call to rewrite the content, focusing on paragraph structure
-    let rewrite = await doGPTRequest(
-      gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName)
-    );
+    let content = JSON.stringify(contentObj);
+
+    let rewrite = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName), "", true);
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -218,13 +157,14 @@ app.post("/buildarticle", async (req, res) => {
   const content = req.body.content;
   const table = req.body.table;
 
+  let tableData = table.data;
+
+  let contentJSON = JSON.stringify(content);
+  let tableJSON = JSON.stringify(tableData);
+
   try {
-    let jsonContent = await doGPTRequest(
-      gptPrompts(importHelpers.GPTPrompt.gptJSON, content + table)
-    );
-    let article = await doGPTRequest(
-      gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName)
-    );
+    let jsonContent = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptJSON, contentJSON + tableJSON), "", true);
+    let article = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName), "", true, false, true);
 
     let parsedArticle = JSON.parse(article);
 
@@ -268,9 +208,7 @@ app.post("/rewritedescription", async (req, res) => {
   let description = req.body.description;
 
   try {
-    let rewritten_descriptions = await doGPTRequest(
-      gptPrompts(importHelpers.GPTPrompt.gptDescription, description)
-    );
+    let rewritten_descriptions = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptDescription, description));
     let parsed_descriptions = JSON.parse(rewritten_descriptions);
 
     if (parsed_descriptions) {
