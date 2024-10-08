@@ -33,13 +33,32 @@ async function clearDirectory(directoryPath, isUnzippedFolder = false) {
 
 async function wipeFolders() {
   try {
-    const foldersToWipe = ["html", "parsedPDFs", "unzipped", "uploads"];
+    const foldersToWipe = ["html", "uploads"];
     const baseDirectory = path.join(__dirname, "files");
 
     for (const folder of foldersToWipe) {
       const folderPath = path.join(baseDirectory, folder);
       const isUnzippedFolder = folder === "unzipped";
-      await clearDirectory(folderPath, isUnzippedFolder);
+
+      if (folder === "html") {
+        const htmlFolderContent = await readdir(folderPath);
+        for (const item of htmlFolderContent) {
+          // Skip the "ex" folder and .gitignore/.gitkeep files
+          if (item !== "ex" && item !== ".gitignore" && item !== ".gitkeep") {
+            const itemPath = path.join(folderPath, item);
+            await clearDirectory(itemPath, isUnzippedFolder);
+          }
+        }
+      } else {
+        const folderContent = await readdir(folderPath);
+        for (const item of folderContent) {
+          // Skip .gitignore and .gitkeep files
+          if (item !== ".gitignore" && item !== ".gitkeep") {
+            const itemPath = path.join(folderPath, item);
+            await clearDirectory(itemPath, isUnzippedFolder);
+          }
+        }
+      }
     }
 
     return true;

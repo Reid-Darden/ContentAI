@@ -74,7 +74,7 @@ $(document).ready(function () {
       let url = window.location.href;
 
       if (url.includes("/articledisplay/")) {
-        if (confirm("By going home, the current article will be lost. Do you want to continue?")) {
+        if (confirm("By going home, the all current files that have been uploaded will be deleted from the current session. Do you want to continue?")) {
           $.ajax({
             url: "/wipefolders",
             type: "POST",

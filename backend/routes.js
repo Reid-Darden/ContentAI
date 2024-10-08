@@ -157,10 +157,8 @@ app.post("/buildarticle", async (req, res) => {
   const content = req.body.content;
   const table = req.body.table;
 
-  let tableData = table.data;
-
   let contentJSON = JSON.stringify(content);
-  let tableJSON = JSON.stringify(tableData);
+  let tableJSON = JSON.stringify(table);
 
   try {
     let jsonContent = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptJSON, contentJSON + tableJSON), "", true);
