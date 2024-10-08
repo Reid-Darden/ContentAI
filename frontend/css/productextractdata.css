@@ -1,18 +1,4 @@
-.vertical-divider {
-  border-left: 2px solid #000;
-  height: 100%;
-  position: absolute;
-  right: 0;
-}
-
-.section-container {
-  position: relative;
-  height: 50vh;
-  margin: 2rem;
-  padding: 1rem;
-}
-
-#contentrewrite_body {
+#productextractdata_body {
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -53,36 +39,9 @@
   text-align: center;
 }
 
-.tight-gap {
-  --gap: 0.5rem;
-}
-
-.tight-gap .column {
-  padding-left: var(--gap);
-  padding-right: var(--gap);
-}
-
-.disabled-box {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-#model_name_label {
-  font-size: 25px;
-  margin-bottom: 20px;
-}
-
 #pdfUpload + label,
-#startParseBtn,
-#rewriteContent,
-.upload-color {
+#send_description {
   background-color: #1c5799;
   color: #fff;
-  font-weight: 700;
-}
-
-#create_article .createArticle {
-  background-color: #1c9858;
-  color: #000;
   font-weight: 700;
 }

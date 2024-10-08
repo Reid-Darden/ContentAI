@@ -15,38 +15,43 @@ const fs = require("fs");
 // GLOBAL VARIABLES
 let articleModelName;
 var uploadURL = "";
+let PDE_Filename = "";
 
 // url for pdf test: https://i.postimg.cc/G3fmqnY5/TM21-MWD005-ST-DRIVER-CORE-Sell-Sheet-v6-HI.jpg
 // MUST BE JPG
 
 //#region PAGE LOADS
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../index.html"));
+	res.sendFile(path.join(__dirname, "../index.html"));
 });
 
 // load home page
 app.get("/home", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/home.html"));
+	res.sendFile(path.join(__dirname, "../frontend/html/home.html"));
 });
 
 // load article create page
 app.get("/contentrewrite", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/contentrewrite.html"));
+	res.sendFile(path.join(__dirname, "../frontend/html/contentrewrite.html"));
 });
 
 // description rewrite
 app.get("/descriptionrewrite", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/descriptionrewrite.html"));
+	res.sendFile(
+		path.join(__dirname, "../frontend/html/descriptionrewrite.html")
+	);
 });
 
 // load article display
 app.get("/articledisplay", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
+	res.sendFile(path.join(__dirname, "../frontend/html/articledisplay.html"));
 });
 
 // load product data extraction page
 app.get("/productextractdata", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/html/productextractdata.html"));
+	res.sendFile(
+		path.join(__dirname, "../frontend/html/productextractdata.html")
+	);
 });
 
 //#endregion
@@ -55,147 +60,179 @@ app.get("/productextractdata", (req, res) => {
 
 // update model name used throughout backend
 app.post("/updateModelName", (req, res) => {
-  let modelName = req.body.value;
-  if (modelName && modelName.length > 0) {
-    articleModelName = req.body.value;
-    res.json({ updated: true });
-  }
+	let modelName = req.body.value;
+	if (modelName && modelName.length > 0) {
+		articleModelName = req.body.value;
+		res.json({ updated: true });
+	}
 });
 
 // login
 app.post("/login", (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
+	let username = req.body.username;
+	let password = req.body.password;
 
-  if (username.length > 0 && password.length > 0) {
-    let usernameCheck = Helpers.checkUserNameValue(username);
-    let passwordCheck = password === Helpers.generatePassword();
-    if (usernameCheck && passwordCheck) {
-      let name = Helpers.findNameByUsername(loginCredentials, username);
-      let role = Helpers.findRoleByUsername(loginCredentials, username);
-      if (name && role) {
-        res.json({ loggedIn: true, username: name });
-      }
-    } else {
-      res.json({ loggedIn: false });
-    }
-  }
+	if (username.length > 0 && password.length > 0) {
+		let usernameCheck = Helpers.checkUserNameValue(username);
+		let passwordCheck = password === Helpers.generatePassword();
+		if (usernameCheck && passwordCheck) {
+			let name = Helpers.findNameByUsername(loginCredentials, username);
+			let role = Helpers.findRoleByUsername(loginCredentials, username);
+			if (name && role) {
+				res.json({ loggedIn: true, username: name });
+			}
+		} else {
+			res.json({ loggedIn: false });
+		}
+	}
 });
 
 // pdf uploads
 app.post("/uploads", pdf.upload.single("pdf"), (req, res) => {
-  if (req.file) {
-    uploadURL = req.file.filename;
-    if (uploadURL.length > 0) {
-      res.json({
-        message: "File uploaded successfully.",
-        file: req.file.filename,
-      });
-    }
-  } else {
-    res.json({ message: "Please upload a valid PDF." });
-  }
+	if (req.file) {
+		uploadURL = req.file.filename;
+		if (uploadURL.length > 0) {
+			res.json({
+				message: "File uploaded successfully.",
+				file: req.file.filename,
+			});
+		}
+	} else {
+		res.json({ message: "Please upload a valid PDF." });
+	}
 });
 
 // url uploads
 app.post("/uploadURL", async (req, res) => {
-  uploadURL = req.body.url;
+	uploadURL = req.body.url;
 
-  if (uploadURL.length > 0) {
-    res.json({ message: "URL uploaded successfully.", url: req.body.url });
-  } else {
-    res.json({ message: "URL upload failed.", url: req.body.url });
-  }
+	if (uploadURL.length > 0) {
+		res.json({ message: "URL uploaded successfully.", url: req.body.url });
+	} else {
+		res.json({ message: "URL upload failed.", url: req.body.url });
+	}
 });
 
 // pdf parsing based on url
 app.get("/parsePDF", async (req, res) => {
-  try {
-    let pdfContentFromUrl = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptImage), path.resolve(__dirname, "files", "uploads", uploadURL), true, true);
+	try {
+		let pdfContentFromUrl = await doGPTRequest(
+			gptPrompts(importHelpers.GPTPrompt.gptImage),
+			path.resolve(__dirname, "files", "uploads", uploadURL),
+			true,
+			true
+		);
 
-    let pdfJSON = JSON.parse(pdfContentFromUrl);
+		let pdfJSON = JSON.parse(pdfContentFromUrl);
 
-    let pdfPara = pdfJSON.paragraph;
-    let pdfTable = pdfJSON.table;
+		let pdfPara = pdfJSON.paragraph;
+		let pdfTable = pdfJSON.table;
 
-    if (pdfPara != undefined && pdfTable != undefined) {
-      res.json({
-        success: true,
-        parsedData: pdfPara,
-        parsedTable: pdfTable,
-      });
-    }
-  } catch (err) {
-    res.json({
-      message: err.message,
-    });
-  }
+		if (pdfPara != undefined && pdfTable != undefined) {
+			res.json({
+				success: true,
+				parsedData: pdfPara,
+				parsedTable: pdfTable,
+			});
+		}
+	} catch (err) {
+		res.json({
+			message: err.message,
+		});
+	}
 });
 
 // content rewriting
 app.post("/rewrittenContent", async (req, res) => {
-  const contentObj = req.body.content;
+	const contentObj = req.body.content;
 
-  if (!contentObj) {
-    return res.status(400).json({ success: false, message: "No content provided." });
-  }
+	if (!contentObj) {
+		return res
+			.status(400)
+			.json({ success: false, message: "No content provided." });
+	}
 
-  try {
-    // do gpt call to rewrite the content, focusing on paragraph structure
-    let content = JSON.stringify(contentObj);
+	try {
+		// do gpt call to rewrite the content, focusing on paragraph structure
+		let content = JSON.stringify(contentObj);
 
-    let rewrite = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName), "", true);
+		let rewrite = await doGPTRequest(
+			gptPrompts(
+				importHelpers.GPTPrompt.gptSEO,
+				content,
+				articleModelName
+			),
+			"",
+			true
+		);
 
-    res.json({ success: true, rewrittenContent: rewrite });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error });
-  }
+		res.json({ success: true, rewrittenContent: rewrite });
+	} catch (error) {
+		res.status(500).json({ success: false, message: error });
+	}
 });
 
 // article building
 app.post("/buildarticle", async (req, res) => {
-  const content = req.body.content;
-  const table = req.body.table;
+	const content = req.body.content;
+	const table = req.body.table;
 
-  let contentJSON = JSON.stringify(content);
-  let tableJSON = JSON.stringify(table);
+	let contentJSON = JSON.stringify(content);
+	let tableJSON = JSON.stringify(table);
 
-  try {
-    let jsonContent = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptJSON, contentJSON + tableJSON), "", true);
-    let article = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName), "", true, false, true);
+	try {
+		let jsonContent = await doGPTRequest(
+			gptPrompts(
+				importHelpers.GPTPrompt.gptJSON,
+				contentJSON + tableJSON
+			),
+			"",
+			true
+		);
+		let article = await doGPTRequest(
+			gptPrompts(
+				importHelpers.GPTPrompt.gptHTML,
+				jsonContent,
+				articleModelName
+			),
+			"",
+			true,
+			false,
+			true
+		);
 
-    let parsedArticle = JSON.parse(article);
+		let parsedArticle = JSON.parse(article);
 
-    res.json({ success: true, data: parsedArticle.data });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err });
-  }
+		res.json({ success: true, data: parsedArticle.data });
+	} catch (err) {
+		res.status(500).json({ success: false, message: err });
+	}
 });
 
 // send email notification of article creation
 app.post("/confirmArticle", async (req, res) => {
-  let article = req.body.content;
-  let user = req.body.user;
-  let title = req.body.title;
-  let comments = req.body.comments;
-  if (await email(article, title, comments, user)) {
-    // reset the files folder
-    if (await wipeFolders()) {
-      res.json({ success: true, alert: "cleared" });
-    } else {
-      res.json({ success: true, alert: "email" });
-    }
-  } else {
-    res.json({ success: false });
-  }
+	let article = req.body.content;
+	let user = req.body.user;
+	let title = req.body.title;
+	let comments = req.body.comments;
+	if (await email(article, title, comments, user)) {
+		// reset the files folder
+		if (await wipeFolders()) {
+			res.json({ success: true, alert: "cleared" });
+		} else {
+			res.json({ success: true, alert: "email" });
+		}
+	} else {
+		res.json({ success: false });
+	}
 });
 
 app.post("/wipefolders", async (req, res) => {
-  if (await wipeFolders()) {
-    res.json({ wiped: true });
-  } else {
-    res.json({ wiped: false });
-  }
+	if (await wipeFolders()) {
+		res.json({ wiped: true });
+	} else {
+		res.json({ wiped: false });
+	}
 });
 
 /*
@@ -203,18 +240,38 @@ REWRITE DESCRIPTION
 */
 
 app.post("/rewritedescription", async (req, res) => {
-  let description = req.body.description;
+	let description = req.body.description;
 
-  try {
-    let rewritten_descriptions = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptDescription, description));
-    let parsed_descriptions = JSON.parse(rewritten_descriptions);
+	try {
+		let rewritten_descriptions = await doGPTRequest(
+			gptPrompts(importHelpers.GPTPrompt.gptDescription, description)
+		);
+		let parsed_descriptions = JSON.parse(rewritten_descriptions);
 
-    if (parsed_descriptions) {
-      res.json({ success: true, descriptions: parsed_descriptions });
-    }
-  } catch (err) {
-    res.status(500).json({ error: err.message, success: false });
-  }
+		if (parsed_descriptions) {
+			res.json({ success: true, descriptions: parsed_descriptions });
+		}
+	} catch (err) {
+		res.status(500).json({ error: err.message, success: false });
+	}
+});
+
+/*
+PRODUCT DATA EXTRACTION
+*/
+app.post("/uploadPDF_PDE", pdf.upload.single("pdf"), (req, res) => {
+	if (req.file) {
+		PDE_Filename = req.file.filename;
+		if (PDE_Filename.length > 0) {
+			res.json({
+				message: "File uploaded successfully.",
+				success: true,
+				file: PDE_Filename,
+			});
+		}
+	} else {
+		res.json({ message: "Please upload a valid PDF.", success: false });
+	}
 });
 
 //#endregion
