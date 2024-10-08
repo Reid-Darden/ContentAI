@@ -33,7 +33,8 @@ $(document).ready(async function () {
 						.removeClass("has-text-danger")
 						.addClass("has-text-success");
 
-					$("#pdfFileName").text(data.file);
+					$("#pdfFileName").text(response.file);
+                    $("#pdfMessage .message-body").text(response.message);
 
 					$("#send_extract_product_data").removeAttr("disabled");
 				} else {

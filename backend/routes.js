@@ -87,8 +87,8 @@ app.post("/login", (req, res) => {
 	}
 });
 
-// pdf uploads
-app.post("/uploads", pdf.upload.single("pdf"), (req, res) => {
+// article pdf uploads
+app.post("/uploads", pdf.upload("article").single("pdf"), (req, res) => {
 	if (req.file) {
 		uploadURL = req.file.filename;
 		if (uploadURL.length > 0) {
@@ -259,7 +259,7 @@ app.post("/rewritedescription", async (req, res) => {
 /*
 PRODUCT DATA EXTRACTION
 */
-app.post("/uploadPDF_PDE", pdf.upload.single("pdf"), (req, res) => {
+app.post("/uploadPDF_PDE", pdf.upload("dataextract").single("pdf"), (req, res) => {
 	if (req.file) {
 		PDE_Filename = req.file.filename;
 		if (PDE_Filename.length > 0) {

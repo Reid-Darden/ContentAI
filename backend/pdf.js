@@ -2,18 +2,18 @@
 const multer = require("multer");
 
 // Configure multer for PDF uploads
-const storage = multer.diskStorage({
-  destination: "./backend/files/uploads/",
+const storage = (folder) => multer.diskStorage({
+  destination: `./backend/files/uploads/${folder}/`,
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
 });
 
-const upload = multer({
-  storage: storage,
+const upload = (folder) => multer({
+  storage: storage(folder),
   fileFilter: function (req, file, cb) {
     if (file.mimetype !== "application/pdf") {
-      return cb(null, false); // Reject non-PDFs
+      return cb(null, false); 
     }
     cb(null, true);
   },
