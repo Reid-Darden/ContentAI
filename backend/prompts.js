@@ -19,6 +19,12 @@ let gptPrompts = (promptNum, extra = "", modelName = "") => {
     {
       prompt: `The following is an example of how the HTML should be outtputted in the following prompt. HTML: ${extra}`,
     },
+    {
+      prompt: `There are 2 images attached to this request. I would like you to return a JSON data structure of data points (given very specific instriuctions) surrounding the 2nd image. The goal of this is to extract golf club data from the second image and into JSON that can be imported into a HTML table. The first attached image in this request shows an example outline of how to dissect the page to target the correct info before making it JSON. Please note that there is no extraction coming from the first image - it is strictly an example. Within the second image, the following Data Points (which will have options attached in ()) are what I want to be extracted/focused on. They will be broken into 2 parts in the final json structure as well (product and variations are the 2 parts). The following data is mapped into the product section of the JSON: PlayerType (Mens or Women), Brand (full brand name), MinorType (what type of club is it like driver, putter, wedge, etc.), Model (full model name), and SubType). Subtype is the main ingredient that determines how many of these object (product + variation) combos will exist in the output. For example, say I am having an image that has fariway wood data in it for a 3 wood and a 5 wood. I would need a seperate entire object with the same other relevant product data in it for both 3 and 5 subtypes. Once the product data objects have been started, move into mapping the variation data to each specific object. Variation Data is vast and includes: Dexterity (Left or Right), Flex of club, Shaft Name and Material, Grip Model, Loft, Club Head Weights, Length, Lie Angle, etc. This data is normally very easily distinguisable within the context of the table that holds the data in the images. Once all the data has been created in the JSON structure, send it as the output.`
+    },
+    {
+      prompt: `The following is an example of where Product Data to be extracted typically can be derived from in the image. Image: ${extra}`
+    }
   ];
 
   return gptPrompts[promptNum].prompt;

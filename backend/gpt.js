@@ -19,6 +19,7 @@ const exampleHTML = () => {
 
 // this is the path to the example images used to give context to gpt calls
 const exampleArticleImg = path.resolve(__dirname, "./files/img/testsellsheet_article.jpg");
+const exampleProductExtractImg = path.resolve(__dirname, "./files/img/testsellsheet_pde.jpg");
 
 // CHATGPT AI
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
@@ -43,7 +44,7 @@ async function doGPTRequest(promptText, imageUrl = "", isResponseJSONFormat = fa
 
     if (imageUrl.length > 0) {
       if (useExampleImg) {
-        let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
+        let exImgBase64 = await Helpers.imagePathToBase64String(exampleProductExtractImg);
 
         messages[0].content.push({
           type: "image_url",
@@ -57,7 +58,7 @@ async function doGPTRequest(promptText, imageUrl = "", isResponseJSONFormat = fa
         .then((response) => {
           return response;
         })
-        .catch((err) => {});
+        .catch((err) => { });
 
       let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 

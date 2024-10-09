@@ -45,5 +45,18 @@ $(document).ready(async function () {
 		});
 	});
 
-	$(document).on("click", "#send_extract_product_data", function () {});
+	$(document).on("click", "#send_extract_product_data", function () {
+		$.ajax({
+			type: "GET",
+			url: "/extractProductData",
+			success: function(resp){
+				if(resp.success){
+					alert("hit and got back");
+				}
+			},
+			error: function(resp){
+
+			}
+		})
+	});
 });

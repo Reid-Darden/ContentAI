@@ -118,7 +118,7 @@ app.get("/parsePDF", async (req, res) => {
 	try {
 		let pdfContentFromUrl = await doGPTRequest(
 			gptPrompts(importHelpers.GPTPrompt.gptImage),
-			path.resolve(__dirname, "files", "uploads", uploadURL),
+			path.resolve(__dirname, "files", "uploads", "article", uploadURL),
 			true,
 			true
 		);
@@ -259,18 +259,42 @@ app.post("/rewritedescription", async (req, res) => {
 /*
 PRODUCT DATA EXTRACTION
 */
-app.post("/uploadPDF_PDE", pdf.upload("dataextract").single("pdf"), (req, res) => {
-	if (req.file) {
-		PDE_Filename = req.file.filename;
-		if (PDE_Filename.length > 0) {
-			res.json({
-				message: "File uploaded successfully.",
-				success: true,
-				file: PDE_Filename,
-			});
+app.post(
+	"/uploadPDF_PDE",
+	pdf.upload("dataextract").single("pdf"),
+	(req, res) => {
+		if (req.file) {
+			PDE_Filename = req.file.filename;
+			if (PDE_Filename.length > 0) {
+				res.json({
+					message: "File uploaded successfully.",
+					success: true,
+					file: PDE_Filename,
+				});
+			}
+		} else {
+			res.json({ message: "Please upload a valid PDF.", success: false });
 		}
+	}
+);
+
+app.get("/extractProductData", async (req, res) => {
+	// TODO: update doGPTRequest to take a json of settings and then update it so those settings are set in an object within the gpt request func that can more easily be called 
+	// TODO: make a example image so the product extract gpt call knows what to look at
+	if (PDE_Filename.length > 0) {
+		let extractedJSONData = doGPTRequest(
+			gptPrompts(importHelpers.GPTPrompt.gptProductDataExtract),
+			path.resolve(
+				__dirname,
+				"files",
+				"uploads",
+				"dataextract",
+				PDE_Filename
+			),
+			true,
+			true
+		);
 	} else {
-		res.json({ message: "Please upload a valid PDF.", success: false });
 	}
 });
 
