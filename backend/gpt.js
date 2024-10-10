@@ -26,39 +26,70 @@ const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
 const openAISecret = process.env.API_KEY || "sk-proj-Gepz49mZ6v661TWlmoUpT3BlbkFJIfWOrd5LhzFh3cTq6dc9";
 
 // do a GPT Request
-async function doGPTRequest(promptText, imageUrl = "", isResponseJSONFormat = false, useExampleImg = false, useExampleHTML = false) {
+async function doGPTRequest(promptText, actualSettings = {}) {
   try {
     const messages = [];
 
-    if (useExampleHTML) {
+    // default settings
+    const defaultSettings = {
+      imageURL: "",
+      isResponseJSONFormat: false,
+      useExampleImg: false,
+      useExampleHTML: false,
+      useExampleProductDataImg: false,
+    };
+
+    // create current settings based on default and passed in settings
+    const settings = { ...defaultSettings, ...actualSettings };
+
+    // system instructions
+    if (settings.useExampleHTML) {
       messages.push({
         role: "system",
         content: gptPrompts(importHelpers.GPTPrompt.gptHTMLEx, await exampleHTML()),
       });
     }
 
+    // main prompt
     messages.push({
       role: "user",
       content: [{ type: "text", text: promptText }],
     });
 
-    if (imageUrl.length > 0) {
-      if (useExampleImg) {
-        let exImgBase64 = await Helpers.imagePathToBase64String(exampleProductExtractImg);
+    // if we have an image to attach
+    if (settings.imageURL.length > 0) {
+      if (settings.useExampleImg || settings.useExampleProductDataImg) {
+        if (settings.useExampleImg) {
+          // article creation example img
+          let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
 
-        messages[0].content.push({
-          type: "image_url",
-          image_url: {
-            url: `data:image/jpeg;base64,${exImgBase64}`,
-          },
-        });
+          messages[0].content.push({
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${exImgBase64}`,
+            },
+          });
+        }
+
+        if (settings.useExampleProductDataImg) {
+          // product data extraction example img
+          let exImgBase64 = await Helpers.imagePathToBase64String(exampleProductExtractImg);
+
+          messages[0].content.push({
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${exImgBase64}`,
+            },
+          });
+        }
       }
 
-      const testImagePath = await Helpers.convertPdfToJpg(imageUrl, path.resolve(__dirname, "files", "uploads"))
+      // convert pdf to jpg for gpt api call
+      const testImagePath = await Helpers.convertPdfToJpg(settings.imageURL, path.resolve(__dirname, "files", "uploads", "jpg"))
         .then((response) => {
           return response;
         })
-        .catch((err) => { });
+        .catch((err) => {});
 
       let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 
@@ -75,10 +106,12 @@ async function doGPTRequest(promptText, imageUrl = "", isResponseJSONFormat = fa
       messages: messages,
     };
 
-    if (isResponseJSONFormat) {
+    // ensures response is json formatted
+    if (settings.isResponseJSONFormat) {
       requestBody.response_format = { type: "json_object" };
     }
 
+    // main call
     let response = await axios.post(openAIEndpoint, requestBody, {
       headers: {
         Authorization: `Bearer ${openAISecret}`,
@@ -86,6 +119,7 @@ async function doGPTRequest(promptText, imageUrl = "", isResponseJSONFormat = fa
       },
     });
 
+    // returns the gpt response
     return response.data.choices[0].message.content;
   } catch (error) {
     if (error.response) {
