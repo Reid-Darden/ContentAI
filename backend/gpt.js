@@ -37,6 +37,7 @@ async function doGPTRequest(promptText, actualSettings = {}) {
       useExampleImg: false,
       useExampleHTML: false,
       useExampleProductDataImg: false,
+      useExampleProductDataRules: false
     };
 
     // create current settings based on default and passed in settings
@@ -50,11 +51,21 @@ async function doGPTRequest(promptText, actualSettings = {}) {
       });
     }
 
+    if (settings.useExampleProductDataRules) {
+      messages.push({
+        role: "system",
+        content: gptPrompts(importHelpers.GPTPrompt.gptProductDataExtractRules),
+      });
+    }
+
     // main prompt
     messages.push({
       role: "user",
       content: [{ type: "text", text: promptText }],
     });
+
+    // for making sure we are adding to the correct messages array
+    const userIndex = messages.findIndex(msg => msg.role == "user");
 
     // if we have an image to attach
     if (settings.imageURL.length > 0) {
@@ -63,7 +74,7 @@ async function doGPTRequest(promptText, actualSettings = {}) {
           // article creation example img
           let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
 
-          messages[0].content.push({
+          messages[userIndex].content.push({
             type: "image_url",
             image_url: {
               url: `data:image/jpeg;base64,${exImgBase64}`,
@@ -75,7 +86,7 @@ async function doGPTRequest(promptText, actualSettings = {}) {
           // product data extraction example img
           let exImgBase64 = await Helpers.imagePathToBase64String(exampleProductExtractImg);
 
-          messages[0].content.push({
+          messages[userIndex].content.push({
             type: "image_url",
             image_url: {
               url: `data:image/jpeg;base64,${exImgBase64}`,
@@ -89,11 +100,11 @@ async function doGPTRequest(promptText, actualSettings = {}) {
         .then((response) => {
           return response;
         })
-        .catch((err) => {});
+        .catch((err) => { });
 
       let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 
-      messages[0].content.push({
+      messages[userIndex].content.push({
         type: "image_url",
         image_url: {
           url: `data:image/jpeg;base64,${inputBase64Img}`,

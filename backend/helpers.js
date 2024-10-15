@@ -4,7 +4,7 @@ const path = require("path");
 const pdfPoppler = require("pdf-poppler");
 
 module.exports = class Helpers {
-  constructor() {}
+  constructor() { }
 
   static GPTPrompt = Object.freeze({
     gptSEO: 0,
@@ -15,6 +15,7 @@ module.exports = class Helpers {
     gptHTMLEx: 5,
     gptProductDataExtract: 6,
     gptProductDataExtractEx: 7,
+    gptProductDataExtractRules: 8
   });
 
   // HELPERS

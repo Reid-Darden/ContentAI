@@ -261,6 +261,7 @@ app.get("/extractProductData", async (req, res) => {
       imageURL: path.resolve(__dirname, "files", "uploads", "dataextract", PDE_Filename),
       isResponseJSONFormat: true,
       useExampleProductDataImg: true,
+      useExampleProductDataRules: true
     };
 
     let extractedJSONData = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptProductDataExtract), settings);
