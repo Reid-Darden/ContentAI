@@ -41,12 +41,17 @@ $(document).ready(async function () {
   });
 
   $(document).on("click", "#send_extract_product_data", function () {
+    $("#send_extract_product_data").addClass("is-loading");
     $.ajax({
       type: "GET",
       url: "/extractProductData",
       success: function (resp) {
         if (resp.success) {
           console.log(resp.data);
+          $("#send_extract_product_data").removeClass("is-loading");
+          if (confirm("Product data extracted successfully. By clicking OK, a new tab will open with the PRIV Base SKU entry page and will start prepopulating data.")) {
+            window.open(resp.url, "_blank");
+          }
         }
       },
       error: function (resp) {},

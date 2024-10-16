@@ -39,7 +39,7 @@ async function doGPTRequest(actualSettings = {}) {
       useExampleImg: false,
       useExampleHTML: false,
       useExampleProductDataImg: false,
-      useExampleProductDataRules: false
+      useExampleProductDataRules: false,
     };
 
     // create current settings based on default and passed in settings
@@ -66,8 +66,8 @@ async function doGPTRequest(actualSettings = {}) {
       content: [{ type: "text", text: settings.prompt }],
     });
 
-    // for making sure we are adding to the correct messages array
-    const userIndex = messages.findIndex(msg => msg.role == "user");
+    // for making sure we are adding to the correct part of messages array
+    const userIndex = messages.findIndex((msg) => msg.role == "user");
 
     // if we have an image to attach
     if (settings.pdfPath.length > 0 && settings.imageConvertFolder.length > 0) {
@@ -102,7 +102,7 @@ async function doGPTRequest(actualSettings = {}) {
         .then((response) => {
           return response;
         })
-        .catch((err) => { });
+        .catch((err) => {});
 
       let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 

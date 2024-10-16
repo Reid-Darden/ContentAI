@@ -20,7 +20,7 @@ let PDE_Filename = "";
 // url for pdf test: https://i.postimg.cc/G3fmqnY5/TM21-MWD005-ST-DRIVER-CORE-Sell-Sheet-v6-HI.jpg
 // MUST BE JPG
 
-//#region PAGE LOADS
+//#region Page Gets
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../index.html"));
 });
@@ -231,7 +231,7 @@ app.post("/rewritedescription", async (req, res) => {
 
   try {
     let settings = {
-      prompt: gptPrompts(importHelpers.GPTPrompt.gptDescription, description)
+      prompt: gptPrompts(importHelpers.GPTPrompt.gptDescription, description),
     };
 
     let rewritten_descriptions = await doGPTRequest(settings);
@@ -272,13 +272,24 @@ app.get("/extractProductData", async (req, res) => {
       imageConvertFolder: "dataextract",
       isResponseJSONFormat: true,
       useExampleProductDataImg: true,
-      useExampleProductDataRules: true
+      useExampleProductDataRules: true,
     };
 
     let extractedJSONData = await doGPTRequest(settings);
 
-    res.json({ success: true, data: extractedJSONData });
+    if (extractedJSONData.length > 0) {
+      let jsonString = JSON.stringify(extractedJSONData);
+      let encodedJSON = encodeURIComponent(jsonString);
+
+      let DEVurl = ``;
+      let url = ``;
+      // /?extracted=${encodedJSON}`;
+      res.json({ success: true, url: DEVurl });
+    } else {
+      res.json({ success: true, message: "Extraction failed." });
+    }
   } else {
+    res.json({ success: false, message: "Filename not found." });
   }
 });
 
