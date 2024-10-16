@@ -26,13 +26,15 @@ const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
 const openAISecret = process.env.API_KEY || "sk-proj-Gepz49mZ6v661TWlmoUpT3BlbkFJIfWOrd5LhzFh3cTq6dc9";
 
 // do a GPT Request
-async function doGPTRequest(promptText, actualSettings = {}) {
+async function doGPTRequest(actualSettings = {}) {
   try {
     const messages = [];
 
     // default settings
     const defaultSettings = {
-      imageURL: "",
+      prompt: "",
+      pdfPath: "",
+      imageConvertFolder: "",
       isResponseJSONFormat: false,
       useExampleImg: false,
       useExampleHTML: false,
@@ -61,14 +63,14 @@ async function doGPTRequest(promptText, actualSettings = {}) {
     // main prompt
     messages.push({
       role: "user",
-      content: [{ type: "text", text: promptText }],
+      content: [{ type: "text", text: settings.prompt }],
     });
 
     // for making sure we are adding to the correct messages array
     const userIndex = messages.findIndex(msg => msg.role == "user");
 
     // if we have an image to attach
-    if (settings.imageURL.length > 0) {
+    if (settings.pdfPath.length > 0 && settings.imageConvertFolder.length > 0) {
       if (settings.useExampleImg || settings.useExampleProductDataImg) {
         if (settings.useExampleImg) {
           // article creation example img
@@ -96,7 +98,7 @@ async function doGPTRequest(promptText, actualSettings = {}) {
       }
 
       // convert pdf to jpg for gpt api call
-      const testImagePath = await Helpers.convertPdfToJpg(settings.imageURL, path.resolve(__dirname, "files", "uploads", "jpg"))
+      const testImagePath = await Helpers.convertPdfToJpg(settings.pdfPath, path.resolve(__dirname, "files", "uploads", settings.imageConvertFolder))
         .then((response) => {
           return response;
         })

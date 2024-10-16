@@ -113,12 +113,14 @@ app.post("/uploadURL", async (req, res) => {
 app.get("/parsePDF", async (req, res) => {
   try {
     let settings = {
-      imageURL: path.resolve(__dirname, "files", "uploads", "article", uploadURL),
+      prompt: gptPrompts(importHelpers.GPTPrompt.gptImage),
+      pdfPath: path.resolve(__dirname, "files", "uploads", "article", uploadURL),
+      imageConvertFolder: "article",
       isResponseJSONFormat: true,
       useExampleImg: true,
     };
 
-    let pdfContentFromUrl = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptImage), settings);
+    let pdfContentFromUrl = await doGPTRequest(settings);
 
     let pdfJSON = JSON.parse(pdfContentFromUrl);
 
@@ -152,10 +154,11 @@ app.post("/rewrittenContent", async (req, res) => {
     let content = JSON.stringify(contentObj);
 
     let settings = {
+      prompt: gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName),
       isResponseJSONFormat: true,
     };
 
-    let rewrite = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptSEO, content, articleModelName), settings);
+    let rewrite = await doGPTRequest(settings);
 
     res.json({ success: true, rewrittenContent: rewrite });
   } catch (error) {
@@ -173,15 +176,17 @@ app.post("/buildarticle", async (req, res) => {
 
   try {
     let settings = {
+      prompt: gptPrompts(importHelpers.GPTPrompt.gptJSON, contentJSON + tableJSON),
       isResponseJSONFormat: true,
     };
 
-    let jsonContent = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptJSON, contentJSON + tableJSON), settings);
+    let jsonContent = await doGPTRequest(settings);
 
     // DO NOT move this. seperates code in GPT request based on that setting
     settings.useExampleHTML = true;
+    settings.prompt = gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName);
 
-    let article = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptHTML, jsonContent, articleModelName), settings);
+    let article = await doGPTRequest(settings);
 
     let parsedArticle = JSON.parse(article);
 
@@ -225,7 +230,11 @@ app.post("/rewritedescription", async (req, res) => {
   let description = req.body.description;
 
   try {
-    let rewritten_descriptions = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptDescription, description));
+    let settings = {
+      prompt: gptPrompts(importHelpers.GPTPrompt.gptDescription, description)
+    };
+
+    let rewritten_descriptions = await doGPTRequest(settings);
     let parsed_descriptions = JSON.parse(rewritten_descriptions);
 
     if (parsed_descriptions) {
@@ -258,13 +267,15 @@ app.post("/uploadPDF_PDE", pdf.upload("dataextract").single("pdf"), (req, res) =
 app.get("/extractProductData", async (req, res) => {
   if (PDE_Filename.length > 0) {
     let settings = {
-      imageURL: path.resolve(__dirname, "files", "uploads", "dataextract", PDE_Filename),
+      prompt: gptPrompts(importHelpers.GPTPrompt.gptProductDataExtract),
+      pdfPath: path.resolve(__dirname, "files", "uploads", "dataextract", PDE_Filename),
+      imageConvertFolder: "dataextract",
       isResponseJSONFormat: true,
       useExampleProductDataImg: true,
       useExampleProductDataRules: true
     };
 
-    let extractedJSONData = await doGPTRequest(gptPrompts(importHelpers.GPTPrompt.gptProductDataExtract), settings);
+    let extractedJSONData = await doGPTRequest(settings);
 
     res.json({ success: true, data: extractedJSONData });
   } else {
