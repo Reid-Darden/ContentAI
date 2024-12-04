@@ -281,9 +281,8 @@ app.get("/extractProductData", async (req, res) => {
       let jsonString = JSON.stringify(extractedJSONData);
       let encodedJSON = encodeURIComponent(jsonString);
 
-      let DEVurl = ``;
+      let DEVurl = `http://priv2.gvc.dvt/productmgmt/basedata/entry.aspx?mode=create&extracted=${encodedJSON}`;
       let url = ``;
-      // /?extracted=${encodedJSON}`;
       res.json({ success: true, url: DEVurl });
     } else {
       res.json({ success: true, message: "Extraction failed." });
