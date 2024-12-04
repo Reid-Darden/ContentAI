@@ -23,7 +23,7 @@ const exampleProductExtractImg = path.resolve(__dirname, "./files/img/testsellsh
 
 // CHATGPT AI
 const openAIEndpoint = "https://api.openai.com/v1/chat/completions";
-const openAISecret = process.env.API_KEY || "sk-proj-Gepz49mZ6v661TWlmoUpT3BlbkFJIfWOrd5LhzFh3cTq6dc9";
+const openAISecret = process.env.API_KEY || "";
 
 // do a GPT Request
 async function doGPTRequest(actualSettings = {}) {
@@ -102,7 +102,7 @@ async function doGPTRequest(actualSettings = {}) {
         .then((response) => {
           return response;
         })
-        .catch((err) => {});
+        .catch((err) => { });
 
       let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 
