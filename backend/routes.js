@@ -114,7 +114,7 @@ app.get("/parsePDF", async (req, res) => {
   try {
     let settings = {
       prompt: gptPrompts(importHelpers.GPTPrompt.gptImage),
-      pdfPath: path.resolve(__dirname, "files", "uploads", "article", uploadURL),
+      pdfPath: path.join(__dirname, "files", "uploads", "article", uploadURL),
       imageConvertFolder: "article",
       isResponseJSONFormat: true,
       useExampleImg: true,
