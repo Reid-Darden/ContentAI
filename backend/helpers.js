@@ -1,11 +1,9 @@
 const loginCredentials = require("./credentials.js");
 const fs = require("fs");
 const path = require("path");
-const pdfPoppler = require("pdf-poppler");
-const fromPath = require("pdf2pic").fromPath;
 
 module.exports = class Helpers {
-  constructor() { }
+  constructor() {}
 
   static GPTPrompt = Object.freeze({
     gptSEO: 0,
@@ -16,7 +14,7 @@ module.exports = class Helpers {
     gptHTMLEx: 5,
     gptProductDataExtract: 6,
     gptProductDataExtractEx: 7,
-    gptProductDataExtractRules: 8
+    gptProductDataExtractRules: 8,
   });
 
   // HELPERS
@@ -34,26 +32,14 @@ module.exports = class Helpers {
   }
 
   async convertPdfToJpg(pdfPath, outputDir) {
-    const options = {
-      format: "jpeg",
-      //out_dir: outputDir,
-      saveFilename: path.basename(pdfPath, path.extname(pdfPath)),
-      savePath: outputDir,
-      density: 100,
-      width: 500,
-      height: 500
-    };
-
     try {
-      //await pdfPoppler.convert(pdfPath, options);
-      const convert = fromPath(pdfPath, options);
-      convert.bulk(-1, { responseType: "image" }).then((resolve) => {
-        const convertedFile = path.join(options.savePath, `${options.saveFilename}-1.jpg`);
+      // do the work to conver the pdf to jpg here. find the best way to do this
 
-        console.log(`PDF converted successfully to JPG in ${outputDir}`);
+      const convertedFile = path.join(outputDir, `${path.basename(pdfPath, path.extname(pdfPath))}-1.jpg`);
 
-        return convertedFile;
-      });
+      console.log(`PDF converted successfully to JPG in ${outputDir}`);
+
+      return convertedFile;
     } catch (err) {
       console.error("Error converting PDF to JPG:", err);
       throw err;

@@ -71,30 +71,28 @@ async function doGPTRequest(actualSettings = {}) {
 
     // if we have an image to attach
     if (settings.pdfPath.length > 0 && settings.imageConvertFolder.length > 0) {
-      if (settings.useExampleImg || settings.useExampleProductDataImg) {
-        if (settings.useExampleImg) {
-          // article creation example img
-          let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
+      if (settings.useExampleImg) {
+        // article creation example img
+        let exImgBase64 = await Helpers.imagePathToBase64String(exampleArticleImg);
 
-          messages[userIndex].content.push({
-            type: "image_url",
-            image_url: {
-              url: `data:image/jpeg;base64,${exImgBase64}`,
-            },
-          });
-        }
+        messages[userIndex].content.push({
+          type: "image_url",
+          image_url: {
+            url: `data:image/jpeg;base64,${exImgBase64}`,
+          },
+        });
+      }
 
-        if (settings.useExampleProductDataImg) {
-          // product data extraction example img
-          let exImgBase64 = await Helpers.imagePathToBase64String(exampleProductExtractImg);
+      if (settings.useExampleProductDataImg) {
+        // product data extraction example img
+        let exImgBase64 = await Helpers.imagePathToBase64String(exampleProductExtractImg);
 
-          messages[userIndex].content.push({
-            type: "image_url",
-            image_url: {
-              url: `data:image/jpeg;base64,${exImgBase64}`,
-            },
-          });
-        }
+        messages[userIndex].content.push({
+          type: "image_url",
+          image_url: {
+            url: `data:image/jpeg;base64,${exImgBase64}`,
+          },
+        });
       }
 
       // convert pdf to jpg for gpt api call
@@ -102,7 +100,7 @@ async function doGPTRequest(actualSettings = {}) {
         .then((response) => {
           return response;
         })
-        .catch((err) => { });
+        .catch((err) => {});
 
       let inputBase64Img = await Helpers.imagePathToBase64String(testImagePath);
 
