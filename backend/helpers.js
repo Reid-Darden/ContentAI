@@ -2,6 +2,8 @@ const loginCredentials = require("./credentials.js");
 const fs = require("fs");
 const path = require("path");
 
+const { exec } = require("child_process");
+
 module.exports = class Helpers {
   constructor() {}
 
@@ -34,6 +36,22 @@ module.exports = class Helpers {
   async convertPdfToJpg(pdfPath, outputDir) {
     try {
       // do the work to conver the pdf to jpg here. find the best way to do this
+      const pyPath = path.join(__dirname, "backend", "convert.py");
+
+      const command = `python "${pyPath}" "${pdfPath}" "${outputDir}"`;
+
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error converting PDF to JPG: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`Error during conversion: ${stderr}`);
+          return;
+        }
+
+        console.log(`PDF converted successfully to JPG in ${stdout}`);
+      });
 
       const convertedFile = path.join(outputDir, `${path.basename(pdfPath, path.extname(pdfPath))}-1.jpg`);
 
