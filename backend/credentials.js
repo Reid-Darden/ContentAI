@@ -20,6 +20,7 @@ let loginCredentials = [
   {
     username: "tj",
     name: "TJ Larson",
+    email: "tlarson@wgs.com"
   },
   {
     username: "alec",
