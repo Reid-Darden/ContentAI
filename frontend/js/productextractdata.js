@@ -1,13 +1,8 @@
 $(document).ready(async function () {
   // User info
   let cook = cookies.getCookie("loggedIn");
-  let role = cookies.getCookie("role");
   if (cook) {
     $("#logged_in_user").text("Welcome, " + decodeURIComponent(cook));
-    if (role == "admin") {
-      $("#admin_panel").removeClass("is-hidden");
-    }
-    $("#article_display").show();
   } else {
     window.location.href = "/";
   }
@@ -36,7 +31,7 @@ $(document).ready(async function () {
           alert("Error uploading PDF.");
         }
       },
-      error: function (response) { },
+      error: function (response) {},
     });
   });
 
@@ -53,7 +48,7 @@ $(document).ready(async function () {
           }
         }
       },
-      error: function (resp) { },
+      error: function (resp) {},
     });
   });
 });

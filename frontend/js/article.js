@@ -1,13 +1,9 @@
 $(document).ready(async function () {
   // User info
   let cook = cookies.getCookie("loggedIn");
-  let role = cookies.getCookie("role");
+  let email = cookies.getCookie("loggedInEmail");
   if (cook) {
     $("#logged_in_user").text("Welcome, " + decodeURIComponent(cook));
-    if (role == "admin") {
-      $("#admin_panel").removeClass("is-hidden");
-    }
-    $("#article_display").show();
   } else {
     window.location.href = "/";
   }
@@ -115,6 +111,7 @@ $(document).ready(async function () {
           content: article,
           title: title,
           comments: comments,
+          email: email,
         }),
         contentType: "application/json",
         processData: false,
@@ -126,8 +123,8 @@ $(document).ready(async function () {
             // if problem with confirm, enable this alert
             //alert(data.alert);
 
-            alert("Article successfully submitted. Confirm this alert to return home.");
-            window.location.href = "/home";
+            alert("Article successfully submitted. Confirm this alert to return back to Create Tech Spec Article page.");
+            window.location.href = "/contentrewrite";
           } else {
             alert("Error confirming article.");
           }

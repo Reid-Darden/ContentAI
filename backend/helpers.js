@@ -40,24 +40,26 @@ module.exports = class Helpers {
 
       const command = `python "${pyPath}" "${outputDir}" "${outputDir}"`;
 
-      exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error converting PDF to JPG: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.error(`Error during conversion: ${stderr}`);
-          return;
-        }
+      return new Promise((resolve, reject) => {
+        exec(command, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`Error converting PDF to JPG: ${error.message}`);
+            reject(error);
+            return;
+          }
+          if (stderr) {
+            console.error(`Error during conversion: ${stderr}`);
+            reject(error);
+            return;
+          }
 
-        console.log(`PDF converted successfully to JPG in ${stdout}`);
+          const convertedFile = path.join(outputDir, `${path.basename(pdfPath, path.extname(pdfPath))}.jpg`);
+
+          console.log(`PDF converted successfully to JPG in ${outputDir}`);
+
+          resolve(convertedFile);
+        });
       });
-
-      const convertedFile = path.join(outputDir, `${path.basename(pdfPath, path.extname(pdfPath))}.jpg`);
-
-      console.log(`PDF converted successfully to JPG in ${outputDir}`);
-
-      return convertedFile;
     } catch (err) {
       console.error("Error converting PDF to JPG:", err);
       throw err;
@@ -73,14 +75,9 @@ module.exports = class Helpers {
     return `gvc${month}${year}`;
   }
 
-  findNameByUsername(arr, targetUsername) {
+  findUserDataByUsername(arr, targetUsername, targetDataPoint) {
     const user = arr.find((user) => user.username === targetUsername);
-    return user ? user.name : null;
-  }
-
-  findRoleByUsername(arr, targetUsername) {
-    const user = arr.find((user) => user.username === targetUsername);
-    return user ? user.role : null;
+    return user ? user[targetDataPoint] : null;
   }
 
   checkUserNameValue(user) {

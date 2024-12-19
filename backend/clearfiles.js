@@ -11,7 +11,7 @@ async function clearDirectory(directoryPath, isUnzippedFolder = false) {
     const files = await readdir(directoryPath);
 
     for (const file of files) {
-      if (file === ".gitignore" || file === ".gitkeep") continue;
+      if (file === ".gitignore" || file === ".gitkeep" || file === "ex") continue;
 
       const filePath = path.join(directoryPath, file);
       const fileStats = await fs.promises.stat(filePath);
@@ -45,7 +45,7 @@ async function wipeFolders() {
         for (const item of htmlFolderContent) {
           // Skip the "ex" folder and .gitignore/.gitkeep files
           if (item !== "ex" && item !== ".gitignore" && item !== ".gitkeep") {
-            const itemPath = path.join(folderPath, item);
+            const itemPath = path.join(folderPath);
             await clearDirectory(itemPath, isUnzippedFolder);
           }
         }

@@ -61,10 +61,10 @@ app.post("/login", (req, res) => {
     let usernameCheck = Helpers.checkUserNameValue(username);
     let passwordCheck = password === Helpers.generatePassword();
     if (usernameCheck && passwordCheck) {
-      let name = Helpers.findNameByUsername(loginCredentials, username);
-      let role = Helpers.findRoleByUsername(loginCredentials, username);
-      if (name && role) {
-        res.json({ loggedIn: true, username: name });
+      let name = Helpers.findUserDataByUsername(loginCredentials, username, "name");
+      let email = Helpers.findUserDataByUsername(loginCredentials, username, "email");
+      if (name && email) {
+        res.json({ loggedIn: true, username: name, email: email });
       }
     } else {
       res.json({ loggedIn: false });
@@ -202,7 +202,8 @@ app.post("/confirmArticle", async (req, res) => {
   let user = req.body.user;
   let title = req.body.title;
   let comments = req.body.comments;
-  if (await email(article, title, comments, user)) {
+  let email = req.body.email;
+  if (await email(article, title, comments, user, email)) {
     // reset the files folder
     if (await wipeFolders()) {
       res.json({ success: true, alert: "cleared" });

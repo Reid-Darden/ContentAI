@@ -3,37 +3,27 @@ let loginCredentials = [
   {
     username: "rd",
     name: "Reid Darden",
-    role: "admin",
+    email: "rdarden@wgs.com",
   },
   {
-    username: "mslock",
+    username: "slock",
     name: "Mike Slock",
-    role: "admin",
   },
   {
-    username: "smargison",
+    username: "sean",
     name: "Sean Margison",
-    role: "admin",
   },
   {
-    username: "afutrell",
+    username: "adam",
     name: "Adam Futrell",
-    role: "admin",
   },
   {
     username: "tj",
     name: "TJ Larson",
-    role: "user",
   },
   {
-    username: "aclloyd",
+    username: "alec",
     name: "Alec Lloyd",
-    role: "user",
-  },
-  {
-    username: "anlloyd",
-    name: "Alan Lloyd",
-    role: "user",
   },
 ];
 

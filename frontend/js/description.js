@@ -1,13 +1,8 @@
 $(document).ready(async function () {
   // User info
   let cook = cookies.getCookie("loggedIn");
-  let role = cookies.getCookie("role");
   if (cook) {
     $("#logged_in_user").text("Welcome, " + decodeURIComponent(cook));
-    if (role == "admin") {
-      $("#admin_panel").removeClass("is-hidden");
-    }
-    $("#article_display").show();
   } else {
     window.location.href = "/";
   }
