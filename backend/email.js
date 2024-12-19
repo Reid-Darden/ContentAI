@@ -15,12 +15,12 @@ let transporter = nodemailer.createTransport({
 // Function to send the email
 async function sendEmail(textContent, title, comments, user) {
   // create html attachment
-  fs.writeFile(`./backend/files/html/${title.replace(/\s/g, "")}.html`, textContent, () => { });
+  fs.writeFile(`./backend/files/html/${title.replace(/\s/g, "")}.html`, textContent, () => {});
 
   const mailOptions = {
     from: "gvcontentai@gmail.com",
-    //to: "rdarden@wgs.com, tlarson@wgs.com",
-    to: "reiddarden@wgs.com",
+    //to: "rdarden@wgs.com, tlarson@wgs.com", // fix this so that it factors in my email & the logged in users email
+    to: "rdarden@wgs.com",
     subject: `GVContentAI: New Article (${title}) by ${user}`,
     text: "NOTES:" + comments,
     attachments: [
