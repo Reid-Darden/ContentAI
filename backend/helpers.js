@@ -36,9 +36,9 @@ module.exports = class Helpers {
   async convertPdfToJpg(pdfPath, outputDir) {
     try {
       // do the work to conver the pdf to jpg here. find the best way to do this
-      const pyPath = path.join(__dirname, "backend", "convert.py");
+      const pyPath = path.join(__dirname, "convert.py");
 
-      const command = `python "${pyPath}" "${pdfPath}" "${outputDir}"`;
+      const command = `python "${pyPath}" "${outputDir}" "${outputDir}"`;
 
       exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -53,7 +53,7 @@ module.exports = class Helpers {
         console.log(`PDF converted successfully to JPG in ${stdout}`);
       });
 
-      const convertedFile = path.join(outputDir, `${path.basename(pdfPath, path.extname(pdfPath))}-1.jpg`);
+      const convertedFile = path.join(outputDir, `${path.basename(pdfPath, path.extname(pdfPath))}.jpg`);
 
       console.log(`PDF converted successfully to JPG in ${outputDir}`);
 

@@ -25,7 +25,7 @@ def convert_pdf_to_jpg(pdf_path, output_folder):
     for page_num in range(len(pdf_document)):
         page = pdf_document.load_page(page_num)
         pix = page.get_pixmap(dpi=300)
-        image_path = os.path.join(output_folder, f"{pdf_name}_page_{page_num + 1}.jpg")
+        image_path = os.path.join(output_folder, f"{pdf_name}.jpg")
         pix.save(image_path)
         print(f"Saved: {image_path}")
 
